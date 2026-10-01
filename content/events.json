@@ -4,9 +4,21 @@
       "id": "001",
       "name": "Nasha Studio",
       "type": "LIVE",
-      "date": "03.05.2025",
       "status": "ARCHIVED",
+      "date": "03.05.2025",
+      "time": "21:00",
       "space": "nasha-studio",
+      "description": "A new modular event series launching from the deep end of the signal spectrum, where hypnotic techno, experimental rhythm and system visuals converge in an intimate A/V environment.",
+      "posterUrl": "images/events/001/poster.jpg",
+      "artists": [
+        "ozan",
+        "veronique",
+        "alexiso",
+        "lauramrls",
+        "vjsolu",
+        "monautomaton",
+        "ttime"
+      ],
       "videos": [
         {
           "id": "_VhZdE8VhZk",
@@ -16,28 +28,24 @@
           "id": "iVwj8hBxMeQ",
           "cap": "Veronique — live set at Pulse Index 001"
         }
-      ],
-      "posterUrl": "images/events/001/poster.jpg",
-      "time": "Doors 21:00",
-      "description": "A new modular event series launching from the deep end of the signal spectrum, where hypnotic techno, experimental rhythm and system visuals converge in an intimate A/V environment.",
-      "artists": [
-        "ozan",
-        "veronique",
-        "alexiso",
-        "lauramrls",
-        "vjsolu",
-        "monautomaton",
-        "ttime"
       ]
     },
     {
       "id": "WS001",
       "name": "Creating Worlds in Touch Designer",
       "type": "WORKSHOP",
-      "date": "19.04.2026",
       "status": "ARCHIVED",
+      "date": "19.04.2026",
+      "time": "9:00–12:00 / 13:00–16:00 (1hr lunch break)",
       "space": "nasha-studio",
+      "description": "An intensive workshop for intermediate-level artists and creative technologists deepening TouchDesigner skills to create immersive audiovisual work — moving through operator logic, instancing, generative systems, data integration, basic Python and real-time rendering, combining guided exercises with practical strategies for building dynamic audiovisual environments. The focus is on practical, installation-ready experimentation: participants develop sketches or short audiovisual studies, with the possibility of presenting expanded works in future Pulse Index programming.",
       "posterUrl": "images/events/ws001/poster.jpg",
+      "artists": [
+        "calvin"
+      ],
+      "documentation": [
+        "monikahauck"
+      ],
       "docPhotos": [
         {
           "src": "images/events/ws001/photo-1.jpg",
@@ -48,8 +56,6 @@
           "cap": "Workshop session"
         }
       ],
-      "time": "9:00–12:00 / 13:00–16:00 (1hr lunch break)",
-      "description": "An intensive workshop for intermediate-level artists and creative technologists deepening TouchDesigner skills to create immersive audiovisual work — moving through operator logic, instancing, generative systems, data integration, basic Python and real-time rendering, combining guided exercises with practical strategies for building dynamic audiovisual environments. The focus is on practical, installation-ready experimentation: participants develop sketches or short audiovisual studies, with the possibility of presenting expanded works in future Pulse Index programming.",
       "links": [
         {
           "label": "Info & updates — Telegram",
@@ -59,30 +65,34 @@
           "label": "Instagram",
           "url": "https://www.instagram.com/pulseindex/"
         }
-      ],
-      "artists": [
-        "calvin"
-      ],
-      "documentation": [
-        "monikahauck"
       ]
     },
     {
       "id": "002",
       "name": "Äänen Lumo",
       "type": "LIVE",
-      "date": "08.05.2026",
       "status": "ARCHIVED",
+      "date": "08.05.2026",
+      "time": "Doors 19:00 / Start 20:00",
       "space": "aanen-lumo",
+      "description": "Pulse Index returns with a new live programme exploring experimental sound, moving image and spatial experience. Bringing together artists working across ambient, audiovisual performance and live composition, the evening unfolds as a sequence of immersive sets where sound and image drift between structure and improvisation.",
+      "posterUrl": "images/events/002/poster.jpg",
+      "artists": [
+        "belka",
+        "static-channel",
+        "lauramrls",
+        "dinavi"
+      ],
+      "documentation": [
+        "alexramirez",
+        "robertopuentes"
+      ],
       "videos": [
         {
           "id": "vNvvO8J9R94",
           "cap": "Pulse Index 002 — after movie"
         }
       ],
-      "posterUrl": "images/events/002/poster.jpg",
-      "time": "Doors 19:00 / Start 20:00",
-      "description": "Pulse Index returns with a new live programme exploring experimental sound, moving image and spatial experience. Bringing together artists working across ambient, audiovisual performance and live composition, the evening unfolds as a sequence of immersive sets where sound and image drift between structure and improvisation.",
       "promoCards": [
         {
           "src": "images/events/002/promo-1.jpg",
@@ -104,29 +114,19 @@
           "src": "images/events/002/promo-5.jpg",
           "cap": "PI 002 — VJ DIN-AVI, promo card"
         }
-      ],
-      "artists": [
-        "belka",
-        "static-channel",
-        "lauramrls",
-        "dinavi"
-      ],
-      "documentation": [
-        "alexramirez",
-        "robertopuentes"
       ]
     },
     {
       "id": "003",
       "name": "Pulse Index x Mindscape",
       "type": "LIVE",
-      "date": "18.10.2026",
       "status": "INCOMING",
-      "space": "studio-db",
-      "posterUrl": "images/events/003/poster.jpg",
+      "date": "18.10.2026",
       "time": "Doors 19:30 / 20:00",
-      "price": "€15 advance / €20 at the door",
+      "space": "studio-db",
       "description": "Pulse Index x Mindscape — a Berlin night pairing Static Channel's album release with Katrinø Brægnum (feat. Carri, with lights by Vitalii Mieleshkoi), Raw Image (VJ Lukas Ruoff / ungrid) and DJ Zygonaut.",
+      "posterUrl": "images/events/003/poster.jpg",
+      "price": "€15 advance / €20 at the door",
       "ticketUrl": "https://ra.co/events/2544914",
       "artists": [
         "katrino",
