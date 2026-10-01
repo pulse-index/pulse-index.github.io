@@ -1,0 +1,46 @@
+{
+  "spaces": [
+    {
+      "id": "nasha-studio",
+      "name": "Nasha Studio",
+      "city": "Helsinki",
+      "tags": [
+        "SPACE"
+      ],
+      "description": "A community-run multidisciplinary collective and experimental studio with a shared passion for exploring new mediums to tell other(ly) stories.",
+      "address": "Pälkäneentie 13b, tila 231, 00510 Helsinki",
+      "mapUrl": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x4692094a17941b75:0x6356116d9d5d772b?sa=X&ved=1t:8290&ictx=111",
+      "link": "https://www.instagram.com/nasha_helsinki/"
+    },
+    {
+      "id": "studio-db",
+      "name": "Studio dB",
+      "city": "Berlin",
+      "tags": [
+        "SPACE"
+      ],
+      "description": "285 m² warehouse space — photo & film studio hosting performances, pop-ups and screenings.",
+      "link": "https://www.instagram.com/studio.db.berlin/"
+    },
+    {
+      "id": "aanen-lumo",
+      "name": "Äänen Lumo",
+      "city": "Helsinki",
+      "tags": [
+        "SPACE"
+      ],
+      "description": "A Helsinki-based association formed in 1995 to promote sonic arts in Finland, organising concerts, workshops, and internet-, film- and gallery-based projects.",
+      "address": "Nokiantie 2-4, 00510 Helsinki",
+      "link": "https://aanenlumo.com/"
+    },
+    {
+      "id": "malatorium",
+      "name": "Malatorium Art Space",
+      "city": "Warsaw",
+      "tags": [
+        "SPACE"
+      ],
+      "link": "https://www.instagram.com/malatorium_artspace/"
+    }
+  ]
+}

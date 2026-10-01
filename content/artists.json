@@ -1,0 +1,365 @@
+{
+  "artists": [
+    {
+      "id": "static-channel",
+      "name": "Static Channel",
+      "role": "AV duo",
+      "city": "Berlin / Helsinki",
+      "members": [
+        "alexiso",
+        "monikahauck"
+      ],
+      "tags": [
+        "AUDIO",
+        "VISUAL"
+      ],
+      "bio": "Canadian audiovisual duo based in Berlin and Helsinki — new media artist/synthesist Monika Hauck and electronic producer/bass guitarist Alex Iso — shaping immersive, improvised dialogues between sound, image, space and movement across installations and live performance.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/staticcchannelmusic/"
+        }
+      ]
+    },
+    {
+      "id": "ozan",
+      "name": "Ozan",
+      "role": "DJ",
+      "city": "Helsinki",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "Istanbul and Helsinki-based DJ working between hypnotic techno and experimental sound explorations. Residencies at Defragged Sessions, We R Special and Club Kaiku; hosts the monthly show \"Pearl Rush\" on IDA Radio Helsinki.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/ozandenizizci/"
+        },
+        {
+          "label": "RA",
+          "url": "https://ra.co/dj/ozan"
+        },
+        {
+          "label": "SC",
+          "url": "https://soundcloud.com/ozandenizizci"
+        }
+      ]
+    },
+    {
+      "id": "veronique",
+      "name": "Veronique",
+      "role": "DJ",
+      "city": "",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "Playful, seductive sets that move from shadow to shine, light to lust, dancing on the edge of sonic genres and genders.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/veroniquekon"
+        },
+        {
+          "label": "SC",
+          "url": "https://on.soundcloud.com/5eVaLSSDuStwPuN58"
+        }
+      ]
+    },
+    {
+      "id": "alexiso",
+      "name": "Alex Iso",
+      "role": "live / DJ",
+      "city": "Berlin",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "Based in Berlin by way of Guelph, Canada. Fuses indie origins, organic complexity and techno energy in live and DJ sets; one half of audiovisual duo Static Channel.",
+      "links": [
+        {
+          "label": "Linktree",
+          "url": "https://linktr.ee/alexisomusic"
+        }
+      ]
+    },
+    {
+      "id": "lauramrls",
+      "name": "Laura MRLS",
+      "role": "live / DJ / producer",
+      "city": "Helsinki",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "Helsinki-based DJ, producer and live artist. Introspective live sets build emotionally dense, longform journeys through drone, field recordings and spatial composition, blurring dark ambient and experimental sound. Resident at SUBVERTED and Monument; curates the Affine Dark Science project.",
+      "links": [
+        {
+          "label": "Live at Solstice 2024",
+          "url": "https://soundcloud.com/postbar-solstice/laura-mrls-live-at-solstice-2024"
+        },
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/la.mrls/"
+        },
+        {
+          "label": "FB",
+          "url": "https://www.facebook.com/LauraMrlsMusic"
+        },
+        {
+          "label": "SC",
+          "url": "https://soundcloud.com/laura_mrls"
+        },
+        {
+          "label": "RA",
+          "url": "https://ra.co/dj/lauramrls"
+        },
+        {
+          "label": "AFDS Bandcamp",
+          "url": "https://affinedarkscience.bandcamp.com/"
+        }
+      ]
+    },
+    {
+      "id": "vjsolu",
+      "name": "VJ Solu",
+      "role": "VJ",
+      "city": "",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "Visualises surreal environments, symbolic narratives and flowing compositions — organic elements meeting harsher forms, from flowers to geometric shapes. Background in fine art and creative new media; works across 3D animation, node-based visuals and live VJing.",
+      "links": [
+        {
+          "label": "Portfolio",
+          "url": "https://inkaj.gitlab.io/portfolio"
+        },
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/inkerinkelinen/"
+        }
+      ]
+    },
+    {
+      "id": "monautomaton",
+      "name": "monautomaton",
+      "role": "VJ / new media artist",
+      "city": "Helsinki",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "Canadian/Polish VJ and new media artist based in Helsinki, creating immersive, surreal visuals for live performances, festivals and installations — merging abstraction, memory and movement into responsive digital landscapes.",
+      "links": [
+        {
+          "label": "Linktree",
+          "url": "https://linktr.ee/monautomaton"
+        }
+      ]
+    },
+    {
+      "id": "ttime",
+      "name": "T-Time",
+      "role": "visual / technical design",
+      "city": "Helsinki",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "Helsinki-based computational designer and full-stack developer working across installation design, live visuals and technical setups for immersive, interactive experiences, often with VR/AR. Part of Nasha Studio.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://instagram.com/nasha_helsinki"
+        },
+        {
+          "label": "Site",
+          "url": "https://tinacerpnjak.com"
+        }
+      ]
+    },
+    {
+      "id": "belka",
+      "name": "белка",
+      "role": "sound artist",
+      "city": "",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "Soundscapes built from cassette tape loops, modular synthesis and field recordings — augmenting and degrading raw material into resonant echoes of nostalgia and spectral presence. Frequent forest explorations inform the work's organic, primal quality.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/_b_e_l_c_h_e_n_o_k/"
+        }
+      ]
+    },
+    {
+      "id": "dinavi",
+      "name": "VJ DIN-AVI",
+      "role": "VJ / visual designer",
+      "city": "",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "Visuals moving through lost knowledge, esotericism and digitalism, drawing parallels between the alchemical and the computational — charts, symbols and incantations alongside digital artefacts, ancient relics and forgotten environments.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/p/DVb1GnnjbQg/"
+        }
+      ]
+    },
+    {
+      "id": "katrino",
+      "name": "Katrinø Brægnum",
+      "role": "composer",
+      "city": "",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/katrine_bregnum/"
+        }
+      ]
+    },
+    {
+      "id": "raw-image",
+      "name": "Raw Image",
+      "role": "AV / audio act",
+      "city": "",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/raw_image_live/"
+        },
+        {
+          "label": "RA",
+          "url": "https://ra.co/dj/rawimage"
+        }
+      ]
+    },
+    {
+      "id": "zygonaut",
+      "name": "DJ Zygonaut",
+      "role": "DJ",
+      "city": "",
+      "tags": [
+        "AUDIO"
+      ],
+      "bio": "",
+      "links": []
+    },
+    {
+      "id": "calvin",
+      "name": "Calvin Guillot",
+      "role": "workshop instructor / new media artist",
+      "city": "Helsinki",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "Multidisciplinary artist and creative technologist from Colombia, based in Helsinki. Works across interactive installations, generative art and parametric sculpture at the intersection of art, science and technology; teaches computational art and TouchDesigner at university level.",
+      "links": [
+        {
+          "label": "Site",
+          "url": "https://calvinguillot.com"
+        },
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/cgxatlas/"
+        }
+      ]
+    },
+    {
+      "id": "vitalii",
+      "name": "Vitalii Mieleshkoi",
+      "role": "lighting designer",
+      "city": "",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "",
+      "links": []
+    },
+    {
+      "id": "carri",
+      "name": "Carri",
+      "role": "VJ (visuals for Katrinø)",
+      "city": "",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "",
+      "links": []
+    },
+    {
+      "id": "lukasruoff",
+      "name": "Lukas Ruoff (ungrid)",
+      "role": "VJ (visuals for Raw Image)",
+      "city": "",
+      "tags": [
+        "VISUAL"
+      ],
+      "bio": "",
+      "links": []
+    },
+    {
+      "id": "monikahauck",
+      "name": "Monika Hauck",
+      "role": "documentation",
+      "city": "Berlin / Helsinki",
+      "tags": [
+        "DOCUMENTATION"
+      ],
+      "bio": "New media artist and synthesist; one half of audiovisual duo Static Channel.",
+      "links": [
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/staticcchannelmusic/"
+        }
+      ]
+    },
+    {
+      "id": "alexramirez",
+      "name": "Alex Ramirez",
+      "role": "photographer / videographer",
+      "city": "Helsinki",
+      "tags": [
+        "DOCUMENTATION"
+      ],
+      "bio": "",
+      "links": [
+        {
+          "label": "Site",
+          "url": "https://alexinthepit.com"
+        },
+        {
+          "label": "IG",
+          "url": "https://instagram.com/alexinthepit"
+        }
+      ]
+    },
+    {
+      "id": "robertopuentes",
+      "name": "Roberto Puentes",
+      "role": "photographer / videographer",
+      "city": "Helsinki",
+      "tags": [
+        "DOCUMENTATION"
+      ],
+      "bio": "",
+      "links": [
+        {
+          "label": "Site",
+          "url": "https://www.robertopuentes.com"
+        },
+        {
+          "label": "IG",
+          "url": "https://www.instagram.com/robertopuentess/"
+        }
+      ]
+    }
+  ]
+}

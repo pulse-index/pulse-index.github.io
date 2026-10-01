@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PULSE INDEX</title>
+<meta name="description" content="Pulse Index — an artist-led platform for experimental audiovisual art: performances, workshops and an archive of documentation. Helsinki / Berlin.">
+<meta property="og:title" content="PULSE INDEX">
+<meta property="og:description" content="Artist-led platform for experimental audiovisual art — performances, workshops and an archive of documentation.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div id="freqbar">
+  <button class="lock" id="home-btn" style="border:none;padding:0"><span class="dot"></span><span>PULSE INDEX</span></button>
+  <nav class="channels">
+    <button data-v="signal" class="active">SIGNAL</button>
+    <button data-v="archive">ARCHIVE</button>
+    <button data-v="network">NETWORK</button>
+    <button data-v="about">ABOUT</button>
+  </nav>
+</div>
+
+<main>
+
+  <!-- SIGNAL -->
+  <section id="view-signal" class="view active">
+    <div class="scan-head">
+      <div class="label">SCAN — sweep through the index</div>
+      <div class="scan-controls">
+        <button id="scan-prev" aria-label="Previous">◀</button>
+        <button id="scan-play" aria-label="Pause scan">❚❚</button>
+        <button id="scan-next" aria-label="Next">▶</button>
+      </div>
+    </div>
+    <div class="scan-wrap">
+      <div class="scan-track" id="scan-track"></div>
+      <div class="scan-line"></div>
+    </div>
+    <div id="next-tx"></div>
+    <div class="also-incoming" id="also-wrap" style="display:none">
+      <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
+      <div id="prog-list"></div>
+    </div>
+    <div class="bottom-logo"><img src="images/site/logo.png" alt="Pulse Index"></div>
+  </section>
+
+  <!-- ARCHIVE -->
+  <section id="view-archive" class="view">
+    <div class="archive-head">
+      <div class="label">RECEIVED / ARCHIVED FILES</div>
+      <div class="label" style="margin-top:4px">Select a folder to open the full file — newest at the top</div>
+    </div>
+    <div class="cabinet" id="cabinet"></div>
+  </section>
+
+  <!-- NETWORK -->
+  <section id="view-network" class="view">
+    <div class="label">SELECT A NODE</div>
+    <div class="scan-controls" id="net-filters" style="flex-wrap:wrap">
+      <span class="label" style="align-self:center;margin-right:4px">CITY</span>
+      <button data-city="ALL" class="netf active">ALL</button>
+      <button data-city="Helsinki" class="netf">HELSINKI</button>
+      <button data-city="Berlin" class="netf">BERLIN</button>
+      <span class="label" style="align-self:center;margin:0 4px 0 14px">TYPE</span>
+      <button data-cat="ALL" class="netf active">ALL</button>
+      <button data-cat="AUDIO" class="netf">AUDIO</button>
+      <button data-cat="VISUAL" class="netf">VJ / VISUAL</button>
+      <button data-cat="DOCUMENTATION" class="netf">DOCUMENTATION</button>
+    </div>
+    <div class="label" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom</div>
+    <svg id="netsvg" viewBox="0 0 700 500"></svg>
+    <div id="netdetail"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="view-about" class="view">
+    <div class="label">ABOUT</div>
+    <p style="font-family:var(--disp); font-weight:600; font-size:22px; margin:10px 0 20px;">Pulse Index</p>
+    <div class="about-grid">
+    <div class="about-text">
+    <p>Pulse Index is an artist-led platform for experimental audiovisual art, bringing together sound, moving image, performance, spatial experience and technology. It creates opportunities for artists and organisations working across these fields to meet, exchange knowledge, and develop new collaborations and deeper interconnection — through performances, workshops and digital activities.</p>
+    <p>The programme includes audiovisual performances in conventional and non-conventional spaces, artist-led workshops, collaborative development sessions such as sound and experimental media demos, and the digital documentation of ephemeral and improvised performances.</p>
+    <p>Pulse Index builds on existing relationships with independent cultural spaces, organisations and artist networks in Helsinki, while continuing to develop new collaborations. It is a space where artists working across disciplines can experiment, share knowledge and find new points of connection — with the aim of sustaining fair working conditions for everyone involved.</p>
+    </div>
+    <div class="about-image" id="about-image">IMAGE — PLACEHOLDER</div>
+    </div>
+    <div class="hairline"></div>
+    <div class="label">CONTACT / FOLLOW</div>
+    <p style="margin-top:10px">
+      <a href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Telegram</a><a href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Instagram</a><a href="https://soundcloud.com/pulse-index" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">SoundCloud</a><a href="https://www.youtube.com/@PULSE_INDEX" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">YouTube</a><a href="https://linktr.ee/pulseindex" target="_blank" rel="noopener" style="color:var(--sig)">Linktree</a>
+    </p>
+    <div class="hairline"></div>
+    <div class="label">SUBMIT DOCUMENTATION</div>
+    <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in — it can be added to the archive.</p>
+    <p>Send it to <a href="mailto:pulseindex.platform@gmail.com" style="color:var(--sig)">pulseindex.platform@gmail.com</a></p>
+  
+    <div class="bottom-logo"><img src="images/site/logo.png" alt="Pulse Index"></div>
+  </section>
+
+</main>
+
+<footer>PULSE INDEX / ARCHIVAL TRANSMISSION SYSTEM</footer>
+
+<div id="filepanel">
+  <div class="inner">
+    <button class="close" id="file-close">CLOSE ✕</button>
+    <div id="file-content"></div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button class="close" id="lightbox-close">CLOSE ✕</button>
+  <img id="lightbox-img" src="" alt="">
+  <div id="lightbox-cap"></div>
+</div>
+
+<script>
+/* Loads the content files, then starts the site. */
+(async function(){
+  const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
+  try{
+    const [ev, ar, sp, st] = await Promise.all(['events','artists','spaces','settings'].map(get));
+    window.ARTISTS = Object.fromEntries((ar.artists||[]).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
+    window.SPACES  = Object.fromEntries((sp.spaces||[]).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
+    const known = id => { if(ARTISTS[id]) return true; console.warn('Pulse Index: unknown artist id "'+id+'" — check content/artists.json'); return false; };
+    window.EVENTS = (ev.events||[]).map(e=>({ ...e,
+      artists: (e.artists||[]).filter(known),
+      documentation: (e.documentation||[]).filter(known),
+      space: SPACES[e.space] ? e.space : '',
+      artistNotes: Object.fromEntries((e.artistNotes||[]).map(n=>[n.artist, n.note]))
+    }));
+    Object.values(ARTISTS).forEach(a=>{ a.members=(a.members||[]).filter(known); });
+    window.ABOUT_IMAGE = st.aboutImage || '';
+    window.TYPE_LABELS = st.typeLabels || { LIVE:'LIVE PERFORMANCE', WORKSHOP:'WORKSHOP' };
+    const s=document.createElement('script'); s.src='assets/app.js'; document.body.appendChild(s);
+  }catch(err){
+    console.error(err);
+    document.querySelector('main').insertAdjacentHTML('afterbegin','<div style="padding:90px 16px;max-width:600px;margin:0 auto" class="label">NO SIGNAL — the content files could not be loaded. If you opened index.html straight from your computer, see README (preview section).</div>');
+  }
+})();
+</script>
+</body>
+</html>
