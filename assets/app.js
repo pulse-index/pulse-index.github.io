@@ -130,7 +130,7 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   }
 })();
 // About image
-(function(){ if(window.ABOUT_IMAGE){ document.getElementById('about-image').innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index">`; } })();
+(function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); } })();
 // keep the sticky archive header sitting right under the top bar
 (function(){ const set=()=>document.documentElement.style.setProperty('--barh', document.getElementById('freqbar').offsetHeight+'px'); set(); addEventListener('resize', set); })();
 
@@ -186,6 +186,7 @@ function folderHead(e){
 }
 
 /* ---------------- EVENT FILE / UNBOXING ---------------- */
+function bioHtml(b, style){ return (b||'').split(/\n\s*\n/).map(p=>`<p style="${style}">${p.trim()}</p>`).join(''); }
 function artistBlock(a){
   const ar = ARTISTS[a];
   const links = (ar.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
@@ -193,7 +194,7 @@ function artistBlock(a){
     ${ar.photoUrl?`<img src="${ar.photoUrl}" alt="${ar.name}" style="width:56px;height:56px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto">`:''}
     <div>
       <div style="font-family:var(--disp);font-weight:600;font-size:14px">${ar.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${ar.role}</span></div>
-      ${ar.bio?`<p style="margin:4px 0;font-size:12px">${ar.bio}</p>`:''}
+      ${ar.bio?bioHtml(ar.bio,'margin:4px 0 8px;font-size:12px;max-width:640px'):''}
       ${links}
     </div>
   </div>`;
@@ -283,9 +284,12 @@ function drawNetwork(){
   const svg=document.getElementById('netsvg');
   const cityMatch = c => netCity==='ALL' || (c||'').includes(netCity);
   const catMatch = tags => netCat==='ALL' || tags.includes(netCat);
+  // an artist also counts for a city if they appeared at an event held there
+  const playedIn = id => netCity!=='ALL' && EVENTS.some(e => [...e.artists, ...(e.documentation||[])].includes(id)
+      && e.space && SPACES[e.space] && (SPACES[e.space].city||'').includes(netCity));
   const onFile = EVENTS.flatMap(e=>[...e.artists, ...(e.documentation||[])]);
   const usedArtists = [...new Set([...onFile, ...onFile.flatMap(id=>ARTISTS[id].members||[])])]
-    .filter(id => cityMatch(ARTISTS[id].city) && catMatch(ARTISTS[id].tags));
+    .filter(id => (cityMatch(ARTISTS[id].city) || playedIn(id)) && catMatch(ARTISTS[id].tags));
   const usedSpaces = [...new Set(EVENTS.filter(e=>e.space).map(e=>e.space))]
     .filter(id => cityMatch(SPACES[id].city));
   const cx=350, cy=250;
@@ -422,7 +426,7 @@ function selectNode(id){
     det.innerHTML=`<button class="close" id="net-close">CLOSE ✕</button>
       ${a.photoUrl?`<img src="${a.photoUrl}" alt="${a.name}" style="width:100%;max-width:180px;display:block;margin-bottom:8px;border:1px solid var(--line)">`:''}
       <div style="font-family:var(--disp);font-weight:600;font-size:16px">${a.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${a.role} · ${a.tags.join(' + ')}${a.city?' · '+a.city:''}</span></div>
-      ${a.bio?`<p style="margin:6px 0">${a.bio}</p>`:''}
+      ${a.bio?bioHtml(a.bio,'margin:6px 0'):''}
       <div class="netlinks">${links}</div>
       ${(a.members||[]).length?`<div class="label" style="margin-top:10px">MEMBERS</div><div class="netfiles">${a.members.map(m=>`<a href="#" onclick="event.preventDefault(); selectNode('${m}')">${ARTISTS[m].name} →</a>`).join('')}</div>`:''}
       ${groupsOf(id).length?`<div class="label" style="margin-top:10px">MEMBER OF</div><div class="netfiles">${groupsOf(id).map(g=>`<a href="#" onclick="event.preventDefault(); selectNode('${g.id}')">${g.name} →</a>`).join('')}</div>`:''}
@@ -442,9 +446,10 @@ function selectNode(id){
 }
 /* ---------------- DIRECT LINKS ----------------
    pulseindex…/#003 opens that event, #archive / #network / #about open a page. */
-(function(){
+function route(){
   const h=decodeURIComponent(location.hash.slice(1)); if(!h) return;
-  const ev=EVENTS.find(e=>e.id===h);
+  const ev=EVENTS.find(e=>e.id.toLowerCase()===h.toLowerCase());
   if(ev) (ev.status==='ARCHIVED' ? openFolder(ev.id) : openFile(ev.id));
   else if(document.getElementById('view-'+h)) showView(h);
-})();
+}
+route(); addEventListener('hashchange', route);
