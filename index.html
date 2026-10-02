@@ -91,9 +91,12 @@
     </div>
     <div class="hairline"></div>
     <div class="label">CONTACT / FOLLOW</div>
-    <p style="margin-top:10px">
+    <div class="contact-row">
+    <p style="margin:0">
       <a href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Telegram</a><a href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Instagram</a><a href="https://soundcloud.com/pulse-index" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">SoundCloud</a><a href="https://www.youtube.com/@PULSE_INDEX" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">YouTube</a><a href="https://linktr.ee/pulseindex" target="_blank" rel="noopener" style="color:var(--sig)">Linktree</a>
     </p>
+    <a class="qr" href="https://linktr.ee/pulseindex" target="_blank" rel="noopener"><span>SCAN →<br>LINKTREE</span><img id="qr-img" src="images/site/qr-linktree.png" alt="QR code to the Pulse Index Linktree"></a>
+    </div>
     <div class="hairline"></div>
     <div class="label">SUBMIT DOCUMENTATION</div>
     <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in — it can be added to the archive.</p>
@@ -125,10 +128,10 @@
   const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
   try{
     const [ev, ar, sp, st] = await Promise.all(['events','artists','spaces','settings'].map(get));
-    window.ARTISTS = Object.fromEntries((ar.artists||[]).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
-    window.SPACES  = Object.fromEntries((sp.spaces||[]).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
+    window.ARTISTS = Object.fromEntries((Array.isArray(ar)?ar:(ar.artists||[])).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
+    window.SPACES  = Object.fromEntries((Array.isArray(sp)?sp:(sp.spaces||[])).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
     const known = id => { if(ARTISTS[id]) return true; console.warn('Pulse Index: unknown artist id "'+id+'" — check content/artists.json'); return false; };
-    window.EVENTS = (ev.events||[]).map(e=>({ ...e,
+    window.EVENTS = (Array.isArray(ev)?ev:(ev.events||[])).map(e=>({ ...e,
       artists: (e.artists||[]).filter(known),
       documentation: (e.documentation||[]).filter(known),
       space: SPACES[e.space] ? e.space : '',
