@@ -1,5 +1,5 @@
-# Pages CMS configuration — the editing panel at https://app.pagescms.org
-# Draft: to be tested when the repository is connected.
+# Pages CMS configuration — editing panel at https://app.pagescms.org
+
 media:
   input: images
   output: images
@@ -9,109 +9,206 @@ content:
     label: Events
     type: file
     path: content/events.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{id} — {name}"
     fields:
-      - name: events
-        label: Events
+      - name: id
+        label: "File number (e.g. 004, WS002)"
+        type: string
+        required: true
+      - name: name
+        label: Title
+        type: string
+        required: true
+      - name: type
+        label: Type
+        type: select
+        options:
+          values: [LIVE, WORKSHOP]
+      - name: status
+        label: Status
+        type: select
+        options:
+          values: [INCOMING, ARCHIVED]
+      - name: date
+        label: "Date (DD.MM.YYYY)"
+        type: string
+      - name: time
+        label: Time
+        type: string
+      - name: space
+        label: "Venue id (see Venues, e.g. studio-db)"
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: posterUrl
+        label: Poster
+        type: image
+      - name: price
+        label: "Ticket price (shown only while incoming)"
+        type: string
+      - name: ticketUrl
+        label: "Ticket link (shown only while incoming)"
+        type: string
+      - name: artists
+        label: "Artists / facilitator (artist ids, e.g. static-channel)"
+        type: string
+        list: true
+      - name: artistNotes
+        label: "Note next to an artist's name (e.g. Album Release)"
         type: object
         list: true
         fields:
-          - { name: id, label: "File number (e.g. 004, WS002)", type: string, required: true }
-          - { name: name, label: Title, type: string, required: true }
-          - { name: type, label: Type, type: aselect, options: { values: [LIVE, WORKSHOP] } }
-          - { name: status, label: Status, type: select, options: { values: [INCOMING, ARCHIVED] } }
-          - { name: date, label: "Date (DD.MM.YYYY)", type: string }
-          - { name: time, label: Time, type: string }
-          - { name: space, label: "Venue id (from Venues)", type: string }
-          - { name: description, label: Description, type: text }
-          - { name: posterUrl, label: Poster, type: image }
-          - { name: price, label: "Ticket price (shown only while incoming)", type: string }
-          - { name: ticketUrl, label: "Ticket link (shown only while incoming)", type: string }
-          - { name: artists, label: "Artists / facilitator (artist ids)", type: string, list: true }
-          - name: artistNotes
-            label: "Notes next to an artist (e.g. Album Release)"
-            type: object
-            list: true
-            fields:
-              - { name: artist, label: Artist id, type: string }
-              - { name: note, label: Note, type: string }
-          - { name: documentation, label: "Documented by (artist ids)", type: string, list: true }
-          - name: docPhotos
-            label: Documentation photos
-            type: object
-            list: true
-            fields:
-              - { name: src, label: Photo, type: image }
-              - { name: cap, label: Caption, type: string }
-          - name: videos
-            label: "Videos (YouTube)"
-            type: object
-            list: true
-            fields:
-              - { name: id, label: "YouTube video id (the part after youtu.be/)", type: string }
-              - { name: cap, label: Caption, type: string }
-          - name: promoCards
-            label: Promo cards / visual identity
-            type: object
-            list: true
-            fields:
-              - { name: src, label: Image, type: image }
-              - { name: cap, label: Caption, type: string }
-          - name: links
-            label: Links
-            type: object
-            list: true
-            fields:
-              - { name: label, label: Label, type: string }
-              - { name: url, label: URL, type: string }
+          - name: artist
+            label: Artist id
+            type: string
+          - name: note
+            label: Note
+            type: string
+      - name: documentation
+        label: "Documented by (artist ids)"
+        type: string
+        list: true
+      - name: docPhotos
+        label: Documentation photos
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: Photo
+            type: image
+          - name: cap
+            label: Caption
+            type: string
+      - name: videos
+        label: "Videos (YouTube)"
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: "YouTube video id (the part after youtu.be/)"
+            type: string
+          - name: cap
+            label: Caption
+            type: string
+      - name: promoCards
+        label: "Promo cards / visual identity"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: Image
+            type: image
+          - name: cap
+            label: Caption
+            type: string
+      - name: links
+        label: Links
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: url
+            label: URL
+            type: string
 
   - name: artists
     label: Artists
     type: file
     path: content/artists.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{name} ({id})"
     fields:
-      - name: artists
-        label: Artists
+      - name: id
+        label: "Id (lowercase, no spaces — used in events)"
+        type: string
+        required: true
+      - name: name
+        label: Name
+        type: string
+        required: true
+      - name: role
+        label: Role
+        type: string
+      - name: city
+        label: City
+        type: string
+      - name: tags
+        label: Category
+        type: select
+        options:
+          values: [AUDIO, VISUAL, DOCUMENTATION]
+          multiple: true
+      - name: bio
+        label: "Bio (blank line = new paragraph)"
+        type: text
+      - name: photoUrl
+        label: Photo
+        type: image
+      - name: members
+        label: "Members (artist ids, for groups)"
+        type: string
+        list: true
+      - name: links
+        label: Links
         type: object
         list: true
         fields:
-          - { name: id, label: "Id (lowercase, no spaces — used in events)", type: string, required: true }
-          - { name: name, label: Name, type: string, required: true }
-          - { name: role, label: Role, type: string }
-          - { name: city, label: City, type: string }
-          - { name: tags, label: Category, type: select, list: true, options: { values: [AUDIO, VISUAL, DOCUMENTATION] } }
-          - { name: bio, label: Bio, type: text }
-          - { name: photoUrl, label: Photo, type: image }
-          - { name: members, label: "Members (artist ids, for groups)", type: string, list: true }
-          - name: links
-            label: Links
-            type: object
-            list: true
-            fields:
-              - { name: label, label: "Label (IG, SC, RA, Site…)", type: string }
-              - { name: url, label: URL, type: string }
+          - name: label
+            label: "Label (IG, SC, RA, Site…)"
+            type: string
+          - name: url
+            label: URL
+            type: string
 
   - name: spaces
     label: Venues
     type: file
     path: content/spaces.json
+    format: json
+    list:
+      collapsible:
+        collapsed: true
+        summary: "{name} ({id})"
     fields:
-      - name: spaces
-        label: Venues
-        type: object
-        list: true
-        fields:
-          - { name: id, label: "Id (lowercase, no spaces — used in events)", type: string, required: true }
-          - { name: name, label: Name, type: string }
-          - { name: city, label: City, type: string }
-          - { name: description, label: Description, type: text }
-          - { name: address, label: Address, type: string }
-          - { name: mapUrl, label: Map link, type: string }
-          - { name: link, label: Website / Instagram, type: string }
+      - name: id
+        label: "Id (lowercase, no spaces — used in events)"
+        type: string
+        required: true
+      - name: name
+        label: Name
+        type: string
+      - name: city
+        label: City
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: address
+        label: Address
+        type: string
+      - name: mapUrl
+        label: Map link
+        type: string
+      - name: link
+        label: "Website / Instagram"
+        type: string
 
   - name: settings
     label: Site settings
     type: file
     path: content/settings.json
+    format: json
     fields:
-      - { name: aboutImage, label: About page image, type: image }
-
+      - name: aboutImage
+        label: About page image
+        type: image
