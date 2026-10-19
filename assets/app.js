@@ -214,11 +214,35 @@ document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e
   });
 })();
 // the full release file — the same slide-in panel the event files use
+function toggleTrack(btn){
+  const li=btn.closest('.trk'), open=!li.classList.contains('open');
+  li.classList.toggle('open', open); btn.setAttribute('aria-expanded', open);
+  btn.querySelector('.tx').textContent = open ? '−' : '+';
+}
 function openRelease(id){
   const r=RELEASES.find(x=>x.id===id); if(!r) return;
   const ev = r.event ? EVENTS.find(e=>e.id===r.event) : null;
   const layer=(head, body)=> body ? `<div class="layer"><div class="lhead">${head}</div>${body}</div>` : '';
-  const tracks=(r.tracks||[]).map((t,i)=>`<li><span class="tn">${String(i+1).padStart(2,'0')}</span><span>${t.title||t}</span><span class="tl">${t.length||''}</span></li>`).join('');
+  // each track is a row; a track with artwork, notes, a video or a link opens into its own little section
+  const tracks=(r.tracks||[]).map((t,i)=>{
+    const n=String(i+1).padStart(2,'0'), title=t.title||t;
+    const extra = t.art || t.notes || t.video || (t.links||[]).length;
+    const thumb = t.art ? `<span class="tt"><img src="${t.art.thumb||t.art.src}" alt="" loading="lazy"></span>` : '<span class="tt none"></span>';
+    if(!extra) return `<li class="trk"><div class="trk-head plain"><span class="tn">${n}</span>${thumb}<span class="ttl">${title}</span><span class="tl">${t.length||''}</span><span class="tx"></span></div></li>`;
+    const links=(t.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`).join('');
+    return `<li class="trk">
+      <button type="button" class="trk-head" aria-expanded="false" onclick="toggleTrack(this)"><span class="tn">${n}</span>${thumb}<span class="ttl">${title}</span><span class="tl">${t.length||''}</span><span class="tx" aria-hidden="true">+</span></button>
+      <div class="trk-body">
+        ${t.art?`<div class="trk-art" onclick="openLightbox('${t.art.src}','${esc(title)} — ${esc(r.title)}')"><img src="${t.art.thumb||t.art.src}" alt="${title} artwork" loading="lazy"></div>`:''}
+        <div class="trk-info">
+          <div class="label">TRACK ${n}${t.length?' · '+t.length:''}</div>
+          <div class="trk-title">${title}</div>
+          ${t.notes?bioHtml(t.notes,'margin:0 0 10px;max-width:520px'):''}
+          ${t.video?ytHtml(t.video,''):''}
+          ${links?`<div class="rel-socials">${links}</div>`:''}
+        </div>
+      </div></li>`;
+  }).join('');
   const links=(r.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
   // sections: build the deeper story from blocks — text, image, video, quote, interview (Q&A)
   const sections=(r.sections||[]).map(s=>{
