@@ -123,14 +123,29 @@
   <div id="lightbox-cap"></div>
 </div>
 
+<script src="config.js"></script>
 <script>
-/* Loads the content files, then starts the site. */
+/* Loads the content (sheet first, files as backup), then starts the site. */
 (async function(){
   const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
-  try{
+  // 1) the Google Sheet (via the Apps Script web app in config.js), 2) if that fails or is slow, the saved files in /content
+  async function fromSheet(){
+    const url=(window.PULSE_CONFIG||{}).endpoint; if(!url) throw new Error('no endpoint');
+    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(), 8000);
+    try{
+      const r=await fetch(url, {signal:ctl.signal}); if(!r.ok) throw new Error('sheet: '+r.status);
+      const d=await r.json(); if(!d.events || !d.artists) throw new Error('sheet: unexpected reply');
+      return [d.events, d.artists, d.spaces||[], d.settings||{}, d.releases||[]];
+    } finally { clearTimeout(t); }
+  }
+  async function fromFiles(){
     const [ev, ar, sp, st] = await Promise.all(['events','artists','spaces','settings'].map(get));
     // releases are optional: a missing file just means no release section
     const rl = await get('releases').catch(()=>[]);
+    return [ev, ar, sp, st, rl];
+  }
+  try{
+    const [ev, ar, sp, st, rl] = await fromSheet().catch(err=>{ if((window.PULSE_CONFIG||{}).endpoint) console.warn('Pulse Index: sheet not reachable, using saved files —', err.message); return fromFiles(); });
     window.ARTISTS = Object.fromEntries((Array.isArray(ar)?ar:(ar.artists||[])).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
     window.SPACES  = Object.fromEntries((Array.isArray(sp)?sp:(sp.spaces||[])).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
     const known = id => { if(ARTISTS[id]) return true; console.warn('Pulse Index: unknown artist id "'+id+'" — check content/artists.json'); return false; };
