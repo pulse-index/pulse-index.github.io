@@ -1,0 +1,20 @@
+[
+  {
+    "id": "R001",
+    "featured": true,
+    "title": "ALBUM TITLE",
+    "artists": ["static-channel"],
+    "format": "ALBUM",
+    "date": "18.10.2026",
+    "label": "",
+    "coverUrl": "",
+    "event": "003",
+    "blurb": "Static Channel's new album, released live at Pulse Index x Mindscape, Studio dB Berlin.",
+    "about": "",
+    "tracks": [],
+    "links": [
+      { "label": "Instagram", "url": "https://www.instagram.com/staticcchannelmusic/" }
+    ],
+    "sections": []
+  }
+]

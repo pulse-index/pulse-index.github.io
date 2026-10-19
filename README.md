@@ -12,6 +12,7 @@ A static website: no server and no database, just files. It can be hosted for fr
 | `content/events.json` | All events: live performances and workshops |
 | `content/artists.json` | Artists, VJs and documenters |
 | `content/spaces.json` | Venues |
+| `content/releases.json` | Releases (albums, EPs…) |
 | `content/settings.json` | Site-wide settings (the About image) |
 | `images/` | All images, sorted per event in `images/events/<number>/` |
 | `.pages.yml` | Setup for the editing panel (Pages CMS) |
@@ -22,9 +23,17 @@ Day to day, only `content/` and `images/` change.
 
 - **Events**
   - Each event has a file number (`id`). Live performances are numbered 001, 002, 003… Workshops use their own series: WS001, WS002…
-  - `status` is either `INCOMING` or `ARCHIVED`. To move an event into the archive, change its status to `ARCHIVED`. Ticket prices and links then disappear automatically, and the event becomes a folder in the archive.
+  - Events archive themselves: from the day after an event's date, it becomes a folder in the archive and its ticket price and link disappear. Until documentation is added, the folder shows "DOCUMENTATION INCOMING". Setting `status` to `ARCHIVED` by hand still works, e.g. for a cancelled date.
+  - When nothing is coming up, the front page shows "Next signal to be announced" with a link to the last event.
   - `artists` and `documentation` list artist **ids** from `artists.json`, e.g. `static-channel`. An id that doesn't exist is skipped, and the browser console shows a warning.
   - `space` is a venue id from `spaces.json`, e.g. `nasha-studio` or `studio-db`.
+- **Releases** (`content/releases.json`)
+  - Each release has a file number (`R001`, `R002`…), which is also its direct link: `yoursite/#R001`.
+  - The release marked `featured` appears on the front page; without one, the newest release does.
+  - `artists` lists artist ids, so their bios and socials appear automatically, and the release shows up on their node in Network.
+  - `event` links the release to the event where it launched (e.g. `003`).
+  - `sections` builds the deeper story in order: `text`, `image`, `video` (YouTube id), `quote` and `interview` (questions & answers) blocks.
+  - Videos show a thumbnail and only load YouTube when someone presses play.
 - **Groups:** An artist entry can list `members` (artist ids). Members are joined to the group with a dashed line on the Network page.
 - **Images:** Keep them under ~1,500 px on the long side, as JPG. Posters go in `images/events/<number>/poster.jpg`.
 - **Direct links:** Every event has its own link: `yoursite/#003`, `yoursite/#WS001`. Pages work the same way: `#archive`, `#network`, `#about`.

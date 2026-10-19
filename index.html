@@ -42,6 +42,7 @@
       <div class="scan-line"></div>
     </div>
     <div id="next-tx"></div>
+    <div id="featured"></div>
     <div class="also-incoming" id="also-wrap" style="display:none">
       <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
       <div id="prog-list"></div>
@@ -128,14 +129,24 @@
   const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
   try{
     const [ev, ar, sp, st] = await Promise.all(['events','artists','spaces','settings'].map(get));
+    // releases are optional: a missing file just means no release section
+    const rl = await get('releases').catch(()=>[]);
     window.ARTISTS = Object.fromEntries((Array.isArray(ar)?ar:(ar.artists||[])).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
     window.SPACES  = Object.fromEntries((Array.isArray(sp)?sp:(sp.spaces||[])).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
     const known = id => { if(ARTISTS[id]) return true; console.warn('Pulse Index: unknown artist id "'+id+'" — check content/artists.json'); return false; };
+    // An event is archived automatically from the day after its date.
+    // Setting status to ARCHIVED by hand still works (e.g. for a cancelled date).
+    const today = new Date(new Date().toDateString());
+    const dateOf = d => { const [dd,mm,yy]=(d||'').split('.').map(Number); return yy ? new Date(yy,mm-1,dd) : null; };
     window.EVENTS = (Array.isArray(ev)?ev:(ev.events||[])).map(e=>({ ...e,
+      status: e.status==='ARCHIVED' || (dateOf(e.date) && dateOf(e.date) < today) ? 'ARCHIVED' : 'INCOMING',
       artists: (e.artists||[]).filter(known),
       documentation: (e.documentation||[]).filter(known),
       space: SPACES[e.space] ? e.space : '',
       artistNotes: Object.fromEntries((e.artistNotes||[]).map(n=>[n.artist, n.note]))
+    }));
+    window.RELEASES = (Array.isArray(rl)?rl:(rl.releases||[])).filter(r=>r.id && r.title && !r.hidden).map(r=>({ ...r,
+      artists: (r.artists||[]).filter(known)
     }));
     Object.values(ARTISTS).forEach(a=>{ a.members=(a.members||[]).filter(known); });
     window.ABOUT_IMAGE = st.aboutImage || '';

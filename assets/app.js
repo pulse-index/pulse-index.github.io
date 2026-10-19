@@ -84,9 +84,19 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   const box=document.getElementById('next-tx');
   const upcoming=[...incoming].sort((x,y)=>parseDate(x.date)-parseDate(y.date));
   if(!upcoming.length){
-    box.innerHTML=`<div class="next-tx" style="display:block"><div class="label">NEXT TRANSMISSION</div>
-      <div class="nt-title">No incoming transmissions right now.</div>
-      <div class="nt-actions"><button class="tune-btn" onclick="showView('archive')">BROWSE THE ARCHIVE →</button></div></div>`;
+    // nothing scheduled: a slim "TBA" strip, pointing at the last event and where announcements go
+    const last=[...archived].sort((x,y)=>parseDate(y.date)-parseDate(x.date))[0];
+    box.innerHTML=`<div class="tba">
+      <div class="tba-main">
+        <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">TBA</span></div>
+        <div class="tba-title">Next signal to be announced<span class="tba-cursor">_</span></div>
+        <div class="tba-note">Announcements go out first on Telegram and Instagram.</div>
+      </div>
+      <div class="nt-actions tba-actions">
+        <a class="tune-btn primary" href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener">GET NOTIFIED →</a>
+        ${last?`<button class="tune-btn" onclick="openFolder('${last.id}')">LAST: ${last.id} ${last.name.toUpperCase()} →</button>`:''}
+      </div>
+    </div>`;
     return;
   }
   const e=upcoming[0], sp=e.space?SPACES[e.space]:null;
@@ -129,6 +139,99 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
     });
   }
 })();
+/* ---------------- RELEASES ----------------
+   content/releases.json. The release marked "featured" (or else the newest)
+   sits on the front page; every release opens as its own file: #R001. */
+const RELEASES = window.RELEASES || [];
+const esc = s => String(s||'').replace(/'/g,"\\'");
+function artistNames(ids){
+  return ids.map(id=>`<a href="#" class="artist-link" onclick="event.preventDefault(); openArtist('${id}')">${ARTISTS[id].name}</a>`).join(' / ');
+}
+function openArtist(id){ closeFile(); showView('network'); selectNode(id); }
+function coverHtml(r, cls){
+  return r.coverUrl
+    ? `<div class="${cls}" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')"><img src="${r.coverUrl}" alt="${r.title} cover"></div>`
+    : `<div class="${cls} empty">COVER — INCOMING</div>`;
+}
+function socialLinks(ids){
+  return ids.flatMap(id=>(ARTISTS[id].links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${ids.length>1?ARTISTS[id].name+' — ':''}${l.label} ↗</a>`)).join('');
+}
+// YouTube: shows the thumbnail; the player only loads when someone presses play
+function ytHtml(id, cap){
+  return `<div class="yt" data-yt="${id}" onclick="playYT(this)" role="button" tabindex="0" aria-label="Play video: ${cap||''}">
+    <img src="https://i.ytimg.com/vi/${id}/hqdefault.jpg" alt="" loading="lazy"><span class="yt-play">▶ PLAY</span></div>
+    ${cap?`<div class="cap">${cap}</div>`:''}`;
+}
+function playYT(el){
+  el.outerHTML=`<div class="yt playing"><iframe src="https://www.youtube-nocookie.com/embed/${el.dataset.yt}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
+}
+document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('yt')){ e.preventDefault(); playYT(e.target); } });
+(function(){
+  const box=document.getElementById('featured');
+  const r = RELEASES.find(x=>x.featured) || [...RELEASES].sort((x,y)=>parseDate(y.date||'1.1.1970')-parseDate(x.date||'1.1.1970'))[0];
+  if(!r) return;
+  const row=(k,v)=> v ? `<div class="row"><span>${k}</span><span>${v}</span></div>` : '';
+  const out = r.date && parseDate(r.date) <= new Date();
+  const ev = r.event ? EVENTS.find(e=>e.id===r.event) : null;
+  const listen = (r.links||[]).find(l=>/bandcamp|spotify|soundcloud|apple|tidal|listen/i.test(l.label+l.url));
+  box.innerHTML=`<div class="next-tx featured">
+    ${coverHtml(r,'nt-poster cover')}
+    <div>
+      <div class="nt-kicker"><span class="label">FEATURED RELEASE</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+      <div class="nt-title">${r.title}</div>
+      <div class="rel-artist">${artistNames(r.artists)}</div>
+      ${r.blurb?`<p class="rel-blurb">${r.blurb}</p>`:''}
+      <div class="nt-meta">
+        ${row('FILE', `<span style="color:var(--sig)">${r.id}</span> / ${r.format||'RELEASE'}`)}
+        ${row('RELEASED', r.date||'')}
+        ${row('LABEL', r.label||'')}
+        ${row('LAUNCH', ev?`<a href="#${ev.id}">${ev.id} — ${ev.name}</a>`:'')}
+      </div>
+      <div class="nt-actions" style="margin-top:16px">
+        ${listen?`<a href="${listen.url}" target="_blank" rel="noopener" class="tune-btn primary">LISTEN →</a>`:''}
+        <button class="tune-btn${listen?'':' primary'}" onclick="openRelease('${r.id}')">FULL RELEASE →</button>
+      </div>
+      ${socialLinks(r.artists)?`<div class="rel-socials">${socialLinks(r.artists)}</div>`:''}
+    </div>
+  </div>`;
+})();
+// the full release file — the same slide-in panel the event files use
+function openRelease(id){
+  const r=RELEASES.find(x=>x.id===id); if(!r) return;
+  const ev = r.event ? EVENTS.find(e=>e.id===r.event) : null;
+  const layer=(head, body)=> body ? `<div class="layer"><div class="lhead">${head}</div>${body}</div>` : '';
+  const tracks=(r.tracks||[]).map((t,i)=>`<li><span class="tn">${String(i+1).padStart(2,'0')}</span><span>${t.title||t}</span><span class="tl">${t.length||''}</span></li>`).join('');
+  const links=(r.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
+  // sections: build the deeper story from blocks — text, image, video, quote, interview (Q&A)
+  const sections=(r.sections||[]).map(s=>{
+    const t=(s.type||'text').toLowerCase();
+    const head=s.heading||({text:'NOTES',image:'IMAGE',video:'VIDEO',quote:'',interview:'INTERVIEW'}[t]||'');
+    if(t==='image') return layer(head||'IMAGE', `<div class="gallery-grid">${galleryItem(s.src,s.cap)}</div>`);
+    if(t==='video') return layer(head||'VIDEO', ytHtml(s.youtube||s.id, s.cap));
+    if(t==='quote') return `<div class="layer"><blockquote class="rel-quote">${s.body}${s.cap?`<cite>— ${s.cap}</cite>`:''}</blockquote></div>`;
+    if(t==='interview') return layer(head, (s.qa||[]).map(q=>`<p class="q">${q.q}</p>${bioHtml(q.a,'margin:0 0 12px')}`).join(''));
+    return layer(head, bioHtml(s.body,'margin:0 0 10px;max-width:640px'));
+  }).join('');
+  document.getElementById('file-content').innerHTML = `
+    <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin:30px 0 20px">
+      <div class="file-head" style="flex:1; min-width:180px; margin:0">
+        <div class="fid">PULSE INDEX / ${r.format||'RELEASE'} / FILE ${r.id}</div>
+        <div class="ftitle">${r.title}</div>
+        <div class="rel-artist" style="font-size:14px">${artistNames(r.artists)}</div>
+        <div class="mono" style="font-size:11px;color:var(--grey);margin-top:6px">${[r.date,r.label].filter(Boolean).join(' · ')}</div>
+      </div>
+      ${r.coverUrl?`<div class="poster-box" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')"><img src="${r.coverUrl}" alt="${r.title} cover"></div>`:''}
+    </div>
+    ${layer('ABOUT THE RECORD', r.about ? bioHtml(r.about,'margin:0 0 10px;max-width:640px') : (r.blurb?`<p style="margin:0">${r.blurb}</p>`:''))}
+    ${layer('TRACKLIST', tracks?`<ol class="tracklist">${tracks}</ol>`:'')}
+    ${layer('LISTEN / LINKS', links?`<div class="related-list">${links}</div>`:'')}
+    ${sections || layer('PROCESS', `<div class="doc-incoming"><span class="status-tag">PROCESS NOTES INCOMING</span><span class="label">Notes, footage and interviews on the making of this record will appear here.</span></div>`)}
+    ${layer('ARTISTS', r.artists.map(artistBlock).join(''))}
+    ${ev?layer('LAUNCHED AT', `<a href="#${ev.id}" class="onfile-link">${ev.id} — ${ev.name}, ${ev.date} →</a>`):''}`;
+  document.getElementById('filepanel').classList.add('open'); setHash(id);
+  document.getElementById('filepanel').scrollTop = 0;
+  document.querySelectorAll('#file-content .layer').forEach((l,i)=>{ l.classList.remove('show'); setTimeout(()=>l.classList.add('show'), 80*i+60); });
+}
 // About image
 (function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); } })();
 // keep the sticky archive header sitting right under the top bar
@@ -230,13 +333,14 @@ function fileLayers(e){
     ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><div class="lhead">TICKETS</div>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
     ${visualAssets.length ? `<div class="layer"><div class="lhead">VISUAL IDENTITY</div><div class="gallery-grid">${visualAssets.join('')}</div></div>` : ''}
     <div class="layer"><div class="lhead">${e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS'}</div>${artistBlocks}</div>
-    ${isIncoming ? docIncoming : `    <div class="layer"><div class="lhead">DOCUMENTATION</div>
+    ${isIncoming || !(docPhotos.length || videoItems.length) ? docIncoming : `    <div class="layer"><div class="lhead">DOCUMENTATION</div>
       <div class="gallery-grid" style="margin-bottom:${docBlocks?'14px':'0'}">
         ${videoItems.join('')}${(docPhotos.length||videoItems.length) ? docPhotos.join('') : `<div class="gallery-item"><div class="poster-frame" style="aspect-ratio:4/3">CONTACT SHEET — PLACEHOLDER</div></div><div class="gallery-item"><div class="monitor"></div></div>`}
       </div>
       ${docBlocks || '<p style="color:var(--grey);margin:0">No documenter credited yet.</p>'}
     </div>
 `}
+    ${(window.RELEASES||[]).filter(r=>r.event===e.id).map(r=>`<div class="layer"><div class="lhead">RELEASED HERE</div><a href="#${r.id}" class="onfile-link">${r.id} — ${r.title} / ${r.artists.map(a=>ARTISTS[a].name).join(' / ')} →</a></div>`).join('')}
     ${eventLinks ? `<div class="layer"><div class="lhead">LINKS</div><div class="related-list">${eventLinks}</div></div>` : ''}
   `;
 }
@@ -430,6 +534,7 @@ function selectNode(id){
       <div class="netlinks">${links}</div>
       ${(a.members||[]).length?`<div class="label" style="margin-top:10px">MEMBERS</div><div class="netfiles">${a.members.map(m=>`<a href="#" onclick="event.preventDefault(); selectNode('${m}')">${ARTISTS[m].name} →</a>`).join('')}</div>`:''}
       ${groupsOf(id).length?`<div class="label" style="margin-top:10px">MEMBER OF</div><div class="netfiles">${groupsOf(id).map(g=>`<a href="#" onclick="event.preventDefault(); selectNode('${g.id}')">${g.name} →</a>`).join('')}</div>`:''}
+      ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); document.getElementById('netdetail').classList.remove('open'); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
       <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
   } else if(SPACES[id]){
     const s=SPACES[id];
@@ -449,7 +554,9 @@ function selectNode(id){
 function route(){
   const h=decodeURIComponent(location.hash.slice(1)); if(!h) return;
   const ev=EVENTS.find(e=>e.id.toLowerCase()===h.toLowerCase());
+  const rel=RELEASES.find(r=>r.id.toLowerCase()===h.toLowerCase());
   if(ev) (ev.status==='ARCHIVED' ? openFolder(ev.id) : openFile(ev.id));
+  else if(rel) openRelease(rel.id);
   else if(document.getElementById('view-'+h)) showView(h);
 }
 route(); addEventListener('hashchange', route);
