@@ -11,7 +11,9 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<!-- bump BUILD with every update so browsers fetch the new files straight away -->
+<script>window.PULSE_BUILD="2026-10-19b";</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-10-19b">
 </head>
 <body>
 
@@ -133,7 +135,7 @@
   <div id="lightbox-cap"></div>
 </div>
 
-<script src="config.js"></script>
+<script src="config.js?v=2026-10-19b"></script>
 <script>
 /* Loads the content, then starts the site — without making visitors wait for Google:
    1) the copy saved in this browser from the last visit shows straight away;
@@ -195,7 +197,7 @@
     Object.values(ARTISTS).forEach(a=>{ a.members=(a.members||[]).filter(known); });
     window.ABOUT_IMAGE = st.aboutImage || '';
     window.TYPE_LABELS = st.typeLabels || { LIVE:'LIVE PERFORMANCE', WORKSHOP:'WORKSHOP' };
-    const s=document.createElement('script'); s.src='assets/app.js'; document.body.appendChild(s);
+    const s=document.createElement('script'); s.src='assets/app.js?v='+window.PULSE_BUILD; document.body.appendChild(s);
   }catch(err){
     console.error(err);
     document.querySelector('main').insertAdjacentHTML('afterbegin','<div style="padding:90px 16px;max-width:600px;margin:0 auto" class="label">NO SIGNAL — the content files could not be loaded. If you opened index.html straight from your computer, see README (preview section).</div>');
