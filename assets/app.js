@@ -182,7 +182,7 @@ document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e
       <div class="rel-artist">${artistNames(r.artists)}</div>
       ${r.blurb?`<p class="rel-blurb">${r.blurb}</p>`:''}
       <div class="nt-meta">
-        ${row('FILE', `<span style="color:var(--sig)">${r.id}</span> / ${r.format||'RELEASE'}`)}
+        ${row(r.catalog?'CAT. NO.':'FILE', `<span style="color:var(--sig)">${r.catalog||r.id}</span> / ${r.format||'RELEASE'}`)}
         ${row('RELEASED', r.date||'')}
         ${row('LABEL', r.label||'')}
         ${row('LAUNCH', ev?`<a href="#${ev.id}">${ev.id} — ${ev.name}</a>`:'')}
@@ -190,10 +190,28 @@ document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e
       <div class="nt-actions" style="margin-top:16px">
         ${listen?`<a href="${listen.url}" target="_blank" rel="noopener" class="tune-btn primary">LISTEN →</a>`:''}
         <button class="tune-btn${listen?'':' primary'}" onclick="openRelease('${r.id}')">FULL RELEASE →</button>
+        ${RELEASES.length>1?`<button class="tune-btn" onclick="showView('releases')">ALL RELEASES →</button>`:''}
       </div>
       ${socialLinks(r.artists)?`<div class="rel-socials">${socialLinks(r.artists)}</div>`:''}
     </div>
   </div>`;
+})();
+// RELEASES page: every release as a cover card, newest first
+(function(){
+  const grid=document.getElementById('release-grid'); if(!grid) return;
+  const list=[...RELEASES].sort((x,y)=>parseDate(y.date||'1.1.1970')-parseDate(x.date||'1.1.1970'));
+  if(!list.length){ grid.innerHTML='<div class="release-empty label">NO RELEASES ON FILE YET</div>'; return; }
+  list.forEach(r=>{
+    const out = r.date && parseDate(r.date) <= new Date();
+    const c=document.createElement('button'); c.className='rel-card'; c.type='button';
+    c.innerHTML=`<div class="rc-cover${r.coverUrl?'':' empty'}">${r.coverUrl?`<img src="${r.coverUrl}" alt="${r.title} cover" loading="lazy">`:'COVER — INCOMING'}</div>
+      <div class="rc-top"><span class="rc-cat">${r.catalog||r.id}</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+      <div class="rc-title">${r.title}</div>
+      <div class="rc-artist">${r.artists.map(a=>ARTISTS[a].name).join(' / ')}</div>
+      <div class="rc-meta">${[r.format||'RELEASE', r.date, r.label].filter(Boolean).join(' · ')}${r.from&&RELEASES.find(x=>x.id===r.from)?`<br>from ${RELEASES.find(x=>x.id===r.from).title}`:''}</div>`;
+    c.onclick=()=>openRelease(r.id);
+    grid.appendChild(c);
+  });
 })();
 // the full release file — the same slide-in panel the event files use
 function openRelease(id){
@@ -215,7 +233,7 @@ function openRelease(id){
   document.getElementById('file-content').innerHTML = `
     <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin:30px 0 20px">
       <div class="file-head" style="flex:1; min-width:180px; margin:0">
-        <div class="fid">PULSE INDEX / ${r.format||'RELEASE'} / FILE ${r.id}</div>
+        <div class="fid">PULSE INDEX / ${r.format||'RELEASE'} / ${r.catalog?'CAT. NO. '+r.catalog:'FILE '+r.id}</div>
         <div class="ftitle">${r.title}</div>
         <div class="rel-artist" style="font-size:14px">${artistNames(r.artists)}</div>
         <div class="mono" style="font-size:11px;color:var(--grey);margin-top:6px">${[r.date,r.label].filter(Boolean).join(' · ')}</div>
@@ -225,6 +243,10 @@ function openRelease(id){
     ${layer('ABOUT THE RECORD', r.about ? bioHtml(r.about,'margin:0 0 10px;max-width:640px') : (r.blurb?`<p style="margin:0">${r.blurb}</p>`:''))}
     ${layer('TRACKLIST', tracks?`<ol class="tracklist">${tracks}</ol>`:'')}
     ${layer('LISTEN / LINKS', links?`<div class="related-list">${links}</div>`:'')}
+    ${(()=>{ const parent=RELEASES.find(x=>x.id===r.from), kids=RELEASES.filter(x=>x.from===r.id);
+      return (parent?layer('FROM', `<a href="#${parent.id}" class="onfile-link">${parent.title} — ${parent.format||'RELEASE'}${parent.catalog?' / '+parent.catalog:''} →</a>`):'')
+        + (kids.length?layer('SINGLES', `<div class="related-list">${kids.map(k=>`<a href="#${k.id}">${k.title}${k.date?' — '+k.date:''}</a>`).join('')}</div>`):''); })()}
+    ${(r.gallery||[]).length?layer('VISUAL IDENTITY', `<div class="gallery-grid">${r.gallery.map(g=>galleryItem(g.src,g.cap,g.thumb)).join('')}</div>`):''}
     ${sections || layer('PROCESS', `<div class="doc-incoming"><span class="status-tag">PROCESS NOTES INCOMING</span><span class="label">Notes, footage and interviews on the making of this record will appear here.</span></div>`)}
     ${layer('ARTISTS', r.artists.map(artistBlock).join(''))}
     ${ev?layer('LAUNCHED AT', `<a href="#${ev.id}" class="onfile-link">${ev.id} — ${ev.name}, ${ev.date} →</a>`):''}`;
@@ -302,9 +324,9 @@ function artistBlock(a){
     </div>
   </div>`;
 }
-function galleryItem(src, cap){
+function galleryItem(src, cap, thumb){
   return `<div class="gallery-item" onclick="openLightbox('${src}','${(cap||'').replace(/'/g,"\\'")}')" style="cursor:pointer">
-    <img src="${src}" alt="${cap||''}"><div class="cap">${cap||''}</div>
+    <img src="${thumb||src}" alt="${cap||''}" loading="lazy"><div class="cap">${cap||''}</div>
   </div>`;
 }
 function fileLayers(e){
@@ -321,8 +343,8 @@ function fileLayers(e){
   const ticketBlock = e.ticketUrl ? `<div class="layer"><div class="lhead">TICKETS</div><a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="display:inline-block">GET TICKETS →</a></div>` : '';
 
   // Visual Identity holds only ADDITIONAL art (poster shown once, in the header, not repeated here)
-  const visualAssets = (e.promoCards||[]).map(c=>galleryItem(c.src, c.cap));
-  const docPhotos = (e.docPhotos||[]).map(p=>galleryItem(p.src, p.cap));
+  const visualAssets = (e.promoCards||[]).map(c=>galleryItem(c.src, c.cap, c.thumb));
+  const docPhotos = (e.docPhotos||[]).map(p=>galleryItem(p.src, p.cap, p.thumb));
   const videoItems = (e.videos||[]).map(v=>`<a class="gallery-item video-link" href="https://youtu.be/${v.id}" target="_blank" rel="noopener" style="grid-column:1/-1;text-decoration:none">
     <div style="font-family:var(--disp);font-weight:600;font-size:15px">▶ ${v.cap}</div>
     <div class="cap">Video on YouTube — opens in a new tab ↗</div></a>`);
@@ -534,7 +556,7 @@ function selectNode(id){
       <div class="netlinks">${links}</div>
       ${(a.members||[]).length?`<div class="label" style="margin-top:10px">MEMBERS</div><div class="netfiles">${a.members.map(m=>`<a href="#" onclick="event.preventDefault(); selectNode('${m}')">${ARTISTS[m].name} →</a>`).join('')}</div>`:''}
       ${groupsOf(id).length?`<div class="label" style="margin-top:10px">MEMBER OF</div><div class="netfiles">${groupsOf(id).map(g=>`<a href="#" onclick="event.preventDefault(); selectNode('${g.id}')">${g.name} →</a>`).join('')}</div>`:''}
-      ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); document.getElementById('netdetail').classList.remove('open'); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
+      ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); document.getElementById('netdetail').classList.remove('open'); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.catalog||r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
       <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
   } else if(SPACES[id]){
     const s=SPACES[id];
@@ -556,7 +578,14 @@ function route(){
   const ev=EVENTS.find(e=>e.id.toLowerCase()===h.toLowerCase());
   const rel=RELEASES.find(r=>r.id.toLowerCase()===h.toLowerCase());
   if(ev) (ev.status==='ARCHIVED' ? openFolder(ev.id) : openFile(ev.id));
-  else if(rel) openRelease(rel.id);
   else if(document.getElementById('view-'+h)) showView(h);
+  else if(rel) openRelease(rel.id);
 }
 route(); addEventListener('hashchange', route);
+
+document.addEventListener('error', e=>{
+  const img=e.target; if(!(img instanceof HTMLImageElement) || img.dataset.failed) return;
+  img.dataset.failed='1';
+  const box=document.createElement('div'); box.className='img-missing'; box.textContent='IMAGE UNAVAILABLE';
+  img.replaceWith(box);
+}, true);
