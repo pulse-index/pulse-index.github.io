@@ -20,6 +20,7 @@
   <nav class="channels">
     <button data-v="signal" class="active">SIGNAL</button>
     <button data-v="archive">ARCHIVE</button>
+    <button data-v="releases">RELEASES</button>
     <button data-v="network">NETWORK</button>
     <button data-v="about">ABOUT</button>
   </nav>
@@ -57,6 +58,15 @@
       <div class="label" style="margin-top:4px">Select a folder to open the full file — newest at the top</div>
     </div>
     <div class="cabinet" id="cabinet"></div>
+  </section>
+
+  <!-- RELEASES -->
+  <section id="view-releases" class="view">
+    <div class="archive-head">
+      <div class="label">RELEASES / CATALOGUE</div>
+      <div class="label" style="margin-top:4px">Records by artists in the index — select one to open the full release</div>
+    </div>
+    <div class="release-grid" id="release-grid"></div>
   </section>
 
   <!-- NETWORK -->
