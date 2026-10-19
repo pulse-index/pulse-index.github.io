@@ -6,5 +6,5 @@
 
    Leave it empty ("") to run the site from the files in /content instead. */
 window.PULSE_CONFIG = {
-  endpoint: "",
+  endpoint: "https://script.google.com/macros/s/AKfycbxXDcJvyUT5aU98uLrJ6M9MObostRXmp1phRb-eJ7T0fRwAvyQ3QnuURpRvwpfYY9vK6A/exec",
 };
