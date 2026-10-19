@@ -3,7 +3,9 @@
     "id": "wave-i",
     "title": "WAVE I",
     "featured": true,
-    "artists": ["static-channel"],
+    "artists": [
+      "static-channel"
+    ],
     "format": "ALBUM",
     "date": "16.10.2026",
     "catalog": "NPS012 | PIX-001",
@@ -11,28 +13,77 @@
     "from": "",
     "event": "003",
     "coverUrl": "https://lh3.googleusercontent.com/d/1apOqlgR6sNpePH9B7XPESSBXkBpwBhYe=w1600",
-    "gallery": [
-      { "src": "https://lh3.googleusercontent.com/d/1ZxoxYr7A12Xua3I3blmqPlaOi136l8uV=w1600", "thumb": "https://lh3.googleusercontent.com/d/1ZxoxYr7A12Xua3I3blmqPlaOi136l8uV=w600", "cap": "Static Channel — Wave I — Morning Shadows" },
-      { "src": "https://lh3.googleusercontent.com/d/1P1iew80NoGFcK-dTV9pBb4thL4jVOHLI=w1600", "thumb": "https://lh3.googleusercontent.com/d/1P1iew80NoGFcK-dTV9pBb4thL4jVOHLI=w600", "cap": "Static Channel — Wave I — Relent" },
-      { "src": "https://lh3.googleusercontent.com/d/142MKU8qqMd9FVPbUEDz26JGAjL236-Eh=w1600", "thumb": "https://lh3.googleusercontent.com/d/142MKU8qqMd9FVPbUEDz26JGAjL236-Eh=w600", "cap": "Static Channel — Wave I — Bender's Uncle" },
-      { "src": "https://lh3.googleusercontent.com/d/1yL9Y_iJtJTtZ5dPzKqsrckuyBV9NAtx3=w1600", "thumb": "https://lh3.googleusercontent.com/d/1yL9Y_iJtJTtZ5dPzKqsrckuyBV9NAtx3=w600", "cap": "Static Channel — Wave I — Love WhaT Is Left" },
-      { "src": "https://lh3.googleusercontent.com/d/1sawnrTfjRJwxeocu5btbpyUt4YJbJE_B=w1600", "thumb": "https://lh3.googleusercontent.com/d/1sawnrTfjRJwxeocu5btbpyUt4YJbJE_B=w600", "cap": "Static Channel — Wave I — Soft Tension" }
-    ],
+    "gallery": [],
     "blurb": "Static Channel's new album, released live at Pulse Index x Mindscape, Studio dB Berlin.",
     "about": "Wave I is an improvised ambient electronic album born from a time of stillness - when\nthe usual rhythms of live performance fell away, and creation itself became a form of\nconnection. In these spacious moments, we turned to longform synth and bass guitar\nimprovisations, allowing each piece to unfold naturally, without expectation.\nLater curated and shaped for emotional clarity, the recordings capture both the\nimmediacy of live creation and the quiet beauty of unexpected turns. It’s an album\nthat stretches time - where making becomes listening, and structure emerges through\npresence.\nMixed by longtime collaborator Daphne Zoe Dahlia, Wave I highlights minimal textures\nand narrative flow. It is the first of two companion albums from this period, each\npaired with abstract visuals that drift between generative forms and fragmented\nmemories - dreamlike, tactile, and suspended just out of reach.",
     "tracks": [
-      { "title": "Morning Shadows", "length": "07:30" },
-      { "title": "Relent", "length": "07:17" },
-      { "title": "Benders Uncle", "length": "10:48" },
-      { "title": "Love What Is Left", "length": "12:08" },
-      { "title": "Soft Tension", "length": "07:38" }
+      {
+        "title": "Morning Shadows",
+        "length": "07:30",
+        "art": {
+          "src": "https://lh3.googleusercontent.com/d/1ZxoxYr7A12Xua3I3blmqPlaOi136l8uV=w1600",
+          "thumb": "https://lh3.googleusercontent.com/d/1ZxoxYr7A12Xua3I3blmqPlaOi136l8uV=w600",
+          "cap": "Static Channel — Wave I — Morning Shadows"
+        }
+      },
+      {
+        "title": "Relent",
+        "length": "07:17",
+        "art": {
+          "src": "https://lh3.googleusercontent.com/d/1P1iew80NoGFcK-dTV9pBb4thL4jVOHLI=w1600",
+          "thumb": "https://lh3.googleusercontent.com/d/1P1iew80NoGFcK-dTV9pBb4thL4jVOHLI=w600",
+          "cap": "Static Channel — Wave I — Relent"
+        }
+      },
+      {
+        "title": "Benders Uncle",
+        "length": "10:48",
+        "art": {
+          "src": "https://lh3.googleusercontent.com/d/142MKU8qqMd9FVPbUEDz26JGAjL236-Eh=w1600",
+          "thumb": "https://lh3.googleusercontent.com/d/142MKU8qqMd9FVPbUEDz26JGAjL236-Eh=w600",
+          "cap": "Static Channel — Wave I — Bender's Uncle"
+        }
+      },
+      {
+        "title": "Love What Is Left",
+        "length": "12:08",
+        "art": {
+          "src": "https://lh3.googleusercontent.com/d/1yL9Y_iJtJTtZ5dPzKqsrckuyBV9NAtx3=w1600",
+          "thumb": "https://lh3.googleusercontent.com/d/1yL9Y_iJtJTtZ5dPzKqsrckuyBV9NAtx3=w600",
+          "cap": "Static Channel — Wave I — Love WhaT Is Left"
+        }
+      },
+      {
+        "title": "Soft Tension",
+        "length": "07:38",
+        "art": {
+          "src": "https://lh3.googleusercontent.com/d/1sawnrTfjRJwxeocu5btbpyUt4YJbJE_B=w1600",
+          "thumb": "https://lh3.googleusercontent.com/d/1sawnrTfjRJwxeocu5btbpyUt4YJbJE_B=w600",
+          "cap": "Static Channel — Wave I — Soft Tension"
+        }
+      }
     ],
     "links": [
-      { "label": "Bandcamp", "url": "https://staticchannelmusic.bandcamp.com/album/wave-i" },
-      { "label": "SoundCloud", "url": "https://soundcloud.com/staticchannel" },
-      { "label": "Apple Music", "url": "https://music.apple.com/fi/album/wave-i/6813976697" },
-      { "label": "YouTube", "url": "https://www.youtube.com/@static_channel" },
-      { "label": "IG", "url": "https://www.instagram.com/staticchannelmusic/" }
+      {
+        "label": "Bandcamp",
+        "url": "https://staticchannelmusic.bandcamp.com/album/wave-i"
+      },
+      {
+        "label": "SoundCloud",
+        "url": "https://soundcloud.com/staticchannel"
+      },
+      {
+        "label": "Apple Music",
+        "url": "https://music.apple.com/fi/album/wave-i/6813976697"
+      },
+      {
+        "label": "YouTube",
+        "url": "https://www.youtube.com/@static_channel"
+      },
+      {
+        "label": "IG",
+        "url": "https://www.instagram.com/staticchannelmusic/"
+      }
     ],
     "sections": []
   }
