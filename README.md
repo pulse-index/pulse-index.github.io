@@ -25,7 +25,7 @@ Content can come from a Google Sheet instead of the files in `content/`:
 
 - The sheet's Apps Script (Extensions → Apps Script) publishes all tabs as one web app.
 - `config.js` holds that web app's URL (ends in `/exec`). With a URL there, the site reads the sheet on every visit.
-- If the sheet can't be reached within 8 seconds, the site uses the files in `content/` as a backup. Leave the URL empty to run from the files only.
+- Visitors never wait for Google: the site shows the copy saved in their browser from the last visit (or, on a first visit, the files in `content/` if the sheet takes longer than 1.5 s), and loads the sheet in the background. If the sheet has something newer, a "NEW SIGNAL — UPDATE" marker appears in the top bar. Leave the URL empty to run from the files only.
 - Changes in the sheet show on the next page load. If one doesn't, use Pulse Index → Refresh the website now in the sheet's menu.
 - Pulse Index → Check for problems finds typos in ids, missing venues and badly written dates.
 

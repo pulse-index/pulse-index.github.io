@@ -326,3 +326,11 @@ main{padding-top:var(--barh,52px);}
 .img-missing{aspect-ratio:4/5; width:100%; display:flex; align-items:center; justify-content:center; font-size:10px; letter-spacing:.08em; color:var(--grey);
   background:repeating-linear-gradient(45deg,var(--line) 0 1px,transparent 1px 7px); border:1px solid var(--line);}
 .nt-poster .img-missing, .rc-cover .img-missing{aspect-ratio:1/1; border:0;}
+
+/* "new signal" marker: fresher content arrived after the page loaded */
+#new-signal{margin-left:auto; margin-right:10px; display:flex; align-items:center; gap:6px; padding:5px 10px; font-size:10px; letter-spacing:.06em;
+  color:var(--sig); border:1px solid var(--sig); background:var(--paper);}
+#new-signal .dot{width:6px; height:6px; border-radius:50%; background:var(--sig); animation:pulse 1.6s infinite;}
+#new-signal:hover{background:var(--sig); color:#fff;}
+#new-signal:hover .dot{background:#fff;}
+@media(max-width:560px){ #new-signal{margin-right:0;} }
