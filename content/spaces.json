@@ -19,6 +19,8 @@
       "SPACE"
     ],
     "description": "285 m² warehouse space — photo & film studio hosting performances, pop-ups and screenings.",
+    "address": "",
+    "mapUrl": "",
     "link": "https://www.instagram.com/studio.db.berlin/"
   },
   {
@@ -30,15 +32,19 @@
     ],
     "description": "A Helsinki-based association formed in 1995 to promote sonic arts in Finland, organising concerts, workshops, and internet-, film- and gallery-based projects.",
     "address": "Nokiantie 2-4, 00510 Helsinki",
+    "mapUrl": "",
     "link": "https://aanenlumo.com/"
   },
   {
-    "id": "malatorium",
+    "id": "malatorium-art-space",
     "name": "Malatorium Art Space",
     "city": "Warsaw",
     "tags": [
       "SPACE"
     ],
+    "description": "",
+    "address": "",
+    "mapUrl": "",
     "link": "https://www.instagram.com/malatorium_artspace/"
   }
 ]

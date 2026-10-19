@@ -4,14 +4,15 @@
     "name": "Static Channel",
     "role": "AV duo",
     "city": "Berlin / Helsinki",
-    "members": [
-      "alexiso",
-      "monikahauck"
-    ],
     "tags": [
       "AUDIO",
       "VISUAL"
     ],
+    "members": [
+      "alex-iso",
+      "monika-hauck"
+    ],
+    "photoUrl": "",
     "bio": "Canadian audiovisual duo based in Berlin and Helsinki — new media artist/synthesist Monika Hauck and electronic producer/bass guitarist Alex Iso — shaping immersive, improvised dialogues between sound, image, space and movement across installations and live performance.",
     "links": [
       {
@@ -28,6 +29,8 @@
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Istanbul and Helsinki-based DJ working between hypnotic techno and experimental sound explorations. Residencies at Defragged Sessions, We R Special and Club Kaiku; hosts the monthly show \"Pearl Rush\" on IDA Radio Helsinki.",
     "links": [
       {
@@ -35,12 +38,12 @@
         "url": "https://www.instagram.com/ozandenizizci/"
       },
       {
-        "label": "RA",
-        "url": "https://ra.co/dj/ozan"
-      },
-      {
         "label": "SC",
         "url": "https://soundcloud.com/ozandenizizci"
+      },
+      {
+        "label": "RA",
+        "url": "https://ra.co/dj/ozan"
       }
     ]
   },
@@ -52,6 +55,8 @@
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Playful, seductive sets that move from shadow to shine, light to lust, dancing on the edge of sonic genres and genders.",
     "links": [
       {
@@ -65,13 +70,15 @@
     ]
   },
   {
-    "id": "alexiso",
+    "id": "alex-iso",
     "name": "Alex Iso",
     "role": "live / DJ",
     "city": "Berlin",
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Based in Berlin by way of Guelph, Canada. Fuses indie origins, organic complexity and techno energy in live and DJ sets; one half of audiovisual duo Static Channel.",
     "links": [
       {
@@ -81,26 +88,20 @@
     ]
   },
   {
-    "id": "lauramrls",
+    "id": "laura-mrls",
     "name": "Laura MRLS",
     "role": "live / DJ / producer",
     "city": "Helsinki",
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Helsinki-based DJ, producer and live artist. Introspective live sets build emotionally dense, longform journeys through drone, field recordings and spatial composition, blurring dark ambient and experimental sound. Resident at SUBVERTED and Monument; curates the Affine Dark Science project.",
     "links": [
       {
-        "label": "Live at Solstice 2024",
-        "url": "https://soundcloud.com/postbar-solstice/laura-mrls-live-at-solstice-2024"
-      },
-      {
         "label": "IG",
         "url": "https://www.instagram.com/la.mrls/"
-      },
-      {
-        "label": "FB",
-        "url": "https://www.facebook.com/LauraMrlsMusic"
       },
       {
         "label": "SC",
@@ -111,28 +112,38 @@
         "url": "https://ra.co/dj/lauramrls"
       },
       {
+        "label": "Live at Solstice 2024",
+        "url": "https://soundcloud.com/postbar-solstice/laura-mrls-live-at-solstice-2024"
+      },
+      {
+        "label": "FB",
+        "url": "https://www.facebook.com/LauraMrlsMusic"
+      },
+      {
         "label": "AFDS Bandcamp",
         "url": "https://affinedarkscience.bandcamp.com/"
       }
     ]
   },
   {
-    "id": "vjsolu",
+    "id": "vj-solu",
     "name": "VJ Solu",
     "role": "VJ",
     "city": "",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Visualises surreal environments, symbolic narratives and flowing compositions — organic elements meeting harsher forms, from flowers to geometric shapes. Background in fine art and creative new media; works across 3D animation, node-based visuals and live VJing.",
     "links": [
       {
-        "label": "Portfolio",
-        "url": "https://inkaj.gitlab.io/portfolio"
-      },
-      {
         "label": "IG",
         "url": "https://www.instagram.com/inkerinkelinen/"
+      },
+      {
+        "label": "Portfolio",
+        "url": "https://inkaj.gitlab.io/portfolio"
       }
     ]
   },
@@ -144,6 +155,8 @@
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Canadian/Polish VJ and new media artist based in Helsinki, creating immersive, surreal visuals for live performances, festivals and installations — merging abstraction, memory and movement into responsive digital landscapes.",
     "links": [
       {
@@ -153,13 +166,15 @@
     ]
   },
   {
-    "id": "ttime",
+    "id": "t-time",
     "name": "T-Time",
     "role": "visual / technical design",
     "city": "Helsinki",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Helsinki-based computational designer and full-stack developer working across installation design, live visuals and technical setups for immersive, interactive experiences, often with VR/AR. Part of Nasha Studio.",
     "links": [
       {
@@ -173,13 +188,15 @@
     ]
   },
   {
-    "id": "belka",
+    "id": "белка",
     "name": "белка",
     "role": "sound artist",
     "city": "",
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Soundscapes built from cassette tape loops, modular synthesis and field recordings — augmenting and degrading raw material into resonant echoes of nostalgia and spectral presence. Frequent forest explorations inform the work's organic, primal quality.",
     "links": [
       {
@@ -189,13 +206,15 @@
     ]
   },
   {
-    "id": "dinavi",
+    "id": "vj-din-avi",
     "name": "VJ DIN-AVI",
     "role": "VJ / visual designer",
     "city": "",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Visuals moving through lost knowledge, esotericism and digitalism, drawing parallels between the alchemical and the computational — charts, symbols and incantations alongside digital artefacts, ancient relics and forgotten environments.",
     "links": [
       {
@@ -205,13 +224,15 @@
     ]
   },
   {
-    "id": "katrino",
+    "id": "katrinø-brægnum",
     "name": "Katrinø Brægnum",
     "role": "sound & dance artist",
     "city": "Berlin",
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Katrine Bregnum is a Danish-born, Berlin-based sound and dance artist, oscillating between hardness and softness, composed structures and improvisation — creating landscapes that are both hypnotic and unpredictable.\n\nIn this live set she moves between acoustic and electronic, accompanied by Carri on Western guitar, e-guitar and pedals. Kat uses her voice and analog synths as both instruments and navigator, exploring improvisation, extended vocal techniques and electronic effects to stretch perceptions of time, resonance and space.",
     "links": [
       {
@@ -228,6 +249,8 @@
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Raw Image, the live techno duo of Leo Wieber and Cameron Hoy (Keanu Raves), have been collaborating since meeting through a summer internship at Berlin-based music production school 343 Labs in 2025. The pair quickly bonded over a shared appreciation for Tresor Records and hardware-focused techno production, which inspired them to begin regular improvised jam sessions together.\n\nThrough these sessions, the duo discovered a natural affinity for playing together with minimal communication, instead responding intuitively to each other’s musical ideas. With a strong emphasis on improvisation and deep exploration of their instruments, each Raw Image performance is shaped in real time — resulting in sets that are truly unique and unpredictable.",
     "links": [
       {
@@ -241,44 +264,50 @@
     ]
   },
   {
-    "id": "zygonaut",
+    "id": "dj-zygonaut",
     "name": "DJ Zygonaut",
     "role": "DJ / producer",
     "city": "Berlin",
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Zygonaut is the techno project of Berlin-based Indian DJ and producer Shakthi Prasad.\n\nRooted in percussion, his sets move through hypnotic, minimal and tribal techno, built around rolling grooves, repetitive rhythms and deep psychedelic textures. His background as a drummer and electronic musician shapes an approach that is rhythmic first, with long transitions and gradual shifts rather than quick changes in energy.\n\nHe has played across Berlin at KitKatClub, Prisma, Bulbul and Crack Bellmer, with festival appearances at Fusion Festival, Litha Gathering and 8DOC × TIEFSEE. He is also the founder of Mindscape, a Berlin event series bringing together electronic music, visual art and community.\n\nHis sets increasingly include unreleased material and works in progress, using the dancefloor as a place to test and develop the Zygonaut sound.",
     "links": []
   },
   {
-    "id": "calvin",
+    "id": "calvin-guillot",
     "name": "Calvin Guillot",
     "role": "workshop instructor / new media artist",
     "city": "Helsinki",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Multidisciplinary artist and creative technologist from Colombia, based in Helsinki. Works across interactive installations, generative art and parametric sculpture at the intersection of art, science and technology; teaches computational art and TouchDesigner at university level.",
     "links": [
       {
-        "label": "Site",
-        "url": "https://calvinguillot.com"
-      },
-      {
         "label": "IG",
         "url": "https://www.instagram.com/cgxatlas/"
+      },
+      {
+        "label": "Site",
+        "url": "https://calvinguillot.com"
       }
     ]
   },
   {
-    "id": "vitalii",
+    "id": "vitalii-mieleshkoi",
     "name": "Vitalii Mieleshkoi",
     "role": "lighting designer",
     "city": "",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "",
     "links": []
   },
@@ -290,17 +319,21 @@
     "tags": [
       "AUDIO"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "",
     "links": []
   },
   {
-    "id": "lukasruoff",
+    "id": "lukas-ruoff-ungrid",
     "name": "Lukas Ruoff (ungrid)",
     "role": "VJ / visual artist (visuals for Raw Image)",
     "city": "Berlin",
     "tags": [
       "VISUAL"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "Visual artist merging cyber-aesthetics, CGI imagery and AI-generated textures, as well as motion graphics and glitch, into immersive, multilayered audiovisual environments. As part of Berlin-based visual collective ungrid and a lecturer at HTW Berlin, he is always searching for new, digital ways to visualise music.",
     "links": [
       {
@@ -308,23 +341,25 @@
         "url": "https://www.instagram.com/ruoff_/"
       },
       {
-        "label": "ungrid",
-        "url": "https://www.instagram.com/ungrid_live/"
-      },
-      {
         "label": "Site",
         "url": "https://ruoffdesign.com/home/"
+      },
+      {
+        "label": "ungrid",
+        "url": "https://www.instagram.com/ungrid_live/"
       }
     ]
   },
   {
-    "id": "monikahauck",
+    "id": "monika-hauck",
     "name": "Monika Hauck",
     "role": "documentation",
     "city": "Berlin / Helsinki",
     "tags": [
       "DOCUMENTATION"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "New media artist and synthesist; one half of audiovisual duo Static Channel.",
     "links": [
       {
@@ -334,42 +369,46 @@
     ]
   },
   {
-    "id": "alexramirez",
+    "id": "alex-ramirez",
     "name": "Alex Ramirez",
     "role": "photographer / videographer",
     "city": "Helsinki",
     "tags": [
       "DOCUMENTATION"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "",
     "links": [
       {
-        "label": "Site",
-        "url": "https://alexinthepit.com"
-      },
-      {
         "label": "IG",
         "url": "https://instagram.com/alexinthepit"
+      },
+      {
+        "label": "Site",
+        "url": "https://alexinthepit.com"
       }
     ]
   },
   {
-    "id": "robertopuentes",
+    "id": "roberto-puentes",
     "name": "Roberto Puentes",
     "role": "photographer / videographer",
     "city": "Helsinki",
     "tags": [
       "DOCUMENTATION"
     ],
+    "members": [],
+    "photoUrl": "",
     "bio": "",
     "links": [
       {
-        "label": "Site",
-        "url": "https://www.robertopuentes.com"
-      },
-      {
         "label": "IG",
         "url": "https://www.instagram.com/robertopuentess/"
+      },
+      {
+        "label": "Site",
+        "url": "https://www.robertopuentes.com"
       }
     ]
   }
