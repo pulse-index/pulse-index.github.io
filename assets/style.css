@@ -425,3 +425,14 @@ main{padding-top:var(--barh,52px);}
 /* button rows (used by the NETWORK filters) */
 .scan-controls{display:flex; gap:8px; margin-top:12px;}
 .scan-controls button{padding:8px 14px; font-size:11px;}
+/* v6: smaller play button, full "Artist — Release — Track" titles */
+.mp{grid-template-columns:32px 1fr; gap:12px; padding:10px 12px 8px;}
+.mp-play{width:32px; height:32px; font-size:10px;}
+.mp-top{align-items:flex-start;}
+.mp-title{white-space:normal; overflow:visible; font-size:13px; line-height:1.35;}
+.mp-lead{color:var(--grey);}
+.mp-time{padding-top:2px;}
+/* intro line now closes the front page */
+#view-signal > .intro{margin:56px 0 0; padding-top:20px; border-top:1px solid var(--line); font-size:15px; color:var(--grey);}
+#view-signal > #next-tx{margin-top:4px;}
+#view-signal > #next-tx > .tba{border-top:0; padding-top:4px;}

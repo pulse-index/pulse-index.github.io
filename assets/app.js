@@ -46,7 +46,7 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
     // nothing scheduled: a slim "TBA" strip, pointing at the last event and where announcements go
     box.innerHTML=`<div class="tba">
       <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">TBA</span></div>
-      <div class="tba-title">Scanning for the next signal<span class="tba-cursor">_</span></div>
+      <div class="tba-title">Next date to be announced<span class="tba-cursor">_</span></div>
       <p class="tba-note">New dates go out first on Telegram.</p>
       <a class="tune-btn primary" href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener">GET NOTIFIED →</a>
     </div>`;
@@ -129,7 +129,7 @@ function scPlayer(r, url){
   const el=document.createElement('div'); el.className='mp';
   el.innerHTML=`<button type="button" class="mp-play" aria-label="Play">▶</button>
     <div class="mp-main">
-      <div class="mp-top"><span class="mp-title">${r.title}</span><span class="mp-time">0:00</span></div>
+      <div class="mp-top"><span class="mp-title"><span class="mp-lead">${[r.artists.map(a=>ARTISTS[a].name).join(' / '), r.title].filter(Boolean).join(' — ')}</span></span><span class="mp-time">0:00</span></div>
       <div class="mp-bar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100"><span class="mp-fill"></span></div>
       <div class="mp-foot"><span class="mp-nav"><button type="button" class="mp-prev" aria-label="Previous track">⏮</button><span class="mp-count"></span><button type="button" class="mp-next" aria-label="Next track">⏭</button></span>
         <a class="mp-src" href="${url}" target="_blank" rel="noopener">SoundCloud ↗</a></div>
@@ -140,9 +140,22 @@ function scPlayer(r, url){
   const frame=document.createElement('iframe');
   frame.allow='autoplay'; frame.title='SoundCloud'; frame.className='mp-frame'; frame.setAttribute('aria-hidden','true'); frame.tabIndex=-1;
   frame.src='https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false&color=%23e4531f';
+  const artist = r.artists.map(a=>ARTISTS[a].name).join(' / ');
+  const lead = [artist, r.title].filter(Boolean).join(' — ');
+  const norm = t => String(t||'').toLowerCase().replace(/[^a-z0-9]+/g,'');
+  // use the track name from our own tracklist when it matches; otherwise SoundCloud's, minus any artist/release prefix
+  function trackName(snd){
+    const sc = snd.title||'', k = norm(sc);
+    const ours = [...(r.tracks||[])].sort((a,b)=>b.title.length-a.title.length).find(t=>norm(t.title) && k.includes(norm(t.title)));
+    if(ours) return ours.title;
+    let t = sc;
+    [artist, r.title].forEach(p=>{ if(p && norm(t).startsWith(norm(p))){ t = t.slice(p.length).replace(/^[\s\-–—:|·]+/,''); } });
+    return t || sc;
+  }
   function setTitle(snd){
     if(!snd) return;
-    title.textContent = snd.title || r.title;
+    const t = trackName(snd);
+    title.innerHTML = `<span class="mp-lead">${lead}${t?' — ':''}</span>${t}`;
     count.textContent = n>1 ? `${idx+1} / ${n}` : '';
   }
   function bind(){
