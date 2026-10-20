@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-10-19c";</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-10-19c">
+<script>window.PULSE_BUILD="2026-10-20c";</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-10-20c">
 </head>
 <body>
 
@@ -32,23 +32,17 @@
 
   <!-- SIGNAL -->
   <section id="view-signal" class="view active">
-    <div class="scan-head">
-      <div class="label">SCAN — sweep through the index</div>
-      <div class="scan-controls">
-        <button id="scan-prev" aria-label="Previous">◀</button>
-        <button id="scan-play" aria-label="Pause scan">❚❚</button>
-        <button id="scan-next" aria-label="Next">▶</button>
+    <div id="tuner"></div>
+    <p class="intro">An artist-led platform for experimental audiovisual art — performances, workshops and an archive of what happened. Helsinki / Berlin.</p>
+    <div class="signal-grid">
+      <div class="signal-main">
+        <div id="next-tx"></div>
+        <div class="also-incoming" id="also-wrap" style="display:none">
+          <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
+          <div id="prog-list"></div>
+        </div>
       </div>
-    </div>
-    <div class="scan-wrap">
-      <div class="scan-track" id="scan-track"></div>
-      <div class="scan-line"></div>
-    </div>
-    <div id="next-tx"></div>
-    <div id="featured"></div>
-    <div class="also-incoming" id="also-wrap" style="display:none">
-      <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
-      <div id="prog-list"></div>
+      <aside class="signal-side" id="featured"></aside>
     </div>
     <div class="bottom-logo"><img src="images/site/logo.png" alt="Pulse Index"></div>
   </section>
@@ -135,7 +129,7 @@
   <div id="lightbox-cap"></div>
 </div>
 
-<script src="config.js?v=2026-10-19c"></script>
+<script src="config.js?v=2026-10-20c"></script>
 <script>
 /* Loads the content, then starts the site — without making visitors wait for Google:
    1) the copy saved in this browser from the last visit shows straight away;
