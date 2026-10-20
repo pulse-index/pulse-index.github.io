@@ -35,47 +35,6 @@ document.addEventListener('keydown', e=>{
   else { const f=document.querySelector('.folder.open'); if(f) closeFolder(f); }
 });
 
-/* ---------------- SCAN — continuous, seamless drift ---------------- */
-const scanItems = [...EVENTS].reverse(); // most recent first
-const SCAN_ITEM_W = 260, SCAN_GAP_W = 110; // gap = the strip of static between the last and first item
-let scanPlaying = true;
-(function(){
-  const track=document.getElementById('scan-track');
-  const setW = scanItems.length * SCAN_ITEM_W + SCAN_GAP_W;
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let offset = 0;
-  const openItem = it => it.status==='ARCHIVED' ? openFolder(it.id) : openFile(it.id);
-  // the item list is duplicated once so the drift can loop without ever visibly jumping
-  [...scanItems, ...scanItems].forEach((it,i)=>{
-    const el=document.createElement('div'); el.className='scan-item';
-    const lineup = lineupText(it);
-    el.innerHTML = `<span class="id">${it.id}</span><span class="name">${it.name}</span><span class="id" style="color:var(--grey)">${it.date}</span>`;
-    el.title = `${it.name} — ${TYPE_LABELS[it.type]||it.type}${lineup?' — '+lineup:''}`;
-    el.onclick = ()=>openItem(it);
-    track.appendChild(el);
-    if(i % scanItems.length === scanItems.length-1){
-      const gap=document.createElement('div'); gap.className='scan-static'; gap.setAttribute('aria-hidden','true');
-      track.appendChild(gap);
-    }
-  });
-
-  function apply(){ track.style.transform = `translateX(${-offset}px)`; }
-  function tick(){
-    if(scanPlaying && !reduceMotion){
-      offset += 0.4;
-      if(offset >= setW) offset -= setW;
-      apply();
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-  document.getElementById('scan-next').onclick=()=>{ offset=(offset+SCAN_ITEM_W)%setW; apply(); };
-  document.getElementById('scan-prev').onclick=()=>{ offset=(offset-SCAN_ITEM_W+setW)%setW; apply(); };
-  document.getElementById('scan-play').onclick=(e)=>{
-    scanPlaying=!scanPlaying; e.currentTarget.textContent = scanPlaying?'❚❚':'▶▶'; e.currentTarget.setAttribute('aria-label', scanPlaying?'Pause scan':'Play scan');
-  };
-})();
-
 /* ---------------- NEXT TRANSMISSION (front page) ----------------
    The soonest INCOMING event fills the front page; any others are
    listed underneath as compact rows. */
@@ -85,16 +44,13 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   const upcoming=[...incoming].sort((x,y)=>parseDate(x.date)-parseDate(y.date));
   if(!upcoming.length){
     // nothing scheduled: a slim "TBA" strip, pointing at the last event and where announcements go
-    const last=[...archived].sort((x,y)=>parseDate(y.date)-parseDate(x.date))[0];
     box.innerHTML=`<div class="tba">
-      <div class="tba-main">
-        <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">TBA</span></div>
-        <div class="tba-title">Next signal to be announced<span class="tba-cursor">_</span></div>
-        <div class="tba-note">Announcements go out first on Telegram and Instagram.</div>
-      </div>
-      <div class="nt-actions tba-actions">
+      <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">TBA</span></div>
+      <div class="tba-title">Next signal<br>to be announced<span class="tba-cursor">_</span></div>
+      <p class="tba-note">The next date goes out first on Telegram and Instagram.</p>
+      <div class="nt-actions">
         <a class="tune-btn primary" href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener">GET NOTIFIED →</a>
-        ${last?`<button class="tune-btn" onclick="openFolder('${last.id}')">LAST: ${last.id} ${last.name.toUpperCase()} →</button>`:''}
+        <a class="tune-btn" href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener">INSTAGRAM ↗</a>
       </div>
     </div>`;
     return;
@@ -166,35 +122,98 @@ function playYT(el){
   el.outerHTML=`<div class="yt playing"><iframe src="https://www.youtube-nocookie.com/embed/${el.dataset.yt}?autoplay=1&rel=0" title="Video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;
 }
 document.addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('yt')){ e.preventDefault(); playYT(e.target); } });
+// SoundCloud player: works with a track, a set/album or a profile link
+function scEmbed(url){
+  let parts=[]; try{ parts=new URL(url).pathname.split('/').filter(Boolean); }catch(_){}
+  const tall = parts.length<2 || parts[1]==='sets'; // sets & profiles show a tracklist, single tracks a slim bar
+  const src = 'https://w.soundcloud.com/player/?url='+encodeURIComponent(url)+'&color=%23e4531f&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false';
+  return `<div class="sc-embed"><iframe src="${src}" height="${tall?300:166}" loading="lazy" allow="autoplay" title="Listen on SoundCloud"></iframe></div>`;
+}
 (function(){
   const box=document.getElementById('featured');
   const r = RELEASES.find(x=>x.featured) || [...RELEASES].sort((x,y)=>parseDate(y.date||'1.1.1970')-parseDate(x.date||'1.1.1970'))[0];
-  if(!r) return;
-  const row=(k,v)=> v ? `<div class="row"><span>${k}</span><span>${v}</span></div>` : '';
+  if(!r){ box.remove(); document.querySelector('.signal-grid').classList.add('solo'); return; }
   const out = r.date && parseDate(r.date) <= new Date();
-  const ev = r.event ? EVENTS.find(e=>e.id===r.event) : null;
-  const listen = (r.links||[]).find(l=>/bandcamp|spotify|soundcloud|apple|tidal|listen/i.test(l.label+l.url));
-  box.innerHTML=`<div class="next-tx featured">
-    ${coverHtml(r,'nt-poster cover')}
-    <div>
-      <div class="nt-kicker"><span class="label">FEATURED RELEASE</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
-      <div class="nt-title">${r.title}</div>
-      <div class="rel-artist">${artistNames(r.artists)}</div>
-      ${r.blurb?`<p class="rel-blurb">${r.blurb}</p>`:''}
-      <div class="nt-meta">
-        ${row(r.catalog?'CAT. NO.':'FILE', `<span style="color:var(--sig)">${r.catalog||r.id}</span> / ${r.format||'RELEASE'}`)}
-        ${row('RELEASED', r.date||'')}
-        ${row('LABEL', r.label||'')}
-        ${row('LAUNCH', ev?`<a href="#${ev.id}">${ev.id} — ${ev.name}</a>`:'')}
+  const links = r.links||[];
+  const sc = links.find(l=>/soundcloud\.com/i.test(l.url));
+  box.innerHTML=`<div class="feat">
+    <div class="feat-head${r.coverUrl?'':' nocover'}">
+      <div>
+        <div class="nt-kicker"><span class="label">FEATURED RELEASE</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+        <div class="feat-title">${r.title}</div>
+        <div class="rel-artist">${artistNames(r.artists)}</div>
       </div>
-      <div class="nt-actions" style="margin-top:16px">
-        ${listen?`<a href="${listen.url}" target="_blank" rel="noopener" class="tune-btn primary">LISTEN →</a>`:''}
-        <button class="tune-btn${listen?'':' primary'}" onclick="openRelease('${r.id}')">FULL RELEASE →</button>
-        ${RELEASES.length>1?`<button class="tune-btn" onclick="showView('releases')">ALL RELEASES →</button>`:''}
-      </div>
-      ${socialLinks(r.artists)?`<div class="rel-socials">${socialLinks(r.artists)}</div>`:''}
+      ${r.coverUrl?`<button type="button" class="feat-cover" onclick="openRelease('${r.id}')" aria-label="Open ${esc(r.title)}"><img src="${r.coverUrl}" alt="${r.title} cover"></button>`:''}
+    </div>
+    ${sc?scEmbed(sc.url):''}
+    ${r.blurb?`<p class="rel-blurb">${r.blurb}</p>`:''}
+    <div class="nt-actions">
+      <button class="tune-btn primary" onclick="openRelease('${r.id}')">FULL RELEASE →</button>
+      ${RELEASES.length>1?`<button class="tune-btn" onclick="showView('releases')">ALL RELEASES →</button>`:''}
     </div>
   </div>`;
+})();
+/* ---------------- TUNER — the archive as a radio band ----------------
+   Every past event is a station on the band, oldest left, newest right.
+   Drag / swipe the needle (or tap a station, or use ◀ ▶ / arrow keys);
+   the readout below shows whatever is tuned in. Starts on the newest. */
+(function(){
+  const box=document.getElementById('tuner');
+  const list=[...archived].sort((x,y)=>parseDate(x.date)-parseDate(y.date));
+  if(!list.length){ box.remove(); return; }
+  const n=list.length, pos=i=> n===1 ? 50 : 6 + i*(88/(n-1)); // even spacing, 6%..94%
+  box.innerHTML=`<div class="tuner">
+    <div class="tuner-head"><span class="label">FROM THE ARCHIVE — drag to tune</span>
+      <span class="tuner-btns"><button type="button" data-step="-1" aria-label="Previous event">◀</button><button type="button" data-step="1" aria-label="Next event">▶</button></span></div>
+    <div class="tuner-band" tabindex="0" role="slider" aria-label="Tune through past events" aria-valuemin="1" aria-valuemax="${n}">
+      ${list.map((e,i)=>`<span class="tm" style="left:${pos(i)}%" data-i="${i}"><span class="tm-id">${e.id}</span></span>`).join('')}
+      <span class="tuner-needle"></span>
+    </div>
+    <button type="button" class="lt-card tuner-readout"></button>
+  </div>`;
+  const band=box.querySelector('.tuner-band'), needle=box.querySelector('.tuner-needle'), out=box.querySelector('.tuner-readout');
+  const marks=[...box.querySelectorAll('.tm')];
+  let cur=-1, x=pos(n-1), drag=null;
+  const nearest = p => list.reduce((b,_,i)=>Math.abs(pos(i)-p)<Math.abs(pos(b)-p)?i:b, 0);
+  function show(i){
+    if(i===cur) return; cur=i;
+    const e=list[i], sp=e.space?SPACES[e.space]:null;
+    marks.forEach((m,k)=>m.classList.toggle('on',k===i));
+    band.setAttribute('aria-valuenow', i+1); band.setAttribute('aria-valuetext', `${e.id} ${e.name}`);
+    out.onclick=()=>openFolder(e.id);
+    out.innerHTML=`${e.posterUrl?`<span class="lt-poster"><img src="${e.posterUrl}" alt="" loading="lazy"></span>`:`<span class="lt-poster empty"></span>`}
+      <span class="lt-info">
+        <span class="fid">${e.id} / ${TYPE_LABELS[e.type]||e.type}</span>
+        <span class="lt-name">${e.name}</span>
+        <span class="lt-meta">${[e.date, sp?`${sp.name}, ${sp.city}`:''].filter(Boolean).join(' · ')}</span>
+        <span class="lt-go">OPEN FILE →</span>
+      </span>`;
+    out.classList.remove('tuning'); void out.offsetWidth; out.classList.add('tuning'); // a short burst of static on every change
+  }
+  function setX(p, snap){
+    x=Math.max(0,Math.min(100,p));
+    if(snap) x=pos(nearest(x));
+    needle.style.left=x+'%'; needle.classList.toggle('free', !snap);
+    show(nearest(x));
+  }
+  const pct = e => { const r=band.getBoundingClientRect(); return (e.clientX-r.left)/r.width*100; };
+  band.addEventListener('pointerdown', e=>{ if(e.button!==0) return; drag={id:e.pointerId, x:e.clientX, moved:false}; });
+  band.addEventListener('pointermove', e=>{
+    if(!drag || e.pointerId!==drag.id) return;
+    if(!drag.moved && Math.abs(e.clientX-drag.x)<4) return;
+    if(!drag.moved){ drag.moved=true; band.classList.add('dragging'); try{ band.setPointerCapture(e.pointerId); }catch(_){} }
+    setX(pct(e), false);
+  });
+  const end = e=>{ if(!drag) return; const wasTap=!drag.moved; drag=null; band.classList.remove('dragging'); setX(wasTap ? pct(e) : x, true); };
+  band.addEventListener('pointerup', end); band.addEventListener('pointercancel', ()=>{ drag=null; band.classList.remove('dragging'); setX(x,true); });
+  const step = d => setX(pos(Math.max(0,Math.min(n-1,cur+d))), true);
+  band.addEventListener('keydown', e=>{
+    if(e.key==='ArrowLeft'){ e.preventDefault(); step(-1); }
+    if(e.key==='ArrowRight'){ e.preventDefault(); step(1); }
+    if(e.key==='Enter'){ e.preventDefault(); openFolder(list[cur].id); }
+  });
+  box.querySelectorAll('.tuner-btns button').forEach(b=>b.onclick=()=>step(+b.dataset.step));
+  setX(x, true);
 })();
 // RELEASES page: every release as a cover card, newest first
 (function(){
