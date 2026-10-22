@@ -1,197 +1,1151 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PULSE INDEX</title>
-<meta name="description" content="Pulse Index — an artist-led platform for experimental audiovisual art: performances, workshops and an archive of documentation. Helsinki / Berlin.">
-<meta property="og:title" content="PULSE INDEX">
-<meta property="og:description" content="Artist-led platform for experimental audiovisual art — performances, workshops and an archive of documentation.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Skill Spill · Creative skill-sharing workshops in Helsinki</title>
+<meta name="description" content="Skill Spill is a creative community in Helsinki running small, hands-on workshops: embroidery, clothing repair, natural dyeing, bookbinding, digital declutter and more. Beginner-friendly, led by local makers.">
+<meta name="keywords" content="Helsinki workshops, craft workshop Helsinki, creative community Helsinki, embroidery workshop, clothing repair, skill sharing, käsityö työpaja Helsinki">
+<meta name="robots" content="index,follow">
 <meta property="og:type" content="website">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="Skill Spill · Creative skill-sharing workshops in Helsinki">
+<meta property="og:description" content="Small, hands-on workshops led by local makers. Come to learn a skill, stay for the people around the table.">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#f6f6f2">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Skill Spill","description":"Community-led creative skill-sharing workshops in Helsinki.","email":"skillspillworkshops@gmail.com","areaServed":{"@type":"City","name":"Helsinki"},"sameAs":["https://www.instagram.com/skillspill.workshops/","https://t.me/+VEVrRvJ6kuRhN2Fh"]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-10-20e";</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-10-20e">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@500&family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+/* Layout concept: a quiet early-web index page. Ink on paper, one green thread, a pixel wordmark as the single loud moment. */
+:root{
+  --paper:#f6f6f2; --paper-2:#ecece6; --ink:#121310; --muted:#686a62; --rule:#c9cac2; --accent:#16794a; --accent-ink:#ffffff; --warn:#a3361f;
+  --font-mark:"Pixelify Sans","Courier New",monospace;
+  --font-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --s-mono:.8125rem; --s-0:1rem; --s-1:1.25rem; --s-2:1.75rem; --s-3:clamp(2rem,4.5vw,2.75rem); --s-mark:clamp(3.4rem,13vw,8.5rem);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121310;--paper-2:#1b1c18;--ink:#ecece6;--muted:#9a9c92;--rule:#34362f;--accent:#4cc98a;--accent-ink:#0d1a12;--warn:#f08a6e;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121310;--paper-2:#1b1c18;--ink:#ecece6;--muted:#9a9c92;--rule:#34362f;--accent:#4cc98a;--accent-ink:#0d1a12;--warn:#f08a6e;color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:var(--s-0);line-height:1.6;margin:0;-webkit-font-smoothing:antialiased}
+a{color:var(--ink);text-decoration-color:var(--accent);text-decoration-thickness:1.5px;text-underline-offset:3px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{margin:0;font-weight:500;line-height:1.1;text-wrap:balance;letter-spacing:-.015em}
+h2{font-size:var(--s-3)}
+h3{font-size:var(--s-1)}
+p{margin:0}
+.wrap{max-width:1080px;margin-inline:auto;padding-inline:16px}
+@media (min-width:720px){.wrap{padding-inline:32px}}
+.mono{font-family:var(--font-mono);font-size:var(--s-mono);letter-spacing:.02em}
+.muted{color:var(--muted)}
+.measure{max-width:60ch}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--ink)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:8px 24px;min-height:52px;flex-wrap:wrap;padding-block:6px}
+.top .logo{font-family:var(--font-mark);font-size:1.3rem;text-decoration:none;color:var(--ink);line-height:1}
+.top nav{display:flex;gap:4px 20px;flex-wrap:wrap}
+.top nav a{font-family:var(--font-mono);font-size:var(--s-mono);text-decoration:none;color:var(--ink)}
+.top nav a:hover{color:var(--accent);text-decoration:underline}
+
+/* ---------- hero ---------- */
+.hero{padding-block:72px 64px;border-bottom:1px solid var(--rule)}
+.hero-grid{display:grid;gap:48px;align-items:center}
+@media (min-width:900px){.hero-grid{grid-template-columns:1.1fr 1fr;align-items:end}}
+.hero-text .lead{margin-top:0;max-width:32ch}
+.mark{font-family:var(--font-mark);font-weight:500;font-size:var(--s-mark);line-height:.9;letter-spacing:-.02em;margin-top:18px}
+.mark .cur{display:inline-block;width:.42em;height:.78em;background:var(--accent);vertical-align:-.04em;margin-left:.06em;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.lead{font-size:var(--s-1);max-width:30ch;margin-top:28px;line-height:1.45}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+.next{border:1px solid var(--ink)}
+.next-h{display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--ink);background:var(--paper-2)}
+.next ol{list-style:none;margin:0;padding:0}
+.next li{display:grid;grid-template-columns:5.2rem minmax(0,1fr) auto;gap:12px;padding:10px 12px;border-bottom:1px solid var(--rule);align-items:baseline;line-height:1.35}
+.next li>.mono:first-child{white-space:nowrap}
+.next .sub{display:block;font-size:.75rem;margin-top:3px}
+.next .pr{font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap}
+.next li:last-child{border-bottom:0}
+.next li a{text-decoration:none;font-weight:500}
+.next li a:hover{text-decoration:underline}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.875rem;padding:10px 16px;background:var(--paper);color:var(--ink);border:1px solid var(--ink);cursor:pointer;text-decoration:none;line-height:1.1;transition:background .12s,color .12s}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn.go{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.go:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.btn[disabled]{opacity:.5;cursor:wait}
+
+/* ---------- sections ---------- */
+section{padding-block:72px;border-bottom:1px solid var(--rule)}
+.sec-head{display:grid;gap:12px;margin-bottom:40px}
+@media (min-width:860px){.sec-head{grid-template-columns:1fr 1fr;align-items:end}}
+.label{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted);margin-bottom:10px}
+.label::before{content:"/";color:var(--accent);margin-right:2px}
+
+/* ---------- workshops list ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:20px}
+.chip{font-family:var(--font-mono);font-size:var(--s-mono);background:none;border:0;padding:2px 0;color:var(--muted);cursor:pointer}
+.chip:hover{color:var(--ink)}
+.chip[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.demo-note{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted);border-left:2px solid var(--accent);padding:4px 12px;margin-bottom:24px}
+.list{border-top:1px solid var(--ink)}
+.ws{display:grid;grid-template-columns:7rem minmax(0,1fr) 13rem;gap:16px 32px;padding-block:28px;border-bottom:1px solid var(--rule)}
+@media (max-width:760px){.ws{grid-template-columns:1fr}}
+.ws-date{display:grid;align-content:start;gap:2px}
+.ws-date .d{font-family:var(--font-mono);font-weight:500;font-size:2.3rem;line-height:1;letter-spacing:-.04em}
+/* ---------- photos: one duotone treatment everywhere ---------- */
+img{max-width:100%}
+.ws>*{min-width:0}
+.duo{filter:url(#duotone);transition:filter .35s ease}
+.band{margin:0;border-bottom:1px solid var(--rule)}
+.band img{display:block;width:100%;height:clamp(220px,34vw,440px);object-fit:cover;object-position:50% 32%}
+.band figcaption{padding-block:8px}
+.thumb{display:block;width:100%;max-width:7rem;aspect-ratio:1;object-fit:cover;margin-top:12px;border:1px solid var(--ink)}
+.ws:hover .thumb,.ws:focus-within .thumb{filter:none}
+@media (max-width:760px){.ws-date{grid-template-columns:auto 1fr;column-gap:16px}.thumb{grid-row:1 / span 3;grid-column:1;width:84px;margin:0}}
+.face{display:flex;gap:12px;align-items:flex-start}
+.face img{width:64px;height:64px;object-fit:cover;flex:none;border:1px solid var(--ink)}
+.gallery{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(220px,1fr);gap:16px;overflow-x:auto;margin-top:28px;padding-bottom:6px}
+.gallery figure{margin:0}
+.gallery img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border:1px solid var(--ink)}
+.gallery img:hover{filter:none}
+.gallery figcaption{margin-top:6px}
+.poster-btn{background:none;border:0;padding:0;font-family:var(--font-mono);font-size:var(--s-mono);color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+#poster-dialog{max-width:min(620px,calc(100vw - 24px))}
+#poster-dialog img{display:block;width:100%;height:auto;max-height:calc(100dvh - 120px);object-fit:contain;background:var(--paper-2)}
+.ws-main{display:grid;gap:8px;align-content:start;min-width:0}
+.ws-main h3{font-size:1.45rem}
+.ws-desc{color:var(--ink);max-width:58ch}
+.ws-meta{display:flex;flex-wrap:wrap;gap:2px 16px}
+details.more summary{cursor:pointer;font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted);width:max-content}
+details.more summary:hover{color:var(--ink)}
+details.more dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:10px 0 0;font-size:.95rem}
+details.more dt{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted);padding-top:2px}
+details.more dd{margin:0}
+.ws-side{display:grid;gap:12px;align-content:start;justify-items:start}
+@media (min-width:761px){.ws-side{justify-items:end;text-align:right}}
+.price{font-size:1.5rem;font-weight:500;font-variant-numeric:tabular-nums;line-height:1}
+.spots{display:grid;gap:5px}
+@media (min-width:761px){.spots{justify-items:end}}
+.xs{display:flex;flex-wrap:wrap;gap:3px;max-width:13rem}
+.xs i{width:9px;height:9px;border:1px solid var(--rule)}
+.xs i.on{background:var(--ink);border-color:var(--ink)}
+.spots-label{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted)}
+.spots-label.full{color:var(--warn)}
+.spots-label.few{color:var(--accent);font-weight:500}
+.empty{padding:32px 0;color:var(--muted)}
+.more-wrap{display:flex;justify-content:center;padding-top:28px}
+
+/* ---------- steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:0;list-style:none;padding:0;margin:0;border-top:1px solid var(--ink);counter-reset:s}
+.steps li{padding:20px 20px 4px 0;display:grid;gap:8px;align-content:start}
+.steps li::before{counter-increment:s;content:"0" counter(s);font-family:var(--font-mono);font-size:var(--s-mono);color:var(--accent)}
+.steps p{color:var(--muted);font-size:.95rem}
+
+/* ---------- facilitate ---------- */
+.cols{display:grid;gap:40px}
+@media (min-width:760px){.cols{grid-template-columns:1fr 1fr}}
+.plain{list-style:none;padding:0;margin:14px 0 0;border-top:1px solid var(--ink)}
+.plain li{padding:10px 0 10px 24px;border-bottom:1px solid var(--rule);position:relative}
+.plain li::before{content:"+";position:absolute;left:2px;font-family:var(--font-mono);color:var(--accent)}
+.plain.you li::before{content:"→"}
+.models{display:grid;gap:0;margin-top:56px;border:1px solid var(--ink)}
+@media (min-width:760px){.models{grid-template-columns:1fr 1fr}.models>div+div{border-left:1px solid var(--ink)}}
+@media (max-width:759px){.models>div+div{border-top:1px solid var(--ink)}}
+.models>div{padding:24px;display:grid;gap:10px;align-content:start}
+.figure{font-family:var(--font-mark);font-size:2.8rem;line-height:1}
+.models p{color:var(--muted)}
+.models p.figure{color:var(--ink)}
+.tl{margin:56px 0 0;display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);border-top:1px solid var(--ink)}
+.tl dt,.tl dd{padding:10px 0;border-bottom:1px solid var(--rule);margin:0}
+.tl dt{font-family:var(--font-mono);font-size:var(--s-mono);padding-top:12px;padding-right:16px}
+@media (max-width:480px){.tl{grid-template-columns:1fr}.tl dt{border-bottom:0;padding-bottom:0}}
+
+/* ---------- panels + forms ---------- */
+.panel{border:1px solid var(--ink);background:var(--paper);min-width:0}
+.panel-h{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 12px;border-bottom:1px solid var(--ink);background:var(--paper-2);font-family:var(--font-mono);font-size:var(--s-mono)}
+.panel-h .dots{letter-spacing:4px;color:var(--muted)}
+.panel-b{padding:24px}
+@media (max-width:480px){.panel-b{padding:18px}}
+.form{display:grid;gap:18px}
+.form .two{display:grid;gap:18px}
+@media (min-width:640px){.form .two{grid-template-columns:1fr 1fr;align-items:start}}
+.field{display:grid;gap:6px;min-width:0}
+.field label,.field legend{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted)}
+.hint{font-size:.85rem;color:var(--muted)}
+input[type=text],input[type=email],input[type=tel],select,textarea{font:inherit;font-size:1rem;width:100%;padding:9px 0;background:transparent;color:var(--ink);border:0;border-bottom:1px solid var(--ink);border-radius:0}
+select{padding-right:4px}
+select option{background:var(--paper);color:var(--ink)}
+input:focus,select:focus{outline:none;border-bottom:2px solid var(--accent);padding-bottom:8px}
+textarea{min-height:88px;resize:vertical;border:1px solid var(--rule);padding:9px}
+textarea:focus{border-color:var(--accent);outline:1px solid var(--accent)}
+fieldset{border:0;padding:0;margin:0;min-width:0}
+.checks{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:4px}
+fieldset.picks{border:0;padding:0;margin:0}
+#join{scroll-margin-top:96px}
+fieldset.picks legend{font-family:var(--font-mono);font-size:var(--s-mono);padding:0;margin-bottom:6px}
+#idea-picks label{font-size:.92rem}
+.checks label{font-family:var(--font-body);font-size:.95rem;color:var(--ink);display:flex;gap:8px;align-items:center}
+input[type=checkbox],input[type=radio]{accent-color:var(--accent);width:16px;height:16px;margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form-status{font-family:var(--font-mono);font-size:var(--s-mono);min-height:1.3em}
+.form-status.err{color:var(--warn)}
+.success{border-left:2px solid var(--accent);padding:4px 0 4px 16px;display:grid;gap:10px}
+.form-wrap{margin-top:56px}
+.form-group{color:var(--accent);border-bottom:1px solid var(--ink);padding-bottom:6px;margin-top:10px}
+input[type=file]{font:inherit;font-size:.9rem;color:var(--muted);max-width:100%}
+
+/* ---------- venues ---------- */
+.perks{list-style:none;padding:0;margin:20px 0 0;border-top:1px solid var(--ink)}
+.perks li{padding:10px 0;border-bottom:1px solid var(--rule)}
+
+/* ---------- about ---------- */
+.mission{font-size:clamp(1.6rem,3.6vw,2.4rem);line-height:1.2;max-width:26ch;letter-spacing:-.02em;font-weight:400}
+.mission em{font-style:normal;color:var(--accent)}
+.hub{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border-top:1px solid var(--ink);margin-top:20px}
+.hub>div{padding:20px 20px 20px 0;display:grid;gap:8px;align-content:start}
+.hub p{color:var(--muted);font-size:.95rem}
+.tiers{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:14px}
+.tiers span{font-family:var(--font-mono);font-size:var(--s-mono);color:var(--muted)}
+.tiers b{font-family:var(--font-body);font-size:1rem;font-weight:500;margin-right:6px;color:var(--ink)}
+
+/* ---------- faq ---------- */
+.faq{border-top:1px solid var(--ink);max-width:780px}
+.faq details{border-bottom:1px solid var(--rule)}
+.faq summary{cursor:pointer;padding:16px 0;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--font-mono);color:var(--accent);flex:none}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding:0 0 18px;color:var(--muted);max-width:62ch}
+
+/* ---------- footer ---------- */
+footer{padding-block:48px 28px}
+footer .row{display:flex;flex-wrap:wrap;justify-content:space-between;gap:28px 48px;align-items:flex-start}
+footer .fmark{font-family:var(--font-mark);font-size:2rem;line-height:1}
+footer .links{display:grid;gap:6px}
+.statusbar{margin-top:48px;border-top:1px solid var(--ink);padding-top:10px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;color:var(--muted)}
+
+/* ---------- dialog ---------- */
+dialog{border:0;padding:0;background:transparent;color:var(--ink);max-width:min(540px,calc(100vw - 24px));width:100%;max-height:calc(100dvh - 24px)}
+dialog::backdrop{background:rgba(18,19,16,.5)}
+dialog .panel{box-shadow:6px 6px 0 var(--ink);max-height:calc(100dvh - 24px);display:flex;flex-direction:column}
+dialog .panel-b{overflow:auto}
+.x{background:none;border:0;font-family:var(--font-mono);font-size:1rem;cursor:pointer;color:var(--ink);padding:0 2px;line-height:1}
+.x:hover{color:var(--accent)}
+.dlg-sum{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:12px 0;display:grid;gap:2px;font-size:.95rem}
+.dlg-sum b{font-weight:500;font-size:1.15rem}
+.policy-box{border:1px solid var(--ink);background:var(--paper-2);padding:12px 14px;font-size:.9rem;display:grid;gap:8px;line-height:1.45}
+.policy-box ul{margin:0;padding-left:18px;display:grid;gap:4px}
+.ref{font-family:var(--font-mono);font-size:1rem;border:1px solid var(--ink);padding:2px 8px;user-select:all}
+</style>
 </head>
 <body>
 
-<div id="freqbar">
-  <button class="lock" id="home-btn" style="border:none;padding:0"><span class="dot"></span><span>PULSE INDEX</span></button>
-  <nav class="channels">
-    <button data-v="signal" class="active">SIGNAL</button>
-    <button data-v="archive">ARCHIVE</button>
-    <button data-v="releases">RELEASES</button>
-    <button data-v="network">NETWORK</button>
-    <button data-v="about">ABOUT</button>
-  </nav>
-</div>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">Skill Spill</a>
+    <nav aria-label="Main">
+      <a href="#about">about</a>
+      <a href="#workshops">workshops</a>
+      <a href="people.html">facilitators</a>
+      <a href="#share">share a skill</a>
+      <a href="#venues">venues</a>
+      <a href="#faq">faq</a>
+    </nav>
+  </div>
+</header>
 
-<main>
-
-  <!-- SIGNAL -->
-  <section id="view-signal" class="view active">
-    <div id="next-tx"></div>
-    <div class="also-incoming" id="also-wrap" style="display:none">
-      <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
-      <div id="prog-list"></div>
+<main id="top">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="duotone" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0.299 0.587 0.114 0 0  0 0 0 1 0"/>
+      <!-- shadows: deep green #0e3a24 · highlights: paper #f6f6f2 -->
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.055 0.965"/>
+        <feFuncG type="table" tableValues="0.227 0.965"/>
+        <feFuncB type="table" tableValues="0.141 0.949"/>
+      </feComponentTransfer>
+    </filter>
+  </svg>
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="mono muted">workshops · skill sharing · Helsinki</p>
+        <h1 class="mark">Skill<br>Spill<span class="cur" aria-hidden="true"></span><span class="visually-hidden"> – creative skill-sharing workshops in Helsinki</span></h1>
+      </div>
+      <div class="hero-text">
+        <p class="lead">A peer-to-peer creative community in Helsinki: a space for practical skills, creative hobbies and open knowledge-sharing.</p>
+        <p class="muted" style="margin-top:14px;max-width:40ch">Small, hands-on workshops led by local makers at cafés and studios around the city. Come to learn a skill, stay for the people around the table.</p>
+        <div class="actions">
+          <a class="btn go" href="#workshops">See upcoming workshops →</a>
+          <a class="btn" href="#share">Share a skill</a>
+        </div>
+      </div>
     </div>
-    <div id="featured"></div>
-    <div id="recap"></div>
-    <p class="intro">An artist-led platform for experimental audiovisual art — performances, workshops and an archive of what happened. Helsinki / Berlin.</p>
+  </div>
+
+  <figure class="band" id="band" hidden>
+    <img class="duo" id="band-img" alt="" loading="lazy">
+    <figcaption class="wrap mono muted" id="band-cap"></figcaption>
+  </figure>
+
+  <section id="workshops">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="label">workshops</p><h2>Upcoming workshops</h2></div>
+        <p class="muted measure">Small, relaxed, hands-on evenings. Pick one, save your spot, and pay in advance with MobilePay so the workshop can go ahead.</p>
+      </div>
+      <h3 style="margin-bottom:16px;font-size:var(--s-1)">How booking works</h3>
+      <ol class="steps">
+        <li><h3>Save your spot</h3><p>Register with the form. Student and employed prices are listed on each workshop.</p></li>
+        <li><h3>Pay in advance</h3><p>Pay via MobilePay Box <b class="mono" style="color:var(--ink)">8051YC</b> with your booking reference. No MobilePay? Get in touch and we'll sort something out.</p></li>
+        <li><h3>We confirm</h3><p>Each workshop runs with at least 5 paid participants. We'll let you know if anything changes.</p></li>
+        <li><h3>Come and make</h3><p>Arrive a few minutes early so everyone can settle in and we start together.</p></li>
+      </ol>
+      <div style="height:48px"></div>
+      <p id="demo-note" class="demo-note" hidden>Preview: registrations aren't saved until the site is connected to your Google Sheet.</p>
+      <div class="list" id="cards"><p class="empty mono">Loading workshops…</p></div>
+      <div class="more-wrap" id="more-wrap" hidden><button class="btn" type="button" id="see-more">See more workshops ↓</button></div>
+
+    </div>
   </section>
 
-  <!-- ARCHIVE -->
-  <section id="view-archive" class="view">
-    <div class="archive-head">
-      <div class="label">RECEIVED / ARCHIVED FILES</div>
-      <div class="label" style="margin-top:4px">Select a folder to open the full file — newest at the top</div>
+  <section id="about">
+    <div class="wrap">
+      <p class="label">about</p>
+      <p class="mission">Everyone knows something worth sharing. Skill Spill is where it <em>spills over</em>.</p>
+      <div class="cols" style="margin-top:32px;align-items:start">
+        <p class="measure">Skill Spill is a relaxed, peer-to-peer creative community in Helsinki: a space for practical skills, creative hobbies and open knowledge-sharing. Local artists and makers lead the sessions, but the room learns from each other: how someone else threads a needle, sorts their files or fixes a hem.</p>
+        <p class="measure muted">We keep groups small and the atmosphere easy, so you can ask the obvious question, make a mess, and leave with something real: a new skill, a finished thing, and a few new faces you'll see next time.</p>
+      </div>
+      <div class="hub">
+        <div><p class="mono muted">learn by doing</p><h3>Hands on, from minute one</h3><p>Short intros, then making. Curiosity over perfection.</p></div>
+        <div><p class="mono muted">peer to peer</p><h3>Everyone brings something</h3><p>Questions, tips and tricks travel around the table, not just from the front.</p></div>
+        <div><p class="mono muted">fair & local</p><h3>Artists paid fairly</h3><p>Your ticket supports local facilitators and small independent venues.</p></div>
+      </div>
+
+      <div class="panel" style="margin-top:56px" id="join">
+        <div class="panel-h"><span>join_the_community</span><span class="dots" aria-hidden="true">□×</span></div>
+        <div class="panel-b cols" style="gap:28px;align-items:start">
+          <div>
+            <h3 style="font-size:var(--s-2)">Hear about new workshops first</h3>
+            <p class="muted" style="margin-top:8px">Groups are small, so spots go quickly. Leave your email and we'll tell you when new dates go up. Tell us what you'd love to learn, and we'll let you know when it's on.</p>
+            <p class="muted" style="margin-top:8px">Prefer your phone? Join the Telegram channel or follow along on Instagram.</p>
+            <div class="actions" style="margin-top:18px">
+              <a class="btn" href="https://t.me/+VEVrRvJ6kuRhN2Fh" target="_blank" rel="noopener">Telegram ↗</a>
+              <a class="btn" href="https://www.instagram.com/skillspill.workshops/" target="_blank" rel="noopener">Instagram ↗</a>
+            </div>
+          </div>
+          <form class="form" data-type="newsletter" novalidate>
+            <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" name="website_url" tabindex="-1" autocomplete="off"></label></div>
+            <div class="field"><label for="n-email">Email *</label><input id="n-email" name="email" type="email" required autocomplete="email"></div>
+            <fieldset class="field picks" id="idea-picks-wrap" hidden><legend>What are you into? <span class="muted">(optional, pick any)</span></legend>
+              <div class="checks" id="idea-picks"></div></fieldset>
+            <div class="field"><label for="n-other">Something else? <span class="muted">(optional)</span></label><input id="n-other" name="other" type="text" maxlength="80" placeholder="anything else you'd love to learn"></div>
+            <div><button class="btn go" type="submit">Join the list</button></div>
+            <p class="muted" style="font-size:.85rem">A few emails a season about new workshops. No spam, unsubscribe anytime.</p>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="cabinet" id="cabinet"></div>
   </section>
 
-  <!-- RELEASES -->
-  <section id="view-releases" class="view">
-    <div class="archive-head">
-      <div class="label">RELEASES / CATALOGUE</div>
-      <div class="label" style="margin-top:4px">Records by artists in the index — select one to open the full release</div>
+  <section id="share">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><p class="label">share a skill</p><h2>Have something to share?</h2></div>
+        <p class="muted measure">Embroidery, coding, bread, bike repair, spreadsheets. If you can show a small group how to do it, we'd love to hear from you. First-time teachers welcome.</p>
+      </div>
+
+      <div class="cols">
+        <div>
+          <h3>We take care of</h3>
+          <ul class="plain">
+            <li>Finding the venue and the date</li>
+            <li>Registrations, payments and participant emails</li>
+            <li>Promotion across our channels</li>
+            <li>Support with planning, so you can focus on teaching</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Fair pay, shared success</h3>
+          <p class="muted" style="margin-top:14px;padding-top:12px;border-top:1px solid var(--ink)">Facilitators receive the majority of each workshop's ticket income, with agreed material costs covered first. The fuller the room, the more you earn, and we grow the community together.</p>
+        </div>
+      </div>
+
+      <div class="panel form-wrap" id="propose">
+        <div class="panel-h"><span>propose_a_workshop</span><span class="dots" aria-hidden="true">□×</span></div>
+        <div class="panel-b">
+          <div class="cols" style="gap:28px;align-items:end;margin-bottom:28px">
+            <div>
+              <h3 style="font-size:var(--s-2)">Propose a workshop</h3>
+              <p class="muted" style="margin-top:8px">The form takes about 15 minutes to fill in. It covers everything we need to plan together, so there's no back-and-forth. You'll get our facilitator guide by email straight away, and we reply within a week.</p>
+              <p style="margin-top:12px"><a href="facilitators.html">Read the facilitator guide first →</a></p>
+            </div>
+            <p class="muted" style="font-size:.95rem">We like 2–3 months of lead time so there's enough room for promotion. Not sure about some answers? A rough idea is fine.</p>
+          </div>
+          <form class="form" data-type="facilitator" novalidate>
+            <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" name="website_url" tabindex="-1" autocomplete="off"></label></div>
+
+            <p class="form-group mono">01 · about you</p>
+            <div class="two">
+              <div class="field"><label for="f-name">Name *</label><input id="f-name" name="name" type="text" required autocomplete="name"></div>
+              <div class="field"><label for="f-email">Email *</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+            </div>
+            <div class="two">
+              <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="f-link">Website, portfolio or Instagram</label><input id="f-link" name="link" type="text" placeholder="@handle or https://"></div>
+            </div>
+            <div class="field"><label for="f-bio">A bit about you *</label><textarea id="f-bio" name="bio" required placeholder="A short bio: your artistic background and why you want to share what you do. We use it on the workshop listing."></textarea></div>
+            <div class="field"><label for="f-exp">Have you taught or led workshops before?</label><textarea id="f-exp" name="experience" style="min-height:64px" placeholder="First time is completely fine"></textarea></div>
+
+            <p class="form-group mono">02 · your workshop</p>
+            <div class="field"><label for="f-title">Workshop title *</label><input id="f-title" name="title" type="text" required placeholder="e.g. Sashiko mending for beginners"></div>
+            <div class="field"><label for="f-format">What will you do, and how do you see the format? *</label><textarea id="f-format" name="format" required></textarea></div>
+            <div class="field"><label for="f-promo">Short description for promotion</label><textarea id="f-promo" name="promo" placeholder="2–4 sentences we can use on the website and social media"></textarea></div>
+            <div class="two">
+              <div class="field"><label for="f-focus">Main focus</label>
+                <select id="f-focus" name="focus"><option>Learning and developing a skill</option><option>Completing a project to take home</option><option>A mix of both</option></select></div>
+              <div class="field"><label for="f-level">Skill level</label>
+                <select id="f-level" name="level"><option>Beginner</option><option>All levels</option><option>Some experience needed</option><option>Advanced</option></select></div>
+            </div>
+            <div class="field"><label for="f-aud">Audience, minimum age, accessibility or experience needed</label><input id="f-aud" name="audience" type="text"></div>
+
+            <p class="form-group mono">03 · practical details</p>
+            <div class="two">
+              <div class="field"><label for="f-len">Ideal length</label><input id="f-len" name="length" type="text" placeholder="We usually recommend 2–3 hours"></div>
+              <div class="two" style="gap:12px">
+                <div class="field"><label for="f-min">Min. people</label><input id="f-min" name="min_participants" type="text" inputmode="numeric" placeholder="5"></div>
+                <div class="field"><label for="f-max">Max. people *</label><input id="f-max" name="max_participants" type="text" inputmode="numeric" placeholder="12" required></div>
+              </div>
+            </div>
+            <div class="two">
+              <div class="field"><label for="f-price">Fair ticket price, incl. materials</label><input id="f-price" name="price" type="text" placeholder="e.g. €25 student / €35 employed"></div>
+              <div class="field"><label for="f-fee">Your expected fee or rate, if any</label><input id="f-fee" name="fee" type="text"><span class="hint">We usually work with a revenue share: you receive 70% of ticket income after materials.</span></div>
+            </div>
+            <div class="field"><label for="f-dates">Preferred days, times or dates</label><input id="f-dates" name="dates" type="text" placeholder="e.g. weekday evenings from February"></div>
+            <div class="field"><label for="f-mat">Materials: what's needed, who provides them, cost per person</label><textarea id="f-mat" name="materials" style="min-height:64px"></textarea></div>
+            <div class="two">
+              <div class="field"><label for="f-space">Space requirements</label><input id="f-space" name="space" type="text" placeholder="e.g. sink, big tables, power outlets"></div>
+              <div class="field"><label for="f-photos">Photos: headshot and your work (up to 5)</label><input id="f-photos" name="photo_files" type="file" accept="image/*" multiple><span class="hint" id="f-photos-hint">JPG or PNG. Resized automatically.</span></div>
+            </div>
+            <div class="field"><label for="f-any">Anything else we should know?</label><textarea id="f-any" name="anything" style="min-height:64px"></textarea></div>
+            <div class="checks"><label><input type="checkbox" name="newsletter" value="yes"> Also tell me when new workshops are announced</label></div>
+            <div><button class="btn go" type="submit">Send proposal →</button></div>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="release-grid" id="release-grid"></div>
   </section>
 
-  <!-- NETWORK -->
-  <section id="view-network" class="view">
-    <div class="label">SELECT A NODE</div>
-    <div class="scan-controls" id="net-filters" style="flex-wrap:wrap">
-      <span class="label" style="align-self:center;margin-right:4px">CITY</span>
-      <button data-city="ALL" class="netf active">ALL</button>
-      <button data-city="Helsinki" class="netf">HELSINKI</button>
-      <button data-city="Berlin" class="netf">BERLIN</button>
-      <span class="label" style="align-self:center;margin:0 4px 0 14px">TYPE</span>
-      <button data-cat="ALL" class="netf active">ALL</button>
-      <button data-cat="AUDIO" class="netf">AUDIO</button>
-      <button data-cat="VISUAL" class="netf">VJ / VISUAL</button>
-      <button data-cat="DOCUMENTATION" class="netf">DOCUMENTATION</button>
+  <section id="venues">
+    <div class="wrap cols" style="align-items:start">
+      <div>
+        <p class="label">venues</p>
+        <h2>Host a workshop at your space</h2>
+        <p class="muted measure" style="margin-top:16px">Cafés, studios, shops, libraries. If you have tables and a bit of room, we can bring a workshop and a new crowd to you.</p>
+        <ul class="perks">
+          <li><b>The format:</b> about 2 hours, 5–15 people at tables, usually weekday evenings or weekend afternoons</li>
+          <li><b>We handle:</b> programming, bookings, payments, promotion with your venue tagged, setup and tidy-up</li>
+          <li><b>We ask for:</b> the space, tables and chairs, access 30 minutes early, and a contact on the day</li>
+          <li><b>Terms:</b> agreed together: free for footfall, a room fee, a minimum spend or a revenue share</li>
+        </ul>
+        <p class="muted measure" style="margin-top:16px">Current partner venues include Byroo Cafe and Zestii Kitchens.</p>
+      </div>
+      <div class="panel" id="venue-form">
+        <div class="panel-h"><span>become_a_venue</span><span class="dots" aria-hidden="true">□×</span></div>
+        <div class="panel-b">
+          <form class="form" data-type="venue" novalidate>
+            <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" name="website_url" tabindex="-1" autocomplete="off"></label></div>
+            <div class="two">
+              <div class="field"><label for="v-venue">Venue or organisation *</label><input id="v-venue" name="venue" type="text" required></div>
+              <div class="field"><label for="v-type">Type of space</label>
+                <select id="v-type" name="space_type"><option>Café / restaurant</option><option>Studio / gallery</option><option>Shop</option><option>Library / cultural centre</option><option>Community space</option><option>Other</option></select></div>
+            </div>
+            <div class="two">
+              <div class="field"><label for="v-name">Contact person *</label><input id="v-name" name="name" type="text" required autocomplete="name"></div>
+              <div class="field"><label for="v-email">Email *</label><input id="v-email" name="email" type="email" required autocomplete="email"></div>
+            </div>
+            <div class="two">
+              <div class="field"><label for="v-phone">Phone</label><input id="v-phone" name="phone" type="tel" autocomplete="tel"></div>
+              <div class="field"><label for="v-link">Website or Instagram</label><input id="v-link" name="link" type="text" placeholder="@venue"></div>
+            </div>
+            <div class="two">
+              <div class="field"><label for="v-addr">Address *</label><input id="v-addr" name="address" type="text" required></div>
+              <div class="field"><label for="v-cap">Seats at tables *</label><input id="v-cap" name="capacity" type="text" required placeholder="e.g. 12"></div>
+            </div>
+            <fieldset class="field"><legend>Facilities</legend>
+              <div class="checks">
+                <label><input type="checkbox" name="facilities" value="Tables"> Tables</label>
+                <label><input type="checkbox" name="facilities" value="Sink / water"> Sink / water</label>
+                <label><input type="checkbox" name="facilities" value="Step-free access"> Step-free access</label>
+                <label><input type="checkbox" name="facilities" value="Accessible toilet"> Accessible toilet</label>
+                <label><input type="checkbox" name="facilities" value="Storage"> Storage</label>
+                <label><input type="checkbox" name="facilities" value="Projector / screen"> Projector / screen</label>
+              </div>
+            </fieldset>
+            <div class="two">
+              <div class="field"><label for="v-mess">Messy or wet work (dyeing, paint)?</label>
+                <select id="v-mess" name="mess"><option>Yes, with some care</option><option>Light mess only</option><option>No mess please</option></select></div>
+              <div class="field"><label for="v-food">Food &amp; drink</label>
+                <select id="v-food" name="food"><option>Participants can order</option><option>We could offer a set menu or discount</option><option>No food service</option></select></div>
+            </div>
+            <fieldset class="field"><legend>Days the space is usually free</legend>
+              <div class="checks">
+                <label><input type="checkbox" name="days" value="Mon"> Mon</label><label><input type="checkbox" name="days" value="Tue"> Tue</label><label><input type="checkbox" name="days" value="Wed"> Wed</label><label><input type="checkbox" name="days" value="Thu"> Thu</label><label><input type="checkbox" name="days" value="Fri"> Fri</label><label><input type="checkbox" name="days" value="Sat"> Sat</label><label><input type="checkbox" name="days" value="Sun"> Sun</label>
+              </div>
+            </fieldset>
+            <div class="two">
+              <div class="field"><label for="v-times">Times</label>
+                <select id="v-times" name="times"><option>Evenings</option><option>Daytime</option><option>Both</option></select></div>
+              <div class="field"><label for="v-terms">What would work for you?</label>
+                <select id="v-terms" name="terms"><option>Let's discuss</option><option>Free, for the footfall and promotion</option><option>Room fee</option><option>Minimum spend per participant</option><option>Revenue share</option></select></div>
+            </div>
+            <div class="field"><label for="v-notes">Anything else? House rules, photos link, ideas</label><textarea id="v-notes" name="notes"></textarea></div>
+            <div><button class="btn go" type="submit">Send →</button></div>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
     </div>
-    <div class="label" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom</div>
-    <svg id="netsvg" viewBox="0 0 700 500"></svg>
-    <div id="netdetail"></div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="view-about" class="view">
-    <div class="label">ABOUT</div>
-    <p style="font-family:var(--disp); font-weight:600; font-size:22px; margin:10px 0 20px;">Pulse Index</p>
-    <div class="about-grid">
-    <div class="about-text">
-    <p>Pulse Index is an artist-led platform for experimental audiovisual art, bringing together sound, moving image, performance, spatial experience and technology. It creates opportunities for artists and organisations working across these fields to meet, exchange knowledge, and develop new collaborations and deeper interconnection — through performances, workshops and digital activities.</p>
-    <p>The programme includes audiovisual performances in conventional and non-conventional spaces, artist-led workshops, collaborative development sessions such as sound and experimental media demos, and the digital documentation of ephemeral and improvised performances.</p>
-    <p>Pulse Index builds on existing relationships with independent cultural spaces, organisations and artist networks in Helsinki, while continuing to develop new collaborations. It is a space where artists working across disciplines can experiment, share knowledge and find new points of connection — with the aim of sustaining fair working conditions for everyone involved.</p>
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="label">faq</p><h2>Questions &amp; policy</h2></div></div>
+      <div class="faq">
+        <details><summary>I've never done this before. Can I join?</summary><p>Yes. Our workshops are made for beginners unless the listing says otherwise. No previous experience needed.</p></details>
+        <details><summary>How do I pay?</summary><p>Pay in advance via MobilePay Box <b>8051YC</b> and add your booking reference to the message. Paying ahead secures your spot and helps the workshop reach its minimum. If MobilePay isn't an option for you, email skillspillworkshops@gmail.com and we'll make another arrangement.</p></details>
+        <details><summary>What's the difference between student and employed prices?</summary><p>We offer a lower student price to keep workshops accessible. Choose the one that fits your situation when you register.</p></details>
+        <details><summary>Are materials included?</summary><p>Yes, unless the listing says otherwise. Some workshops ask you to bring something, like clothes to mend or your laptop.</p></details>
+        <details id="policy"><summary>Cancellation policy</summary><p>Plans change, so let us know as soon as you can.<br><br><b>More than 48 hours before:</b> full refund, or transfer your place to someone else.<br><b>Less than 48 hours before:</b> the fee is non-refundable, but you can transfer your place. Just tell us their name in advance.<br><b>No-shows:</b> we can't offer refunds or transfers for missed workshops without notice. Places are limited, and early notice lets us offer your spot to someone else.</p></details>
+        <details><summary>What if a workshop doesn't reach the minimum?</summary><p>To keep workshops small, personal and financially sustainable, each one needs at least 5 paid participants to go ahead. If we have to cancel or reschedule, you get a full refund or can move your registration to another workshop. We'll always tell you as early as possible.</p></details>
+        <details><summary>Should I arrive early?</summary><p>If you can, arrive a few minutes before the start so everyone can get settled and we can begin together.</p></details>
+        <details><summary>I'd like to teach a workshop. How does it work?</summary><p>Have a look at our <a href="facilitators.html">facilitator guide</a>: how we work together, pay, materials, invoicing and the planning timeline. When you're ready, send us your idea through the <a href="#propose">proposal form</a>.</p></details>
+        <details><summary>How do I contact you?</summary><p>Email <span style="user-select:all;color:var(--ink)">skillspillworkshops@gmail.com</span>, message us on <a href="https://www.instagram.com/skillspill.workshops/" target="_blank" rel="noopener">Instagram</a>, or reply to your booking email.</p></details>
+      </div>
+      <p class="muted" style="margin-top:24px">Thank you for supporting small, independent workshops.</p>
     </div>
-    <div class="about-image" id="about-image">IMAGE — PLACEHOLDER</div>
-    </div>
-    <div class="hairline"></div>
-    <div class="label">CONTACT / FOLLOW</div>
-    <div class="contact-row">
-    <p style="margin:0">
-      <a href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Telegram</a><a href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Instagram</a><a href="https://soundcloud.com/pulse-index" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">SoundCloud</a><a href="https://www.youtube.com/@PULSE_INDEX" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">YouTube</a><a href="https://linktr.ee/pulseindex" target="_blank" rel="noopener" style="color:var(--sig)">Linktree</a>
-    </p>
-    <a class="qr" href="https://linktr.ee/pulseindex" target="_blank" rel="noopener"><span>SCAN →<br>LINKTREE</span><img id="qr-img" src="images/site/qr-linktree.png" alt="QR code to the Pulse Index Linktree"></a>
-    </div>
-    <div class="hairline"></div>
-    <div class="label">SUBMIT DOCUMENTATION</div>
-    <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in — it can be added to the archive.</p>
-    <p>Send it to <a href="mailto:pulseindex.platform@gmail.com" style="color:var(--sig)">pulseindex.platform@gmail.com</a></p>
-  
-    <div class="bottom-logo"><img src="images/site/logo.png" alt="Pulse Index"></div>
   </section>
-
 </main>
 
-<footer>PULSE INDEX / ARCHIVAL TRANSMISSION SYSTEM</footer>
-
-<div id="filepanel">
-  <div class="inner">
-    <button class="close" id="file-close">CLOSE ✕</button>
-    <div id="file-content"></div>
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div><p class="fmark">Skill Spill</p><p class="muted" style="margin-top:10px;max-width:34ch">Practical skills, shared around the table.</p></div>
+      <div class="links">
+        <a href="https://t.me/+VEVrRvJ6kuRhN2Fh" target="_blank" rel="noopener">Telegram ↗</a>
+        <a href="https://www.instagram.com/skillspill.workshops/" target="_blank" rel="noopener">Instagram ↗</a>
+        <p id="contact-email" hidden></p>
+        <a href="#join">Join the email list</a>
+        <a href="#propose">Propose a workshop</a>
+        <a href="people.html">Meet the facilitators</a>
+        <a href="facilitators.html">Facilitator guide</a>
+        <a href="#venue-form">Host a workshop</a>
+      </div>
+    </div>
+    <div class="statusbar mono"><span>© <span id="year">2026</span> Skill Spill</span><span>building a community one workshop at a time</span></div>
   </div>
-</div>
+</footer>
 
-<div id="lightbox">
-  <button class="close" id="lightbox-close">CLOSE ✕</button>
-  <img id="lightbox-img" src="" alt="">
-  <div id="lightbox-cap"></div>
-</div>
+<dialog id="poster-dialog" aria-label="Workshop poster">
+  <div class="panel">
+    <div class="panel-h"><span id="poster-bar">poster</span><button type="button" class="x" data-close aria-label="Close">×</button></div>
+    <img id="poster-img" alt="">
+  </div>
+</dialog>
 
-<script src="config.js?v=2026-10-20e"></script>
+<dialog id="done-dialog" aria-labelledby="done-title">
+  <div class="panel">
+    <div class="panel-h"><span id="done-bar">sent</span><button type="button" class="x" data-close aria-label="Close">×</button></div>
+    <div class="panel-b" style="display:grid;gap:14px">
+      <h3 id="done-title" style="font-size:var(--s-2)">Sent</h3>
+      <div id="done-body" style="display:grid;gap:14px"></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="reg-dialog" aria-labelledby="reg-title">
+  <div class="panel">
+    <div class="panel-h"><span id="reg-bar">register</span><button type="button" class="x" data-close aria-label="Close">×</button></div>
+    <div class="panel-b">
+      <div id="reg-form-wrap">
+        <h3 id="reg-title" style="font-size:var(--s-2);margin-bottom:16px">Save your spot</h3>
+        <div class="dlg-sum" id="reg-sum"></div>
+        <form class="form" id="reg-form" novalidate style="margin-top:20px">
+          <div class="hp" aria-hidden="true"><label>Leave empty <input type="text" name="website_url" tabindex="-1" autocomplete="off"></label></div>
+          <input type="hidden" name="workshop_id">
+          <div class="field"><label for="r-name">Full name *</label><input id="r-name" name="name" type="text" required autocomplete="name"></div>
+          <div class="two">
+            <div class="field"><label for="r-email">Email *</label><input id="r-email" name="email" type="email" required autocomplete="email"></div>
+            <div class="field"><label for="r-phone">Phone</label><input id="r-phone" name="phone" type="tel" autocomplete="tel"></div>
+          </div>
+          <div class="two">
+            <div class="field"><label for="r-ticket">Ticket</label><select id="r-ticket" name="ticket"></select></div>
+            <div class="field"><label for="r-seats">Spots</label><select id="r-seats" name="seats"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div>
+          </div>
+          <div class="field" id="student-field" hidden><label for="r-student">Student number *</label><input id="r-student" name="student_number" type="text" autocomplete="off" inputmode="text"><span class="hint">Needed for the student price. Bring your student card to the workshop.</span></div>
+          <div class="field" id="mat-field" hidden><label for="r-mat">Materials *</label><select id="r-mat" name="material_option"></select><span class="hint">Price per person, added to your ticket.</span></div>
+          <p class="mono" id="reg-total" hidden></p>
+          <div id="extra-q" style="display:grid;gap:18px"></div>
+          <div class="field"><label for="r-notes">Access needs, allergies or questions</label><textarea id="r-notes" name="notes" style="min-height:64px"></textarea></div>
+          <fieldset class="field" id="photo-field"><legend>Photos *</legend>
+            <span class="hint" style="margin-bottom:4px">We take a few photos during workshops for documentation and our Instagram. What's okay with you?</span>
+            <div class="checks" style="flex-direction:column;align-items:flex-start;gap:6px">
+              <label><input type="radio" name="photo_consent" value="Yes" required> Yes, photos of me are fine</label>
+              <label><input type="radio" name="photo_consent" value="Yes, no face"> Yes, but please don't show my face</label>
+              <label><input type="radio" name="photo_consent" value="No photos"> No photos of me, please</label>
+            </div>
+          </fieldset>
+          <div class="policy-box" aria-labelledby="pol-h">
+            <p class="mono" id="pol-h">cancellation policy</p>
+            <ul>
+              <li><b>More than 48 hours before:</b> full refund, or transfer your place to someone else.</li>
+              <li><b>Less than 48 hours before:</b> no refund, but you can transfer your place. Tell us their name in advance.</li>
+              <li><b>No-show without notice:</b> no refund or transfer.</li>
+              <li><b>Fewer than 5 paid participants:</b> we cancel or reschedule, and you get a full refund or move to another workshop.</li>
+            </ul>
+            <p class="muted">To cancel or transfer, email <span style="user-select:all;color:var(--ink)">skillspillworkshops@gmail.com</span>.</p>
+          </div>
+          <div class="checks" style="flex-direction:column;align-items:flex-start">
+            <label><input type="checkbox" name="agree" value="yes" required> I agree to the cancellation policy *</label>
+            <label><input type="checkbox" name="newsletter" value="yes"> Tell me when new workshops are announced</label>
+          </div>
+          <div><button class="btn go" type="submit" id="reg-submit">Register →</button></div>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div id="reg-done" hidden></div>
+    </div>
+  </div>
+</dialog>
+
+<script src="config.js"></script>
 <script>
-/* Loads the content, then starts the site — without making visitors wait for Google:
-   1) the copy saved in this browser from the last visit shows straight away;
-   2) otherwise the sheet gets 1.5 s, then the saved files in /content take over;
-   3) the sheet keeps loading in the background. Its answer is saved for next time,
-      and if it differs from what's on screen, a "new signal" marker offers a reload. */
-(async function(){
-  const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
-  const URL_ = (window.PULSE_CONFIG||{}).endpoint;
-  const CACHE_KEY = 'pi_site_v2', CACHE_DAYS = 30;
-  const same = (a,b) => JSON.stringify(a)===JSON.stringify(b);
-  function readCache(){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); return c && c.src===URL_ && Date.now()-c.t < CACHE_DAYS*864e5 ? c.d : null; }catch(_){ return null; } }
-  function writeCache(d){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify({t:Date.now(), src:URL_, d})); }catch(_){} }
-  async function fromSheet(){
-    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(), 20000);
-    try{
-      const r=await fetch(URL_, {signal:ctl.signal}); if(!r.ok) throw new Error('sheet: '+r.status);
-      const d=await r.json(); if(!d.events || !d.artists) throw new Error('sheet: unexpected reply');
-      return [d.events, d.artists, d.spaces||[], d.settings||{}, d.releases||[]];
-    } finally { clearTimeout(t); }
-  }
-  async function fromFiles(){
-    const [ev, ar, sp, st] = await Promise.all(['events','artists','spaces','settings'].map(get));
-    // releases are optional: a missing file just means no release section
-    const rl = await get('releases').catch(()=>[]);
-    return [ev, ar, sp, st, rl];
-  }
-  function newSignal(){
-    if(document.getElementById('new-signal')) return;
-    const b=document.createElement('button'); b.id='new-signal'; b.type='button';
-    b.innerHTML='<span class="dot"></span>NEW SIGNAL — UPDATE ↻'; b.title='The content has changed since this page loaded';
-    b.onclick=()=>location.reload();
-    document.getElementById('freqbar').insertBefore(b, document.querySelector('nav.channels'));
-  }
-  const sheet = URL_ ? fromSheet().catch(err=>{ console.warn('Pulse Index: sheet not reachable —', err.message); return null; }) : Promise.resolve(null);
+/* ============================================================
+   SETTINGS: edit these after setup (see SETUP.md)
+   ============================================================ */
+const SKILLSPILL = {
+  endpoint: (window.SKILLSPILL_CONFIG || {}).endpoint || "",   // set in config.js
+  contactEmail: "skillspillworkshops@gmail.com", // shown in the footer and FAQ
+  mobilePayBox: "8051YC",   // shown in payment instructions
+  season: "Autumn 2026",
+  // Photos live in the "images" folder on GitHub. Leave heroImage "" to hide the photo band.
+  heroImage: "",
+  heroCaption: "",
+  // Optional photo strip in the About section, e.g. {src:"images/embroidery-1.jpg", caption:"Embroidery 101"}
+  gallery: [],
+  // Show "Only N spots left" when this many spots or fewer remain (needs a capacity in the sheet)
+  spotsThreshold: 5
+};
+
+/* Programme shown while `endpoint` is empty. Once connected, workshops come from the Google Sheet. */
+const SAMPLE_WORKSHOPS = [
+ {
+  "id": "EMB-1013",
+  "title": "Embroidery 101",
+  "date": "2026-10-13",
+  "start": "18:00",
+  "end": "20:00",
+  "venue": "Byroo Cafe",
+  "address": "Laivurinrinne 1, 00120 Helsinki",
+  "facilitator": "Katie Ballinger",
+  "facilitator_bio": "Katie Ballinger is an artist from Canada who is a jack of all trades, from visual arts to coding. She worked in Silicon Valley tech for five years as a self-taught software engineer and recently graduated from Aalto University's New Media programme.",
+  "description": "During this workshop we will learn the basics to get started with embroidery. We'll learn about working with threads and needles, go through a few basic stitches, and get started on a simple design using what you've learned.",
+  "level": "Beginner",
+  "price_student": 20,
+  "price_employed": 30,
+  "materials": "All materials provided."
+ },
+ {
+  "id": "DARN-1020",
+  "extra_questions": "What kind of garment are you bringing to repair?",
+  "title": "Clothing Repair: Darning",
+  "date": "2026-10-20",
+  "start": "18:00",
+  "end": "20:00",
+  "venue": "Byroo Cafe",
+  "address": "Laivurinrinne 1, 00120 Helsinki",
+  "facilitator": "Katie Ballinger",
+  "facilitator_bio": "Katie Ballinger is an artist from Canada who is a jack of all trades, from visual arts to coding. She worked in Silicon Valley tech for five years as a self-taught software engineer and recently graduated from Aalto University's New Media programme.",
+  "description": "Learn about different techniques for repairing clothing and textiles. We provide some materials and tools; you bring your ripped, torn and disfigured textiles, and we restore your items to use and beautify them in the process.",
+  "level": "Beginner",
+  "price_student": 15,
+  "price_employed": 20,
+  "materials": "Some materials and tools provided.",
+  "bring": "Your ripped, torn or worn textiles."
+ },
+ {
+  "id": "DD-1104",
+  "title": "Digital Declutter",
+  "date": "2026-11-04",
+  "start": "18:00",
+  "end": "20:00",
+  "venue": "Zestii Kitchens",
+  "address": "Kaarlenkatu 15, 00530 Helsinki",
+  "facilitator": "Katie Ballinger",
+  "facilitator_bio": "Katie Ballinger is an artist from Canada who is a jack of all trades, from visual arts to coding. She worked in Silicon Valley tech for five years as a self-taught software engineer and recently graduated from Aalto University's New Media programme. As a big collector of data, she has been cleaning up her own digital mess and has recognised the lack of education or knowledge around this. All of us need help with these digital hygiene tasks, even her, so let's face this challenge together.",
+  "description": "Get your digital work life under control in this relaxed, hands-on co-working session designed for anyone ready for a clearer inbox, better file organisation and smoother daily workflows. We'll kick things off with a short, practical intro on how digital clutter affects focus and productivity, along with simple ways to make your systems work for you.\n\nThen we'll get straight into it, working on our own setups side by side. Whether you're tackling your inbox, reorganising files or sorting out storage, you'll get light guidance, practical tips, and the chance to learn from how others manage their workflows.",
+  "level": "All levels",
+  "price_student": 20,
+  "price_employed": 25,
+  "pay_by": "2026-11-01",
+  "bring": "Your work computer (and any drives or files you want to tackle), and a rough idea of what's been slowing you down.",
+  "notes": "You're welcome to order from the menu at extra cost."
+ },
+ {
+  "id": "DARN-1110",
+  "extra_questions": "What kind of garment are you bringing to repair?",
+  "title": "Clothing Repair: Darning",
+  "date": "2026-11-10",
+  "start": "18:00",
+  "end": "20:00",
+  "venue": "Byroo Cafe",
+  "address": "Laivurinrinne 1, 00120 Helsinki",
+  "facilitator": "Katie Ballinger",
+  "facilitator_bio": "Katie Ballinger is an artist from Canada who is a jack of all trades, from visual arts to coding. She worked in Silicon Valley tech for five years as a self-taught software engineer and recently graduated from Aalto University's New Media programme.",
+  "description": "Learn about different techniques for repairing clothing and textiles. We provide some materials and tools; you bring your ripped, torn and disfigured textiles, and we restore your items to use and beautify them in the process.",
+  "level": "Beginner",
+  "price_student": 15,
+  "price_employed": 20,
+  "materials": "Some materials and tools provided.",
+  "bring": "Your ripped, torn or worn textiles."
+ },
+ {
+  "id": "AVO-1116",
+  "title": "Avocado-Dyed Hand Towels: Layer, Stitch & Create",
+  "date": "2026-11-16",
+  "closes_at": "2026-11-13T15:00:00.000Z",
+  "start": "17:00",
+  "end": "19:00",
+  "venue": "Venue TBC",
+  "facilitator": "Shweta Dash",
+  "facilitator_bio": "Hi, I am Shweta, a textile designer working through material play and hands-on making. My workshop approach is open-minded and experimental while acknowledging traditional artisanal textile-making methods. Through facilitating workshops across Helsinki, Espoo and Joutsa, I have learned that craft techniques continuously shape-shift through the materials at hand and the outcomes they produce.",
+  "description": "Create your own layered kitchen towel using gauze textiles, cotton yarn and avocado dyeing. We will begin by layering and hand-stitching pre-treated gauze textiles together using cotton yarns, creating a tactile, textured surface.\n\nThis hands-on workshop combines textile layering, hand stitching and natural dyeing to create a functional textile object. No previous textile experience is required.",
+  "level": "Beginner friendly",
+  "price_employed": 40
+ },
+ {
+  "id": "BOOK-1118",
+  "title": "Pocket Book Making",
+  "date": "2026-11-18",
+  "venue": "Byroo Cafe",
+  "address": "Laivurinrinne 1, 00120 Helsinki",
+  "facilitator": "Katie Ballinger",
+  "facilitator_bio": "Katie Ballinger is an artist from Canada who is a jack of all trades, from visual arts to coding. She worked in Silicon Valley tech for five years as a self-taught software engineer and recently graduated from Aalto University's New Media programme.",
+  "description": "Come make your own pocket-sized book from scratch! In this hands-on workshop, we'll explore simple bookbinding techniques and create a small book with a custom, decorated cover.\n\nChoose between A5 or A6 size, and fill your book with your choice of dot-grid or lined paper. Colourful, sturdy cardstock will be provided for the covers, which we can decorate together, or you're welcome to bring your own paper if you have something special in mind.\n\nWe'll learn how to bind our books using staples, with all the necessary tools and materials provided. If you'd like to experiment with a different binding technique, you're also welcome to bring your own materials and make the book your own.",
+  "level": "Beginner, no experience needed",
+  "price_student": 20,
+  "price_employed": 30,
+  "materials": "All tools and materials provided.",
+  "bring": "Optional: your own paper or binding materials."
+
+ }
+];
+
+const MIN_PARTICIPANTS = 5;
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const isDemo = () => !SKILLSPILL.endpoint;
+const slug = t => String(t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const paras = t => String(t||"").split(/\n\s*\n|\r\n\s*\r\n/).map(x=>x.trim()).filter(Boolean);
+let workshops = [];
+
+$("#year").textContent = new Date().getFullYear();
+if ($("#season")) $("#season").textContent = SKILLSPILL.season || "";
+if (SKILLSPILL.contactEmail){ const c=$("#contact-email"); c.hidden=false; c.innerHTML='<span style="user-select:all">'+esc(SKILLSPILL.contactEmail)+'</span>'; }
+
+const D = iso => new Date(iso+"T12:00:00");
+const fmt = (iso, o) => { const d=D(iso); return isNaN(d) ? iso : new Intl.DateTimeFormat("en-GB",o).format(d); };
+const fmtDate = iso => fmt(iso,{weekday:"short",day:"numeric",month:"short"});
+const timeOf = w => w.start ? `${w.start}${w.end?"–"+w.end:""}` : "time TBC";
+const hasCap = w => Number(w.capacity) > 0;
+const isFull = w => hasCap(w) && !(Number(w.spotsLeft) > 0);
+const mapUrl = w => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([w.venue, w.address || "Helsinki"].filter(Boolean).join(", "));
+/* Material add-ons: one per line in the sheet, e.g. "Yarn | 8" */
+const matOptions = w => String(w.material_options||"").split(/\n+/).map(l=>l.trim()).filter(Boolean).map(l=>{
+  const m = l.match(/^(.*?)\s*(?:\||:|\+|€)\s*€?\s*(\d+(?:[.,]\d+)?)\s*€?$/);
+  return m ? {label:m[1].trim(), price:Number(m[2].replace(",","."))} : {label:l, price:0};
+});
+const matHint = w => { const o=matOptions(w).filter(x=>x.price>0); if(!o.length) return ""; const lo=Math.min(...o.map(x=>x.price)); return `+ materials from €${lo}`; };
+const priceText = w => w.price_student && w.price_employed && w.price_student!=w.price_employed ? `€${esc(w.price_student)} / €${esc(w.price_employed)}` : `€${esc(w.price_employed || w.price_student)}`;
+
+/* The site tells the sheet its own address, so emails can link back here without any setup */
+const SITE_BASE = /^https?:$/.test(location.protocol) ? location.origin + location.pathname.replace(/[^/]*$/,"") : "";
+
+/* Speed: show the list this browser saw last time straight away, then refresh it from the sheet */
+const CACHE_KEY = "ss_workshops_v1";
+function readCache(){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||"null"); return c && Date.now()-c.t < 3*864e5 ? c.w : null; }catch(e){ return null; } }
+function writeCache(w){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify({t:Date.now(), w})); }catch(e){} }
+function showWorkshops(list){
+  const today = new Date().toISOString().slice(0,10);
+  workshops = list.filter(w=>String(w.date)>=today).sort((a,b)=>(a.date+(a.start||"99")).localeCompare(b.date+(b.start||"99")));
+  renderCards(); renderNext();
+}
+async function loadWorkshops(){
+  if (isDemo()){ workshops = SAMPLE_WORKSHOPS; $("#demo-note").hidden = false; showWorkshops(workshops); addEventData(); return; }
+  const cached = readCache();
+  if (cached) showWorkshops(cached);
   try{
-    let shown = readCache();
-    if(!shown) shown = await Promise.race([sheet, new Promise(r=>setTimeout(()=>r(null), 1500))]);
-    if(!shown) shown = await fromFiles();
-    sheet.then(fresh=>{ if(!fresh) return; writeCache(fresh); if(!same(fresh, shown)) newSignal(); });
-    const [ev, ar, sp, st, rl] = shown;
-    window.ARTISTS = Object.fromEntries((Array.isArray(ar)?ar:(ar.artists||[])).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
-    window.SPACES  = Object.fromEntries((Array.isArray(sp)?sp:(sp.spaces||[])).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
-    const known = id => { if(ARTISTS[id]) return true; console.warn('Pulse Index: unknown artist id "'+id+'" — check content/artists.json'); return false; };
-    // An event is archived automatically from the day after its date.
-    // Setting status to ARCHIVED by hand still works (e.g. for a cancelled date).
-    const today = new Date(new Date().toDateString());
-    const dateOf = d => { const [dd,mm,yy]=(d||'').split('.').map(Number); return yy ? new Date(yy,mm-1,dd) : null; };
-    window.EVENTS = (Array.isArray(ev)?ev:(ev.events||[])).map(e=>({ ...e,
-      status: e.status==='ARCHIVED' || (dateOf(e.date) && dateOf(e.date) < today) ? 'ARCHIVED' : 'INCOMING',
-      artists: (e.artists||[]).filter(known),
-      documentation: (e.documentation||[]).filter(known),
-      space: SPACES[e.space] ? e.space : '',
-      artistNotes: Object.fromEntries((e.artistNotes||[]).map(n=>[n.artist, n.note]))
-    }));
-    window.RELEASES = (Array.isArray(rl)?rl:(rl.releases||[])).filter(r=>r.id && r.title && !r.hidden).map(r=>({ ...r,
-      artists: (r.artists||[]).filter(known)
-    }));
-    Object.values(ARTISTS).forEach(a=>{ a.members=(a.members||[]).filter(known); });
-    window.ABOUT_IMAGE = st.aboutImage || '';
-    window.TYPE_LABELS = st.typeLabels || { LIVE:'LIVE PERFORMANCE', WORKSHOP:'WORKSHOP' };
-    const s=document.createElement('script'); s.src='assets/app.js?v='+window.PULSE_BUILD; document.body.appendChild(s);
-  }catch(err){
-    console.error(err);
-    document.querySelector('main').insertAdjacentHTML('afterbegin','<div style="padding:90px 16px;max-width:600px;margin:0 auto" class="label">NO SIGNAL — the content files could not be loaded. If you opened index.html straight from your computer, see README (preview section).</div>');
+    const r = await fetch(SKILLSPILL.endpoint+"?action=workshops"+(SITE_BASE?"&site="+encodeURIComponent(SITE_BASE):""));
+    const fresh = (await r.json()).workshops || [];
+    writeCache(fresh); showWorkshops(fresh); addEventData();
+  }catch(e){
+    if (!cached) $("#cards").innerHTML = '<p class="empty">Couldn\'t load workshops right now. Refresh the page, or check Instagram or Telegram for the latest programme.</p>';
   }
+}
+
+$("#see-more").addEventListener("click", ()=>{ showAll=true; renderCards(); });
+// open the full list when someone follows a link to a specific workshop
+if (/^#ws-/.test(location.hash)) showAll = true;
+function renderNext(){
+  if (!$("#next-list")) return;
+  const n = workshops;
+  $("#next-list").innerHTML = n.length ? n.map(w=>`<li><span class="mono muted">${esc(fmt(w.date,{weekday:"short"}))} ${esc(fmt(w.date,{day:"numeric",month:"numeric"}))}</span><span><a href="#ws-${esc(w.id)}">${esc(w.title)}</a><span class="mono muted sub">${esc(w.venue)} · ${esc(timeOf(w))}</span></span><span class="pr muted">${isClosed(w)?'<span class="mono">closed</span>':isFull(w)?'<span class="mono" style="color:var(--warn)">full</span>':priceText(w)}</span></li>`).join("")
+    : '<li><span></span><span class="muted">New workshops coming soon.</span></li>';
+}
+
+/* Registration deadline (set per workshop in the sheet) */
+const isClosed = w => !!w.closed || (!!w.closes_at && new Date(w.closes_at) <= new Date());
+const closesLabel = w => { const d=new Date(w.closes_at); if (isNaN(d)) return "";
+  const p=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZone:"Europe/Helsinki"}).formatToParts(d).reduce((o,x)=>(o[x.type]=x.value,o),{});
+  return `${p.weekday} ${p.day} ${p.month}, ${p.hour}:${p.minute}`; };
+function spotsHtml(w){
+  if (isClosed(w)) return `<a class="mono muted" style="font-size:var(--s-mono)" href="#join">hear about the next date</a>`;
+  const min = `<span class="spots-label">min. ${MIN_PARTICIPANTS} to run</span>`;
+  if (!hasCap(w)) return min;
+  const cap = Number(w.capacity), left = Math.max(0, Math.min(cap, Number(w.spotsLeft)||0));
+  if (!left) return `<span class="spots-label full">Full · waitlist open</span> <a class="mono muted" style="font-size:var(--s-mono)" href="#join">hear about the next date</a>`;
+  if (left <= (SKILLSPILL.spotsThreshold ?? 5)) return `<span class="spots-label few">Only ${left} spot${left===1?"":"s"} left</span>`;
+  return min;
+}
+
+const SHOW_FIRST = 4;   // how many workshops show before "See more"
+let showAll = false;
+function renderCards(){
+  if (!workshops.length){ $("#cards").innerHTML = '<p class="empty">No workshops listed right now. Join Telegram or the email list to hear about the next ones.</p>'; return; }
+  const extra = Math.max(0, workshops.length - SHOW_FIRST);
+  $("#more-wrap").hidden = showAll || !extra;
+  $("#see-more").textContent = `See ${extra} more workshop${extra===1?"":"s"} ↓`;
+  $("#cards").innerHTML = (showAll ? workshops : workshops.slice(0, SHOW_FIRST)).map(w=>{
+    const full = isFull(w);
+    const where = w.address ? `${esc(w.venue)}, ${esc(w.address)}` : esc(w.venue);
+    return `<article class="ws" id="ws-${esc(w.id)}">
+      <div class="ws-date"><span class="d">${esc(fmt(w.date,{day:"numeric"}))}</span><span class="mono">${esc(fmt(w.date,{month:"short"}))} · ${esc(fmt(w.date,{weekday:"short"}))}</span><span class="mono muted">${esc(timeOf(w))}</span>${w.image?`<img class="thumb duo" src="${esc(w.image)}" alt="" loading="lazy">`:""}</div>
+      <div class="ws-main">
+        <p class="mono muted">${esc((w.level||"").toLowerCase())}${w.facilitator?` · with <a href="people.html#${slug(w.facilitator)}" style="color:inherit">${esc(w.facilitator)}</a>`:""}</p>
+        <h3>${esc(w.title)}</h3>
+        <p class="ws-desc">${esc(paras(w.description)[0]||"")}</p>
+        <p class="ws-meta muted" style="font-size:.95rem">${/tbc/i.test(w.venue||"")&&!w.address?`<span>${where}</span>`:`<a href="${mapUrl(w)}" target="_blank" rel="noopener" style="color:inherit">${where} ↗</a>`}</p>
+        <details class="more"><summary>${paras(w.description).length>1?"read more":"details"}</summary>${paras(w.description).slice(1).map(x=>`<p class="ws-desc" style="margin-top:10px">${esc(x)}</p>`).join("")}<dl>
+          ${w.materials?`<dt>materials</dt><dd>${esc(w.materials)}</dd>`:""}
+          ${w.bring?`<dt>bring</dt><dd>${esc(w.bring)}</dd>`:""}
+          ${w.notes?`<dt>food</dt><dd>${esc(w.notes)}</dd>`:""}
+          ${w.facilitator_bio?`<dt>${esc((w.facilitator||"facilitator").split(" ")[0].toLowerCase())}</dt><dd>${w.facilitator_photo?`<span class="face"><img class="duo" src="${esc(w.facilitator_photo)}" alt="${esc(w.facilitator||"")}" loading="lazy"><span>${esc(w.facilitator_bio)}</span></span>`:esc(w.facilitator_bio)}</dd>`:""}
+          ${matOptions(w).length?`<dt>material options</dt><dd>${matOptions(w).map(o=>`${esc(o.label)}${o.price?` +€${o.price}`:""}`).join(" · ")}</dd>`:""}
+          <dt>payment</dt><dd>MobilePay Box ${esc(SKILLSPILL.mobilePayBox)}, ${w.pay_by?"by "+esc(fmt(w.pay_by,{day:"numeric",month:"long"})):"in advance"}</dd>
+          <dt>minimum</dt><dd>${MIN_PARTICIPANTS} paid participants for the workshop to go ahead</dd>
+          ${w.poster?`<dt>poster</dt><dd><button type="button" class="poster-btn" data-poster="${esc(w.poster)}" data-title="${esc(w.title)}">View poster</button></dd>`:""}
+        </dl></details>
+      </div>
+      <div class="ws-side">
+        <div><p class="price">${priceText(w)}</p>${w.price_student&&w.price_employed&&w.price_student!=w.price_employed?'<p class="mono muted" style="margin-top:4px">student / employed</p>':""}${matHint(w)?`<p class="mono muted" style="margin-top:2px">${matHint(w)}</p>`:""}</div>
+        ${spotsHtml(w)}
+        ${isClosed(w) ? `<button class="btn" type="button" disabled>Registration closed</button>`
+          : `<button class="btn ${full?"":"go"}" type="button" data-register="${esc(w.id)}">${full?"Join waitlist":"Register →"}</button>${w.closes_at?`<p class="mono muted" style="font-size:var(--s-mono)">registration closes ${esc(closesLabel(w))}</p>`:""}`}
+      </div></article>`;
+  }).join("");
+}
+
+async function send(payload){
+  if (isDemo()){
+    await new Promise(r=>setTimeout(r,600));
+    if (payload.type==="registration"){
+      const w = workshops.find(x=>x.id===payload.workshop_id);
+      if (isClosed(w)) return {ok:false,error:"closed"};
+      const price = payload.ticket==="Student" ? (w.price_student||w.price_employed) : (w.price_employed||w.price_student);
+      const mat = (matOptions(w).find(o=>o.label===payload.material_option)||{price:0}).price;
+      return {ok:true,status:isFull(w)?"waitlist":"registered",ref:"SS-"+Math.random().toString(36).slice(2,7).toUpperCase(),amount:((Number(price)||0)+mat)*(Number(payload.seats)||1),payBy:w.pay_by||(()=>{const d=new Date(w.date+"T12:00:00");d.setDate(d.getDate()-2);return d.toISOString().slice(0,10)})(),demo:true};
+    }
+    return {ok:true,demo:true};
+  }
+  const r = await fetch(SKILLSPILL.endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...payload,_site:SITE_BASE})});
+  return r.json();
+}
+
+function shrinkImage(file){
+  return new Promise(res=>{
+    const img=new Image(), url=URL.createObjectURL(file);
+    img.onload=()=>{ const k=Math.min(1,1600/Math.max(img.width,img.height)); const c=document.createElement("canvas");
+      c.width=Math.round(img.width*k); c.height=Math.round(img.height*k); c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url); res({name:file.name, data:c.toDataURL("image/jpeg",0.82)}); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); res({name:file.name,data:""}); };
+    img.src=url;
+  });
+}
+function formToObject(form){
+  const o={}; new FormData(form).forEach((v,k)=>{ o[k] = k in o ? [].concat(o[k],v) : v; });
+  Object.keys(o).forEach(k=>{ if(Array.isArray(o[k])) o[k]=o[k].join(", "); }); return o;
+}
+function validate(form){
+  for (const el of $$("[required]",form)){
+    if (el.type==="radio"){ if (!form.querySelector(`input[name="${el.name}"]:checked`)){ el.focus(); return "Please choose an option for photos."; } continue; }
+    const bad = el.type==="checkbox" ? !el.checked : !el.value.trim() || (el.type==="email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value.trim()));
+    if (bad){ el.focus(); const lab = form.querySelector(`label[for="${el.id}"]`)?.textContent.replace("*","").trim() || "This field";
+      return el.type==="checkbox" ? "Please tick the box to confirm." : (el.type==="email" && el.value) ? "Please check the email address." : `${lab} is needed.`; }
+  }
+  return "";
+}
+
+/* Confirmation pop-ups after a proposal or venue pitch (same style as registration) */
+const DONE = {
+  facilitator: d => ({bar:"proposal_sent", title:"Proposal sent ✓", body:`
+    <p>Thank you${d.name?", "+esc(d.name.split(" ")[0]):""}! Your proposal for <b>${esc(d.title)}</b> is with us.</p>
+    <div class="dlg-sum"><b>What happens next</b>
+      <span>1. We read it and reply within a week.</span>
+      <span>2. If it's a good fit, we set up a short chat to plan it together.</span>
+      <span>3. We find a date and venue, usually 2–3 months ahead.</span></div>
+    <p class="muted" style="font-size:.92rem">We've emailed a copy of this and a link to our facilitator guide to ${esc(d.email)}.</p>
+    <div><a class="btn" href="facilitators.html">Read the facilitator guide →</a></div>`}),
+  venue: d => ({bar:"venue_sent", title:"Thanks, we got it ✓", body:`
+    <p>Thank you${d.name?", "+esc(d.name.split(" ")[0]):""}! <b>${esc(d.venue)}</b> is on our list.</p>
+    <div class="dlg-sum"><b>What happens next</b>
+      <span>1. We review the details you sent.</span>
+      <span>2. We get back to you within a week to arrange a short visit or call.</span>
+      <span>3. Together we pick dates and terms that work for your space.</span></div>
+    <p class="muted" style="font-size:.92rem">We've emailed ${esc(d.email)} an overview of how hosting a Skill Spill workshop works.</p>`})
+};
+function showDone(c, extra){
+  $("#done-bar").textContent=c.bar; $("#done-title").textContent=c.title;
+  $("#done-body").innerHTML=c.body+(extra||"")+'<div style="margin-top:8px"><button class="btn" type="button" data-close>Close</button></div>';
+  $("#done-dialog").showModal();
+}
+document.addEventListener("click", e=>{ const d=$("#done-dialog"); if(d && d.open && (e.target.closest("#done-dialog [data-close]")||e.target===d)) d.close(); });
+
+/* ---------- "what would you love to learn?" options (Ideas tab in the sheet) ---------- */
+const SAMPLE_IDEAS = [{id:"textiles-sewing",idea:"Textiles & sewing"},{id:"knitting-crochet",idea:"Knitting & crochet"},{id:"embroidery-mending",idea:"Embroidery & mending"},{id:"printmaking",idea:"Printmaking"},{id:"drawing-painting",idea:"Drawing & painting"},{id:"paper-bookbinding",idea:"Paper & bookbinding"},{id:"natural-dyeing",idea:"Natural dyeing"},{id:"ceramics-clay",idea:"Ceramics & clay"},{id:"digital-skills",idea:"Digital skills"},{id:"music-sound",idea:"Music & sound"}];
+function showIdeas(list){
+  if (!list || !list.length || !$("#idea-picks")) return;
+  $("#idea-picks").innerHTML = list.map(i=>`<label><input type="checkbox" name="picks" value="${esc(i.id)}"> ${esc(i.idea)}</label>`).join("");
+  $("#idea-picks-wrap").hidden = false;
+}
+(async()=>{
+  if (isDemo()) return showIdeas(SAMPLE_IDEAS);
+  let cached=null; try{ cached=JSON.parse(localStorage.getItem("ss_ideas_v1")||"null"); }catch(e){}
+  if (cached) showIdeas(cached);
+  try{ const r=await fetch(SKILLSPILL.endpoint+"?action=ideas"); const j=await r.json();
+    if (j.ok){ if (!cached || JSON.stringify(cached)!==JSON.stringify(j.ideas)) showIdeas(j.ideas); try{ localStorage.setItem("ss_ideas_v1", JSON.stringify(j.ideas)); }catch(e){} } }catch(e){}
 })();
+
+/* ---------- Links from emails: #vote=…, #unsubscribe=…, #join-ref=… ----------
+   Nothing changes until the person clicks a button here. */
+let demoVotes = {};
+async function api(params){
+  if (isDemo()){
+    await new Promise(r=>setTimeout(r,300));
+    if (params.action==="api_vote"){ const had=demoVotes[params.pick]; demoVotes[params.pick]=true; params.result=had?"already":"counted"; }
+    if (params.action.startsWith("api_vote")) return {ok:true,result:params.result||"",ideas:SAMPLE_IDEAS.map((i,n)=>({...i,votes:(n%3)+(demoVotes[i.id]?1:0),mine:!!demoVotes[i.id]}))};
+    return {ok:true,found:true,demo:true};
+  }
+  const r = await fetch(SKILLSPILL.endpoint+"?"+new URLSearchParams(params)); return r.json();
+}
+function linkDialog(bar,title,html){
+  $("#done-bar").textContent=bar; $("#done-title").textContent=title; $("#done-body").innerHTML=html;
+  if (!$("#done-dialog").open) $("#done-dialog").showModal();
+}
+const closeBtn = '<div><button class="btn" type="button" data-close>Close</button></div>';
+const oops = '<p>Something went wrong. Try again in a moment, or email <span style="user-select:all">skillspillworkshops@gmail.com</span>.</p>'+closeBtn;
+async function voteUI(v, s, pick){
+  if (!pick) linkDialog("vote","What should we teach next?","<p class=\"muted\">Loading…</p>");
+  try{
+    const res = await api(pick?{action:"api_vote",v,s,pick}:{action:"api_votes",v});
+    if (!res.ok) return linkDialog("vote","Hmm","<p>This voting link looks incomplete. Try the button in the email again.</p>"+closeBtn);
+    const picked = pick && res.ideas.find(i=>i.id===pick);
+    const msg = picked ? (res.result==="already" ? `You've already voted for <b>${esc(picked.idea)}</b>.` : `✓ Counted: <b>${esc(picked.idea)}</b>. Thank you!`) : "Vote for as many as you like. We use this to plan the next workshops.";
+    linkDialog("vote","What should we teach next?", `<p${picked?' style="color:var(--accent)"':' class="muted"'}>${msg}</p>
+      <div style="border-top:1px solid var(--rule)">${res.ideas.map(i=>`<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--rule)">
+        <span>${esc(i.idea)} <span class="muted mono" style="font-size:var(--s-mono)">· ${i.votes}</span></span>
+        ${i.mine?'<span class="mono" style="color:var(--accent);white-space:nowrap">✓ your vote</span>':`<button class="btn" type="button" data-pick="${esc(i.id)}">Vote</button>`}</div>`).join("")||'<p class="muted">No ideas listed right now.</p>'}</div>
+      <p class="muted" style="font-size:.95rem">Something else you'd love to learn? Email <span style="user-select:all;color:var(--ink)">skillspillworkshops@gmail.com</span>, or <a href="#propose" data-close>teach it yourself</a>.</p>${closeBtn}`);
+    $$("#done-body [data-pick]").forEach(b=>b.addEventListener("click",()=>{ b.disabled=true; voteUI(v,s,b.dataset.pick); }));
+  }catch(e){ linkDialog("vote","Hmm",oops); }
+}
+function unsubUI(t, step){
+  if (!step) return linkDialog("email list","Unsubscribe?",`<p>Stop getting emails about new workshops from Skill Spill? You'll still get emails about any workshop you book.</p>
+    <div class="actions" style="margin-top:0"><button class="btn go" type="button" id="unsub-yes">Yes, unsubscribe me</button><button class="btn" type="button" data-close>Keep me on the list</button></div>`) || $("#unsub-yes").addEventListener("click",()=>unsubUI(t,"go"));
+  const action = step==="go" ? "api_unsubscribe" : "api_resubscribe";
+  api({action,t}).then(res=>{
+    if (!res.ok) return linkDialog("email list","Hmm",oops);
+    if (step==="go") { linkDialog("email list","You're unsubscribed",`<p>${res.found?"No more list emails. Thanks for being part of Skill Spill.":"That address wasn't on the list (it may already be removed)."}</p>
+      <p class="muted">Clicked by mistake?</p><div class="actions" style="margin-top:0"><button class="btn" type="button" id="unsub-undo">Re-join the list</button><button class="btn" type="button" data-close>Close</button></div>`);
+      $("#unsub-undo") && $("#unsub-undo").addEventListener("click",()=>unsubUI(t,"undo")); }
+    else linkDialog("email list","Welcome back 💚","<p>You're back on the list.</p>"+closeBtn);
+  }).catch(()=>linkDialog("email list","Hmm",oops));
+}
+function joinUI(r, t, go){
+  if (!go) return linkDialog("email list","Hear about new workshops first",`<p>Groups are small, so spots go quickly. We'll email you when new dates go up. A few emails a season, no spam, unsubscribe anytime.</p>
+    <div class="actions" style="margin-top:0"><button class="btn go" type="button" id="join-yes">Yes, add me</button><button class="btn" type="button" data-close>No thanks</button></div>`) || $("#join-yes").addEventListener("click",()=>joinUI(r,t,true));
+  api({action:"api_join_ref",r,t}).then(res=>linkDialog("email list", res.ok?"You're on the list 💚":"Hmm", res.ok?"<p>We'll let you know when new workshops go up.</p>"+closeBtn:"<p>We couldn't find your booking. Email us and we'll add you by hand.</p>"+closeBtn))
+    .catch(()=>linkDialog("email list","Hmm",oops));
+}
+(function handleLinkHash(){
+  const h = new URLSearchParams(location.hash.slice(1)); let hit=true;
+  if (h.get("vote")) voteUI(h.get("vote"), h.get("s")||"");
+  else if (h.get("unsubscribe")) unsubUI(h.get("unsubscribe"));
+  else if (h.get("join-ref")) joinUI(h.get("join-ref"), h.get("t")||"");
+  else hit=false;
+  if (hit) try{ history.replaceState(null,"",location.pathname+location.search); }catch(e){}
+})();
+
+const THANKS = {
+  facilitator:["Proposal received.","We've emailed you our facilitator guide and what happens next. We'll get back to you within a week."],
+  venue:["Thanks, details received.","We've emailed you an overview of how partnering works, and we'll be in touch within a week to arrange a visit or call."],
+  newsletter:["You're on the list.","We'll email you when new workshops go up, and when something you picked is on."]
+};
+$$("form[data-type]").forEach(form=>form.addEventListener("submit", async e=>{
+  e.preventDefault();
+  const status=$(".form-status",form), err=validate(form);
+  if (err){ status.textContent=err; status.className="form-status err"; return; }
+  const btn=$("button[type=submit]",form); btn.disabled=true; status.className="form-status"; status.textContent="Sending…";
+  try{
+    const data = formToObject(form); delete data.photo_files;
+    const fi = form.querySelector('input[type=file]');
+    if (fi && fi.files.length){ status.textContent="Preparing photos…"; data.photos = await Promise.all([...fi.files].slice(0,5).map(shrinkImage)); status.textContent="Sending…"; }
+    const res = await send({type:form.dataset.type,...data});
+    if (!res.ok) throw new Error(res.error||"failed");
+    const [h,p]=THANKS[form.dataset.type];
+    const demo = res.demo?'<p class="mono muted">preview mode: nothing was sent</p>':"";
+    form.outerHTML = `<div class="success" role="status"><h3>${h}</h3><p class="muted">${p}</p>${demo}</div>`;
+    if (DONE[form.dataset.type]) showDone(DONE[form.dataset.type](data), demo);
+  }catch(ex){ btn.disabled=false; status.className="form-status err"; status.textContent="That didn't go through. Check your connection and try again."; }
+}));
+
+/* ---------- registration dialog ---------- */
+const dlg=$("#reg-dialog"), regForm=$("#reg-form"); let current=null;
+document.addEventListener("click", e=>{
+  const b=e.target.closest("[data-register]"); if(!b) return;
+  current=workshops.find(w=>w.id===b.dataset.register); if(!current) return;
+  if (isClosed(current)) { renderCards(); return; }
+  const full=isFull(current);
+  $("#reg-form-wrap").hidden=false; $("#reg-done").hidden=true;
+  regForm.reset(); regForm.workshop_id.value=current.id;
+  // Workshop-specific questions (one per line in the sheet's extra_questions column)
+  const qs = String(current.extra_questions||"").split(/\n+/).map(q=>q.trim()).filter(Boolean).slice(0,3);
+  const mo = matOptions(current);
+  $("#mat-field").hidden = !mo.length; $("#r-mat").required = !!mo.length;
+  $("#r-mat").innerHTML = mo.length ? `<option value="">Choose…</option>` + mo.map(o=>`<option value="${esc(o.label)}">${esc(o.label)}${o.price?` (+€${o.price})`:" (no extra cost)"}</option>`).join("") : "";
+  setTimeout(updateTotal);
+  $("#extra-q").innerHTML = qs.map((q,i)=>`<div class="field"><label for="r-xq${i}">${esc(q)} *</label><input id="r-xq${i}" name="xq${i}" type="text" required data-q="${esc(q)}"></div>`).join("");
+  $(".form-status",regForm).textContent=""; $("#reg-submit").disabled=false;
+  $("#reg-title").textContent = full?"Join the waitlist":"Save your spot";
+  $("#reg-submit").textContent = full?"Join waitlist →":"Register →";
+  $("#reg-bar").textContent = full?"waitlist":"register";
+  const t = regForm.ticket; t.innerHTML = "";
+  const two = current.price_student && current.price_employed && current.price_student!=current.price_employed;
+  if (two){
+    t.insertAdjacentHTML("beforeend",`<option value="Student">Student · €${esc(current.price_student)}</option>`);
+    t.insertAdjacentHTML("beforeend",`<option value="Employed">Employed · €${esc(current.price_employed)}</option>`);
+  } else t.insertAdjacentHTML("beforeend",`<option value="Standard">Standard · €${esc(current.price_employed||current.price_student)}</option>`);
+  toggleStudent();
+  const max = (!hasCap(current)||full) ? 3 : Math.min(3, Number(current.spotsLeft)); regForm.seats.innerHTML="";
+  for(let i=1;i<=max;i++) regForm.seats.insertAdjacentHTML("beforeend",`<option value="${i}">${i}</option>`);
+  $("#reg-sum").innerHTML = `<b>${esc(current.title)}</b><span>${esc(fmtDate(current.date))}, ${esc(timeOf(current))} · ${esc(current.venue)}</span><span class="muted">${priceText(current)}${current.price_student&&current.price_employed&&current.price_student!=current.price_employed?" student / employed":""}${full?" · currently full":""}</span>`;
+  dlg.showModal(); setTimeout(()=>$("#r-name").focus(),30);
+});
+function toggleStudent(){
+  const on = regForm.ticket.value==="Student", inp=$("#r-student");
+  $("#student-field").hidden = !on; inp.required = on; if(!on) inp.value="";
+}
+regForm.ticket.addEventListener("change", ()=>{ toggleStudent(); updateTotal(); });
+regForm.seats.addEventListener("change", updateTotal);
+$("#r-mat").addEventListener("change", updateTotal);
+function updateTotal(){
+  if (!current) return;
+  const opts = matOptions(current), t = regForm.ticket.value;
+  const base = Number(t==="Student" ? (current.price_student||current.price_employed) : (current.price_employed||current.price_student))||0;
+  const sel = opts.find(o=>o.label===regForm.material_option.value);
+  const seats = Number(regForm.seats.value)||1;
+  const el = $("#reg-total");
+  if (!opts.length){ el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = sel ? `Total: <b>€${(base+sel.price)*seats}</b> <span class="muted">(${seats>1?`${seats} × `:""}${sel.price?`${seats>1?"(":""}€${base} ticket + €${sel.price} ${esc(sel.label.toLowerCase())}${seats>1?")":""}`:`€${base} ticket`})</span>` : `<span class="muted">Choose your materials to see the total.</span>`;
+}
+dlg.addEventListener("click", e=>{
+  if(e.target.closest("[data-close]")||e.target===dlg){ dlg.close(); if (e.target.closest('a[href="#policy"]')) $("#policy").open = true; }
+});
+document.addEventListener("click", e=>{ if (e.target.closest('a[href="#policy"]')) { const p=$("#policy"); if(p) p.open=true; } });
+
+regForm.addEventListener("submit", async e=>{
+  e.preventDefault();
+  const status=$(".form-status",regForm), err=validate(regForm);
+  if (err){ status.textContent=err; status.className="form-status err"; return; }
+  const btn=$("#reg-submit"); btn.disabled=true; status.className="form-status"; status.textContent="Saving your spot…";
+  try{
+    const data=formToObject(regForm);
+    data.answers = [...regForm.querySelectorAll("[data-q]")].map(el=>`${el.dataset.q} → ${el.value.trim()}`).join("\n");
+    Object.keys(data).filter(k=>/^xq\d$/.test(k)).forEach(k=>delete data[k]);
+    const res=await send({type:"registration",...data});
+    if (!res.ok && res.error==="closed"){ btn.disabled=true; status.className="form-status err"; status.textContent="Sorry, registration for this workshop has just closed."; current.closed=true; renderCards(); return; }
+    if (!res.ok) throw new Error(res.error||"failed");
+    const wait=res.status==="waitlist";
+    const by = res.payBy ? `by ${esc(fmt(res.payBy,{day:"numeric",month:"long"}))}` : "as soon as you can";
+    const close = `<div style="margin-top:20px"><button class="btn" type="button" data-close>Close</button></div>`;
+    $("#reg-done").innerHTML = wait
+      ? `<div class="success"><h3>You're on the waitlist.</h3><p>We'll email <b>${esc(data.email)}</b> if a spot opens up for ${esc(current.title)}. No payment needed yet.</p><p>Reference <span class="ref">${esc(res.ref)}</span></p></div>${close}`
+      : `<div class="success"><h3>Spot saved. One more step.</h3>
+          <p>Pay <b>€${esc(res.amount)}</b> ${by} via MobilePay Box <span class="ref">${esc(SKILLSPILL.mobilePayBox)}</span></p>
+          <p>Add your reference to the payment message: <span class="ref">${esc(res.ref)}</span></p>
+          <p class="muted" style="font-size:.92rem">Need to cancel? Email ${esc(SKILLSPILL.contactEmail)} more than 48 hours before for a full refund.</p>
+          <p class="muted" style="font-size:.92rem">Paying in advance secures your spot and helps the workshop reach its minimum of ${MIN_PARTICIPANTS}. No MobilePay? Reply to your confirmation email and we'll arrange something else.</p>
+          ${res.demo?'<p class="mono muted">preview mode: nothing was saved or emailed</p>':`<p class="muted" style="font-size:.92rem">Details are on their way to ${esc(data.email)}.</p>`}
+        </div>${close}`;
+    $("#reg-form-wrap").hidden=true; $("#reg-done").hidden=false;
+    try{ localStorage.removeItem(CACHE_KEY); }catch(e){}
+    if (!wait && !res.demo && hasCap(current)){ current.spotsLeft=Math.max(0,current.spotsLeft-Number(data.seats||1)); renderCards(); }
+  }catch(ex){ btn.disabled=false; status.className="form-status err"; status.textContent="That didn't go through. Check your connection and try again."; }
+});
+
+/* Structured data so search engines can list workshops as events in Helsinki */
+function addEventData(){
+  try{
+    const ev = workshops.map(w=>({"@context":"https://schema.org","@type":"Event",name:w.title,
+      startDate: w.date+(w.start?"T"+w.start+":00+02:00":""), endDate: w.end? w.date+"T"+w.end+":00+02:00":undefined,
+      eventAttendanceMode:"https://schema.org/OfflineEventAttendanceMode", eventStatus:"https://schema.org/EventScheduled",
+      description: paras(w.description).join(" "),
+      location:{"@type":"Place",name:w.venue,address:{"@type":"PostalAddress",streetAddress:w.address||"",addressLocality:"Helsinki",addressCountry:"FI"}},
+      organizer:{"@type":"Organization",name:"Skill Spill",url:location.href.split("#")[0]},
+      performer: w.facilitator?{"@type":"Person",name:w.facilitator}:undefined,
+      offers:[w.price_student,w.price_employed].filter(Boolean).map(p=>({"@type":"Offer",price:String(p),priceCurrency:"EUR",availability:"https://schema.org/InStock",url:location.href.split("#")[0]+"#ws-"+w.id}))}));
+    const el=document.createElement("script"); el.type="application/ld+json"; el.textContent=JSON.stringify(ev); document.head.appendChild(el);
+  }catch(e){}
+}
+
+/* ---------- photos ---------- */
+if (SKILLSPILL.heroImage){ $("#band-img").src=SKILLSPILL.heroImage; $("#band-cap").textContent=SKILLSPILL.heroCaption||""; $("#band").hidden=false; }
+if ((SKILLSPILL.gallery||[]).length){
+  const g=document.createElement("div"); g.className="gallery";
+  g.innerHTML=SKILLSPILL.gallery.map(x=>`<figure><img class="duo" src="${esc(x.src)}" alt="${esc(x.caption||"")}" loading="lazy"><figcaption class="mono muted">${esc(x.caption||"")}</figcaption></figure>`).join("");
+  $("#about .hub").after(g);
+}
+document.addEventListener("click", e=>{
+  const b=e.target.closest("[data-poster]");
+  if (b){ $("#poster-img").src=b.dataset.poster; $("#poster-img").alt="Poster: "+b.dataset.title; $("#poster-bar").textContent=b.dataset.title; $("#poster-dialog").showModal(); return; }
+  const d=$("#poster-dialog"); if (d.open && (e.target.closest("#poster-dialog [data-close]")||e.target===d)) d.close();
+});
+
+loadWorkshops();
 </script>
 </body>
 </html>
