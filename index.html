@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-10-22d";</script>
+<script>window.PULSE_BUILD="2026-10-24a";</script>
 <link rel="stylesheet" href="assets/style.css?v=2026-10-22d">
 </head>
 <body>
@@ -62,9 +62,12 @@
 
   <!-- NETWORK -->
   <section id="view-network" class="view">
-    <div class="label">SELECT A NODE</div>
+    <div class="label" id="net-hint-top">SELECT A NODE</div>
     <div class="scan-controls" id="net-filters" style="flex-wrap:wrap">
-      <span class="label" style="align-self:center;margin-right:4px">CITY</span>
+      <span class="label" style="align-self:center;margin-right:4px">VIEW</span>
+      <button data-mode="map" class="netf active">MAP</button>
+      <button data-mode="list" class="netf">LIST</button>
+      <span class="label" style="align-self:center;margin:0 4px 0 14px">CITY</span>
       <button data-city="ALL" class="netf active">ALL</button>
       <button data-city="Helsinki" class="netf">HELSINKI</button>
       <button data-city="Berlin" class="netf">BERLIN</button>
@@ -74,8 +77,9 @@
       <button data-cat="VISUAL" class="netf">VJ / VISUAL</button>
       <button data-cat="DOCUMENTATION" class="netf">DOCUMENTATION</button>
     </div>
-    <div class="label" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom</div>
+    <div class="label" id="net-hint" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom</div>
     <svg id="netsvg" viewBox="0 0 700 500"></svg>
+    <div id="netlist" hidden></div>
     <div id="netdetail"></div>
   </section>
 
