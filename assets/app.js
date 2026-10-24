@@ -491,7 +491,7 @@ function netSelection(){
   const usedArtists = [...new Set([...onFile, ...onFile.flatMap(id=>ARTISTS[id].members||[])])]
     .filter(id => (cityMatch(ARTISTS[id].city) || playedIn(id)) && catMatch(ARTISTS[id].tags));
   const usedSpaces = [...new Set(EVENTS.filter(e=>e.space).map(e=>e.space))]
-    .filter(id => cityMatch(SPACES[id].city));
+    .filter(id => (netCat==='ALL' || netCat==='SPACE') && cityMatch(SPACES[id].city));
   return {usedArtists, usedSpaces};
 }
 function drawNetwork(){
