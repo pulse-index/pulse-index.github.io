@@ -219,6 +219,32 @@ main{padding-top:52px; min-height:100vh;}
 #netsvg .tag-DOCUMENTATION circle{stroke:#8c6b4a;}
 #netsvg .tag-SPACE circle{stroke:var(--ink); stroke-width:1.5;}
 #netsvg circle:hover{fill:var(--panel);}
+/* LIST view of the network */
+#netlist{border-top:1px solid var(--line); padding:0 16px; max-width:960px;}
+.nl-head, .nl-row{display:grid; grid-template-columns:minmax(0,2.2fr) minmax(0,1.4fr) minmax(0,1fr) 64px; gap:12px; align-items:baseline;}
+.nl-head{position:sticky; top:calc(var(--barh,46px) + var(--netfh,50px)); background:var(--paper); z-index:30; border-bottom:1px solid var(--ink);}
+@media(min-width:1100px){ #netlist{max-width:min(960px, calc(100vw - 368px));} }
+.nl-head button{white-space:nowrap; border:0; padding:10px 0 8px; text-align:left; font-size:10px; letter-spacing:.08em; color:var(--grey);}
+.nl-head button:hover, .nl-head button.on{color:var(--ink);}
+.nl-head button:last-child, .nl-files{text-align:right;}
+.nl-row{width:100%; border:0; border-bottom:1px solid var(--line); padding:11px 0; text-align:left; font-size:12px;}
+.nl-row:hover{background:var(--panel);}
+.nl-row:hover .nl-name{color:var(--sig);}
+.nl-name{font-family:var(--disp); font-weight:600; font-size:15px; overflow-wrap:anywhere;}
+.nl-role{font-family:var(--mono); font-weight:400; font-size:10px; color:var(--grey);}
+.nl-type, .nl-city, .nl-files{font-size:11px; color:var(--grey);}
+.nl-type{display:flex; align-items:center; flex-wrap:wrap; gap:0 6px;}
+.nl-dot{display:inline-block; width:8px; height:8px; border-radius:50%; border:1.5px solid var(--ink); flex:none;}
+.nl-dot.tag-AUDIO{border-color:var(--sig);} .nl-dot.tag-VISUAL{border-color:#5c7a8c;} .nl-dot.tag-DOCUMENTATION{border-color:#8c6b4a;}
+.nl-dot + .nl-dot{margin-left:-4px;}
+.nl-letter{font-size:10px; letter-spacing:.08em; color:var(--sig); padding:14px 0 2px; border-bottom:1px solid var(--line);}
+.nl-empty{padding:40px 0; text-align:center; color:var(--grey); font-size:11px;}
+.nl-count{margin:12px 0 0;}
+@media(max-width:560px){
+  .nl-head, .nl-row{grid-template-columns:minmax(0,1fr) 84px 56px; gap:10px;}
+  .nl-head button[data-sort="type"], .nl-type{display:none;}
+  .nl-role{display:block;}
+}
 .netf.active{background:var(--ink); color:var(--paper); border-color:var(--ink);}
 /* detail card: pop-out, side panel on wide screens, bottom sheet on narrow */
 #netdetail{position:fixed; z-index:60; background:var(--paper); border:1px solid var(--line); font-size:12px;

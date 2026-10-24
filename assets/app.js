@@ -330,7 +330,9 @@ function openRelease(id){
 // About image
 (function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); } })();
 // keep the sticky archive header sitting right under the top bar
-(function(){ const set=()=>document.documentElement.style.setProperty('--barh', document.getElementById('freqbar').offsetHeight+'px'); set(); addEventListener('resize', set); })();
+(function(){ const set=()=>document.documentElement.style.setProperty('--barh', document.getElementById('freqbar').offsetHeight+'px'); set();
+  const nf=()=>{ const f=document.getElementById('net-filters'); if(f&&f.offsetHeight) document.documentElement.style.setProperty('--netfh', f.offsetHeight+'px'); };
+  addEventListener('resize', nf); document.querySelectorAll('nav.channels button').forEach(b=>b.addEventListener('click', ()=>setTimeout(nf,0))); setTimeout(nf,0); addEventListener('resize', set); })();
 
 /* ---------------- ARCHIVE — filing cabinet ----------------
    Most recent folder sits at the top of the drawer. Tabs step across in
@@ -475,12 +477,11 @@ function closeFile(){
 }
 
 /* ---------------- NETWORK ---------------- */
-let netCity='ALL', netCat='ALL';
+let netCity='ALL', netCat='ALL', netMode='map', netSort={key:'name', dir:1};
 const nodePos={}; // id -> {x,y} — set once a node has been dragged, overrides the generated layout
 const NETVB={x:0,y:0,w:700,h:500}; // pan/zoom state — kept within these starting bounds
 const TAG_COLORS = {AUDIO:'#e4531f', VISUAL:'#5c7a8c', DOCUMENTATION:'#8c6b4a'};
-function drawNetwork(){
-  const svg=document.getElementById('netsvg');
+function netSelection(){
   const cityMatch = c => netCity==='ALL' || (c||'').includes(netCity);
   const catMatch = tags => netCat==='ALL' || tags.includes(netCat);
   // an artist also counts for a city if they appeared at an event held there
@@ -491,6 +492,12 @@ function drawNetwork(){
     .filter(id => (cityMatch(ARTISTS[id].city) || playedIn(id)) && catMatch(ARTISTS[id].tags));
   const usedSpaces = [...new Set(EVENTS.filter(e=>e.space).map(e=>e.space))]
     .filter(id => cityMatch(SPACES[id].city));
+  return {usedArtists, usedSpaces};
+}
+function drawNetwork(){
+  if(netMode==='list') return drawNetList();
+  const svg=document.getElementById('netsvg');
+  const {usedArtists, usedSpaces} = netSelection();
   const cx=350, cy=250;
   // elliptical radii kept comfortably inside the 700x500 viewBox so nothing runs off-canvas.
   // nodePos[id], if set by dragging, overrides the generated position.
@@ -606,6 +613,69 @@ document.querySelectorAll('#net-filters button[data-cat]').forEach(b=>b.addEvent
   document.querySelectorAll('#net-filters button[data-cat]').forEach(x=>x.classList.remove('active'));
   b.classList.add('active'); netCat=b.dataset.cat; drawNetwork();
 }));
+/* LIST view: same people + spaces as the map (same CITY / TYPE filters), as a sortable table.
+   Click a column heading to sort; click it again to reverse. Click a row to open the same detail card. */
+document.querySelectorAll('#net-filters button[data-mode]').forEach(b=>b.addEventListener('click', ()=>{
+  document.querySelectorAll('#net-filters button[data-mode]').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); netMode=b.dataset.mode;
+  const list=netMode==='list';
+  document.getElementById('netsvg').style.display = list?'none':'';
+  document.getElementById('netlist').hidden = !list;
+  document.getElementById('net-hint').hidden = list;
+  document.getElementById('net-hint-top').textContent = list ? 'SELECT A NAME' : 'SELECT A NODE';
+  drawNetwork();
+}));
+const NET_COLS=[
+  {key:'name', label:'NAME'},
+  {key:'type', label:'TYPE'},
+  {key:'city', label:'CITY'},
+  {key:'files', label:'ON FILE'},
+];
+function drawNetList(){
+  const box=document.getElementById('netlist');
+  const {usedArtists, usedSpaces} = netSelection();
+  const countFor = id => SPACES[id] ? EVENTS.filter(e=>e.space===id).length
+    : EVENTS.filter(e=>e.artists.includes(id) || (e.documentation||[]).includes(id)).length;
+  const rows=[
+    ...usedArtists.map(id=>{ const a=ARTISTS[id]; return {id, name:a.name, role:a.role||'', tags:a.tags||[], city:a.city||'', files:countFor(id)}; }),
+    ...usedSpaces.map(id=>{ const v=SPACES[id]; return {id, name:v.name, role:'Venue', tags:['SPACE'], city:v.city||'', files:countFor(id)}; }),
+  ];
+  const typeText = r => r.tags.map(t=>t==='VISUAL'?'VJ / VISUAL':t).join(' + ');
+  const val = (r,k) => k==='type' ? typeText(r) : r[k];
+  const {key, dir} = netSort;
+  rows.sort((a,b)=>{
+    let d;
+    if(key==='files') d = a.files-b.files;
+    else { const x=val(a,key), y=val(b,key);
+      // empty city/type always last, whichever direction
+      if(!x !== !y) return !x ? 1 : -1;
+      d = x.localeCompare(y, undefined, {sensitivity:'base'}); }
+    return (d*dir) || a.name.localeCompare(b.name, undefined, {sensitivity:'base'});
+  });
+  // letter dividers only when sorted by name
+  let last='';
+  const body = rows.map(r=>{
+    let div='';
+    if(key==='name'){ const L=(r.name[0]||'').normalize('NFD')[0].toUpperCase(); if(L!==last){ last=L; div=`<div class="nl-letter">${L}</div>`; } }
+    const dots=r.tags.map(t=>`<i class="nl-dot tag-${t}"></i>`).join('');
+    return div+`<button class="nl-row" data-id="${r.id}">
+      <span class="nl-name">${r.name}${r.role?`<span class="nl-role"> / ${r.role}</span>`:''}</span>
+      <span class="nl-type">${dots}${typeText(r)}</span>
+      <span class="nl-city">${r.city||'—'}</span>
+      <span class="nl-files">${r.files||'—'}</span>
+    </button>`;
+  }).join('');
+  box.innerHTML = `<div class="nl-head">${NET_COLS.map(c=>`<button data-sort="${c.key}" class="${c.key===key?'on':''}">${c.label}${c.key===key?(dir>0?' ↓':' ↑'):''}</button>`).join('')}</div>
+    ${rows.length ? body : '<div class="nl-empty">NO SIGNAL IN THIS FILTER</div>'}
+    <div class="label nl-count">${rows.length} ON FILE</div>`;
+  box.querySelectorAll('.nl-head button').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.sort;
+    // "ON FILE" starts with the most active first; everything else starts A→Z
+    netSort = netSort.key===k ? {key:k, dir:-netSort.dir} : {key:k, dir: k==='files' ? -1 : 1};
+    drawNetList();
+  });
+  box.querySelectorAll('.nl-row').forEach(b=>b.onclick=()=>selectNode(b.dataset.id));
+}
 function groupsOf(id){ return Object.values(ARTISTS).filter(a=>(a.members||[]).includes(id)); }
 function eventLinksFor(list){
   return list.map(e=>{
