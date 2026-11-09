@@ -612,14 +612,16 @@ function drawNetwork(){
     NETVB.w=newW; NETVB.h=newH; setVB();
   }, {passive:false});
 })();
-document.querySelectorAll('#net-filters button[data-city]').forEach(b=>b.addEventListener('click', ()=>{
-  document.querySelectorAll('#net-filters button[data-city]').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); netCity=b.dataset.city; drawNetwork();
-}));
-document.querySelectorAll('#net-filters button[data-cat]').forEach(b=>b.addEventListener('click', ()=>{
-  document.querySelectorAll('#net-filters button[data-cat]').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); netCat=b.dataset.cat; drawNetwork();
-}));
+/* CITY and TYPE filters toggle: clicking the active one again switches it off (back to ALL) */
+function netFilter(attr, b){
+  const group=document.querySelectorAll(`#net-filters button[data-${attr}]`);
+  const v = b.classList.contains('active') && b.dataset[attr]!=='ALL' ? 'ALL' : b.dataset[attr];
+  group.forEach(x=>{ const on=x.dataset[attr]===v; x.classList.toggle('active', on); x.setAttribute('aria-pressed', on); });
+  if(attr==='city') netCity=v; else netCat=v;
+  drawNetwork();
+}
+document.querySelectorAll('#net-filters button[data-city]').forEach(b=>b.addEventListener('click', ()=>netFilter('city', b)));
+document.querySelectorAll('#net-filters button[data-cat]').forEach(b=>b.addEventListener('click', ()=>netFilter('cat', b)));
 /* LIST view: same people + spaces as the map (same CITY / TYPE filters), as a sortable table.
    Click a column heading to sort; click it again to reverse. Click a row to open the same detail card. */
 document.querySelectorAll('#net-filters button[data-mode]').forEach(b=>b.addEventListener('click', ()=>{
