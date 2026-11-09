@@ -46,5 +46,17 @@
     "address": "",
     "mapUrl": "",
     "link": "https://www.instagram.com/malatorium_artspace/"
+  },
+  {
+    "id": "ida-radio",
+    "name": "IDA Radio",
+    "city": "Helsinki",
+    "tags": [
+      "SPACE"
+    ],
+    "description": "Community-run online radio founded in Tallinn in 2018, with a second channel and studio in Helsinki since 2020. Music shows across genres, talk programmes, concerts and sound residencies.",
+    "address": "",
+    "mapUrl": "",
+    "link": "https://idaidaida.net/"
   }
 ]

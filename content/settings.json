@@ -2,6 +2,7 @@
   "aboutImage": "images/site/about.jpg",
   "typeLabels": {
     "LIVE": "LIVE PERFORMANCE",
-    "WORKSHOP": "WORKSHOP"
+    "WORKSHOP": "WORKSHOP",
+    "LISTENING": "LISTENING SESSION"
   }
 }
