@@ -752,12 +752,18 @@ function regBtnHtml(id){
   if(s.state==='full') return `<span class="status-tag">FULL</span>`;
   return `<span class="status-tag">REGISTRATION CLOSED</span>`;
 }
+// the event's "registration info" from the sheet: paragraphs, with links made clickable
+function regInfoHtml(id){
+  const ev=EVENTS.find(e=>e.id===id), t=String((ev&&ev.registrationInfo)||'').trim(); if(!t) return '';
+  return '<div class="reg-info">'+t.split(/\n\s*\n/).map(p=>'<p>'+htmlEsc(p.trim()).replace(/\n/g,'<br>')
+    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/,'')}</a>`)+'</p>').join('')+'</div>';
+}
 function regLayerHtml(id, again){
   const s=REG[id]; if(!s) return '';
   const head='<div class="lhead">REGISTRATION</div>';
   const live = s.state==='open' || s.state==='waitlist';
   if(live && REG_DONE[id] && !again) return head+`<div class="reg-ok"><span class="status-tag">${REG_DONE[id]==='waitlist'?'ON THE WAITLIST':'REGISTERED'}</span>
-    <p>You signed up from this device. To cancel, reply to the confirmation email.</p>
+    <p>You signed up from this device. To cancel, reply to the confirmation email.</p>${regInfoHtml(id)}
     <button type="button" class="text-link" onclick="regRender('${id}',true)">REGISTER SOMEONE ELSE →</button></div>`;
   if(s.state==='full') return head+`<div class="reg-ok"><span class="status-tag">FULL</span><p>This event is full and the waitlist is closed.</p></div>`;
   if(!live) return head+`<div class="reg-ok"><span class="status-tag">REGISTRATION CLOSED</span></div>`;
@@ -765,8 +771,8 @@ function regLayerHtml(id, again){
   const room = wait ? s.waitLeft : s.left;
   const max = Math.max(1, Math.min(4, room==null ? 4 : room));
   const intro = wait ? "The event is full. Join the waitlist and you'll get an email if a spot opens up."
-    : 'Free registration, so we know how many people are coming.' + (s.left!=null && s.left<5 ? ` <span class="reg-left">${spotsText(s.left)}</span>` : '');
-  return head+`<p class="reg-intro">${intro}</p>
+    : 'Register so we know how many people are coming.' + (s.left!=null && s.left<5 ? ` <span class="reg-left">${spotsText(s.left)}</span>` : '');
+  return head+`<p class="reg-intro">${intro}</p>${regInfoHtml(id)}
     <form class="reg-form" novalidate onsubmit="return submitReg(event,'${id}')" data-t0="${Date.now()}">
       <label><span class="label">NAME</span><input name="name" required maxlength="100" autocomplete="name"></label>
       <label><span class="label">EMAIL</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
@@ -820,7 +826,7 @@ function submitReg(ev, id){
       REG_DONE[id]=r.status; regSave();
       const box=document.getElementById('reg-'+id);
       box.innerHTML=`<div class="lhead">REGISTRATION</div><div class="reg-ok"><span class="status-tag">${r.status==='waitlist'?'ON THE WAITLIST':"YOU'RE ON THE LIST"}</span>
-        <p>${r.status==='waitlist'?"We'll email you if a spot opens up.":'See you there.'} A confirmation is on its way to ${htmlEsc(v('email'))}.</p></div>`;
+        <p>${r.status==='waitlist'?"We'll email you if a spot opens up.":'See you there.'} A confirmation is on its way to ${htmlEsc(v('email'))}.</p>${regInfoHtml(id)}</div>`;
       box.dataset.st=JSON.stringify(REG[id]||null)+'d';
       regRefresh(); return;
     }
