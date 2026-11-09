@@ -73,6 +73,7 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
       </div>
       <div class="nt-actions" style="margin-top:16px">
         ${e.ticketUrl ? `<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn primary">GET TICKETS →</a>` : ''}
+        <span class="reg-slot" data-reg-btn="${e.id}"></span>
         <button class="tune-btn" onclick="openFile('${e.id}')">FULL FILE →</button>
       </div>
     </div>
@@ -87,7 +88,8 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
       r.onclick=(ev)=>{ if(!ev.target.closest('a')) openFile(e.id); };
       r.innerHTML=`<div><div class="fid">${e.id} / ${TYPE_LABELS[e.type]||e.type}</div><div class="name">${e.name}</div></div>
         <div class="meta" style="margin:0">${e.date}${sp?` &nbsp;·&nbsp; ${sp.name.toUpperCase()}, ${sp.city.toUpperCase()}`:''}</div>
-        ${e.ticketUrl ? `<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="align-self:flex-start;margin-top:0">GET TICKETS →</a>` : ''}`;
+        ${e.ticketUrl ? `<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="align-self:flex-start;margin-top:0">GET TICKETS →</a>` : ''}
+        <span class="reg-slot compact" data-reg-btn="${e.id}"></span>`;
       list.appendChild(r);
     });
   }
@@ -327,8 +329,11 @@ function openRelease(id){
   document.getElementById('filepanel').scrollTop = 0;
   document.querySelectorAll('#file-content .layer').forEach((l,i)=>{ l.classList.remove('show'); setTimeout(()=>l.classList.add('show'), 80*i+60); });
 }
-// About image
-(function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); } })();
+// About image, with an optional "PHOTO: Name" credit under it (Settings → about image credit: "Name" or "Name | link")
+(function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); }
+  const cr=document.getElementById('about-credit'), raw=String(window.ABOUT_CREDIT||'').trim();
+  if(cr && raw && window.ABOUT_IMAGE){ const [name,link]=raw.split('|').map(x=>x.trim()); const h=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    cr.innerHTML='PHOTO: '+(link&&/^https?:\/\//.test(link)?`<a href="${h(link)}" target="_blank" rel="noopener">${h(name)}</a>`:h(name)); cr.hidden=false; } })();
 // keep the sticky archive header sitting right under the top bar
 (function(){ const set=()=>document.documentElement.style.setProperty('--barh', document.getElementById('freqbar').offsetHeight+'px'); set();
   const nf=()=>{ const f=document.getElementById('net-filters'); if(f&&f.offsetHeight) document.documentElement.style.setProperty('--netfh', f.offsetHeight+'px'); };
@@ -427,6 +432,7 @@ function fileLayers(e){
   return `
     <div class="layer"><div class="lhead">DESCRIPTION</div><p style="margin:0">${e.description || `Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.`}</p></div>
     ${sp ? `<div class="layer"><div class="lhead">VENUE</div>${sp.description?`<p style="margin:0 0 8px">${sp.description}</p>`:''}<div class="related-list">${venueLine}</div></div>` : ''}
+    ${isIncoming ? `<div class="layer reg-layer" id="reg-${e.id}" data-reg-layer="${e.id}" hidden></div>` : ''}
     ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><div class="lhead">TICKETS</div>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
     ${visualAssets.length ? `<div class="layer"><div class="lhead">VISUAL IDENTITY</div><div class="gallery-grid">${visualAssets.join('')}</div></div>` : ''}
     <div class="layer"><div class="lhead">${e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS'}</div>${artistBlocks}</div>
@@ -455,6 +461,7 @@ function openFile(id){
       ${e.posterUrl ? `<div class="poster-box" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')"><img src="${e.posterUrl}" alt="${e.name} poster"></div>` : ''}
     </div>
 ` + fileLayers(e);
+  regRefresh(true);
   document.getElementById('filepanel').classList.add('open'); setHash(id);
   document.getElementById('filepanel').scrollTop = 0;
   document.querySelectorAll('#file-content .layer').forEach((l,i)=>{
@@ -714,6 +721,130 @@ function selectNode(id){
   det.classList.add('open');
   document.getElementById('net-close').onclick = ()=>det.classList.remove('open');
 }
+/* ---------------- REGISTRATION ----------------
+   Events with "registration" ticked in the sheet get a REGISTER button and a short form.
+   The sheet's Registrations.gs answers two things over POST: every event's state, and sign-ups.
+   States: open (left = spots left, or null for no limit) / waitlist / full / closed.
+   Until that script is in place, nothing shows. */
+var REG = {}, REG_DONE = {};
+const htmlEsc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+(function(){
+  try{ const c=JSON.parse(localStorage.getItem('pi_reg_v1')||'null'); if(c && Date.now()-c.t < 864e5) REG=c.d||{}; }catch(_){}
+  try{ REG_DONE=JSON.parse(localStorage.getItem('pi_reg_done')||'{}')||{}; }catch(_){}
+})();
+function regSave(){ try{ localStorage.setItem('pi_reg_v1', JSON.stringify({t:Date.now(), d:REG})); localStorage.setItem('pi_reg_done', JSON.stringify(REG_DONE)); }catch(_){} }
+function regPost(body){
+  const url=(window.PULSE_CONFIG||{}).endpoint; if(!url) return Promise.reject(new Error('no endpoint'));
+  const ctl=new AbortController(), t=setTimeout(()=>ctl.abort(), 25000);
+  // sent as plain text: the simplest kind of request, which Google's web apps accept from any site
+  return fetch(url, {method:'POST', body:JSON.stringify(body), signal:ctl.signal})
+    .then(r=>{ if(!r.ok) throw new Error('status '+r.status); return r.json(); })
+    .finally(()=>clearTimeout(t));
+}
+const spotsText = n => n===1 ? '1 SPOT LEFT' : n+' SPOTS LEFT';
+function regBtnHtml(id){
+  const s=REG[id]; if(!s) return '';
+  if(REG_DONE[id] && (s.state==='open'||s.state==='waitlist')) return `<span class="status-tag">${REG_DONE[id]==='waitlist'?'ON THE WAITLIST':'REGISTERED'}</span>`;
+  if(s.state==='open') return `<button type="button" class="tune-btn primary" onclick="openRegister('${id}')">REGISTER →</button>${s.left!=null && s.left>0 && s.left<5?`<span class="status-tag">${spotsText(s.left)}</span>`:''}`;
+  if(s.state==='waitlist') return `<button type="button" class="tune-btn" onclick="openRegister('${id}')">JOIN WAITLIST →</button><span class="status-tag">FULL</span>`;
+  if(s.state==='full') return `<span class="status-tag">FULL</span>`;
+  return `<span class="status-tag">REGISTRATION CLOSED</span>`;
+}
+function regLayerHtml(id, again){
+  const s=REG[id]; if(!s) return '';
+  const head='<div class="lhead">REGISTRATION</div>';
+  const live = s.state==='open' || s.state==='waitlist';
+  if(live && REG_DONE[id] && !again) return head+`<div class="reg-ok"><span class="status-tag">${REG_DONE[id]==='waitlist'?'ON THE WAITLIST':'REGISTERED'}</span>
+    <p>You signed up from this device. To cancel, reply to the confirmation email.</p>
+    <button type="button" class="text-link" onclick="regRender('${id}',true)">REGISTER SOMEONE ELSE →</button></div>`;
+  if(s.state==='full') return head+`<div class="reg-ok"><span class="status-tag">FULL</span><p>This event is full and the waitlist is closed.</p></div>`;
+  if(!live) return head+`<div class="reg-ok"><span class="status-tag">REGISTRATION CLOSED</span></div>`;
+  const wait = s.state==='waitlist';
+  const room = wait ? s.waitLeft : s.left;
+  const max = Math.max(1, Math.min(4, room==null ? 4 : room));
+  const intro = wait ? "The event is full. Join the waitlist and you'll get an email if a spot opens up."
+    : 'Free registration, so we know how many people are coming.' + (s.left!=null && s.left<5 ? ` <span class="reg-left">${spotsText(s.left)}</span>` : '');
+  return head+`<p class="reg-intro">${intro}</p>
+    <form class="reg-form" novalidate onsubmit="return submitReg(event,'${id}')" data-t0="${Date.now()}">
+      <label><span class="label">NAME</span><input name="name" required maxlength="100" autocomplete="name"></label>
+      <label><span class="label">EMAIL</span><input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+      <label class="reg-people"><span class="label">PEOPLE</span><select name="people">${Array.from({length:max},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label>
+      <label class="reg-note"><span class="label">NOTE (OPTIONAL)</span><input name="note" maxlength="300" placeholder="Access needs, questions…"></label>
+      <label class="reg-hp" aria-hidden="true">Leave empty <input name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="reg-check"><input type="checkbox" name="consent"><span>Pulse Index uses my name and email only for this event's guest list, and deletes them after the event.</span></label>
+      <label class="reg-check"><input type="checkbox" name="newsletter"><span>Also send me news about future Pulse Index events (optional, unsubscribe any time).</span></label>
+      <div class="reg-actions"><button type="submit" class="tune-btn primary">${wait?'JOIN WAITLIST →':'REGISTER →'}</button><span class="reg-msg" role="status" aria-live="polite"></span></div>
+    </form>`;
+}
+// draws one event's registration section; keeps anything already typed into the form
+function regRender(id, again, note){
+  const box=document.getElementById('reg-'+id); if(!box) return;
+  const old=box.querySelector('form'), keep={};
+  if(old) ['name','email','note'].forEach(n=>keep[n]=old.elements[n].value);
+  const html=regLayerHtml(id, again);
+  box.hidden=!html; box.innerHTML=html; box.dataset.st=JSON.stringify(REG[id]||null)+(REG_DONE[id]&&!again?'d':'');
+  if(html) box.classList.add('show');
+  const f=box.querySelector('form');
+  if(f){ Object.keys(keep).forEach(n=>f.elements[n].value=keep[n]); if(note) f.querySelector('.reg-msg').textContent=note; }
+}
+// buttons everywhere + any open registration section (left alone while its state hasn't changed, so typing isn't lost)
+function regRefresh(force){
+  document.querySelectorAll('[data-reg-btn]').forEach(el=>{ el.innerHTML=regBtnHtml(el.dataset.regBtn); });
+  document.querySelectorAll('[data-reg-layer]').forEach(el=>{
+    const id=el.dataset.regLayer;
+    if(force || el.dataset.st !== JSON.stringify(REG[id]||null)+(REG_DONE[id]?'d':'')) regRender(id);
+  });
+}
+function openRegister(id){
+  openFile(id);
+  setTimeout(()=>{ const el=document.getElementById('reg-'+id); if(!el || el.hidden) return;
+    el.classList.add('show'); el.scrollIntoView({behavior:'smooth', block:'start'});
+    const i=el.querySelector('input[name=name]'); if(i) i.focus({preventScroll:true}); }, 300);
+}
+function submitReg(ev, id){
+  ev.preventDefault();
+  const f=ev.target, msg=f.querySelector('.reg-msg'), btn=f.querySelector('button[type=submit]');
+  const v=n=>f.elements[n].value.trim();
+  if(!v('name')){ msg.textContent='Add your name.'; f.elements.name.focus(); return false; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'))){ msg.textContent='Check the email address.'; f.elements.email.focus(); return false; }
+  if(!f.elements.consent.checked){ msg.textContent='Tick the box about the guest list to continue.'; return false; }
+  btn.disabled=true; msg.textContent='SENDING…';
+  regPost({action:'register', event:id, name:v('name'), email:v('email'), people:+v('people'), note:v('note'),
+           website:f.elements.website.value, consent:true, newsletter:f.elements.newsletter.checked, t:Date.now()-(+f.dataset.t0||0)})
+  .then(r=>{
+    const before=JSON.stringify(REG[id]||null);
+    if('event' in r){ if(r.event) REG[id]=r.event; else delete REG[id]; }
+    if(r.ok){
+      REG_DONE[id]=r.status; regSave();
+      const box=document.getElementById('reg-'+id);
+      box.innerHTML=`<div class="lhead">REGISTRATION</div><div class="reg-ok"><span class="status-tag">${r.status==='waitlist'?'ON THE WAITLIST':"YOU'RE ON THE LIST"}</span>
+        <p>${r.status==='waitlist'?"We'll email you if a spot opens up.":'See you there.'} A confirmation is on its way to ${htmlEsc(v('email'))}.</p></div>`;
+      box.dataset.st=JSON.stringify(REG[id]||null)+'d';
+      regRefresh(); return;
+    }
+    regSave();
+    const errs={duplicate:'This email is already registered for this event.',
+      too_many: r.left ? `Only ${r.left} left. Choose fewer people.` : 'No spots left.',
+      invalid:'Check your name and email, then try again.',
+      full:'Sorry, it just filled up.', closed:'Registration for this event has closed.'};
+    const text=errs[r.error]||'Something went wrong. Please try again.';
+    if(JSON.stringify(REG[id]||null)!==before){ regRender(id, true, text); regRefresh(); return; }
+    btn.disabled=false; msg.textContent=text;
+  })
+  .catch(()=>{ btn.disabled=false; msg.textContent="Couldn't reach the server. Please try again in a moment."; });
+  return false;
+}
+(function(){
+  if(!incoming.length || !(window.PULSE_CONFIG||{}).endpoint){ REG={}; return; }
+  regRefresh();   // last known state, straight away
+  regPost({action:'status'}).then(r=>{
+    if(!r || !r.ok) return;
+    REG=r.events||{};
+    Object.keys(REG_DONE).forEach(id=>{ if(!REG[id]) delete REG_DONE[id]; });
+    regSave(); regRefresh();
+  }).catch(err=>console.warn('Pulse Index: registration not reachable —', err.message));
+})();
+
 /* ---------------- DIRECT LINKS ----------------
    pulseindex…/#003 opens that event, #archive / #network / #about open a page. */
 function route(){
