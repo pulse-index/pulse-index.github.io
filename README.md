@@ -44,6 +44,8 @@ Content can come from a Google Sheet instead of the files in `content/`:
   - `event` links the release to the event where it launched (e.g. `003`).
   - `sections` builds the deeper story in order: `text`, `image`, `video` (YouTube id), `quote` and `interview` (questions & answers) blocks.
   - Videos show a thumbnail and only load YouTube when someone presses play.
+- **Event types:** `LIVE` (live performance, numbered 001, 002…), `WORKSHOP` (WS001…) and `LISTENING` (listening session, suggested numbering LS001…). The site also accepts the sheet's spelled-out names, e.g. "Listening session".
+- **Registration:** in the sheet's Events tab, tick `registration` to give an upcoming event a REGISTER button and a sign-up form. `capacity` = how many can come (empty = no limit); `waitlist` = extra spots once it's full (empty = no waitlist). The site shows "N SPOTS LEFT" under 5, then JOIN WAITLIST, then FULL; sign-ups close by themselves when both are used up, when `registration` is unticked, or after the event date. Sign-ups land in the Registrations tab (with a headcount per event) and each person gets a confirmation email. They are deleted the morning after the event. People who tick the optional newsletter box are added to the Newsletter tab, which is kept. This runs on the sheet's Apps Script (Code.gs, version 2.1: doPost).
 - **Groups:** An artist entry can list `members` (artist ids). Members are joined to the group with a dashed line on the Network page.
 - **Images:** Keep them under ~1,500 px on the long side, as JPG. Posters go in `images/events/<number>/poster.jpg`.
 - **Direct links:** Every event has its own link: `yoursite/#003`, `yoursite/#WS001`. Pages work the same way: `#archive`, `#network`, `#about`.
