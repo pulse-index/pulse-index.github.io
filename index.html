@@ -12,8 +12,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-10-24b";</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-10-22d">
+<script>window.PULSE_BUILD="2026-11-09b";</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-09b">
 </head>
 <body>
 
@@ -94,7 +94,10 @@
     <p>The programme includes audiovisual performances in conventional and non-conventional spaces, artist-led workshops and demos, and the documentation of ephemeral and improvised work. It grows through relationships with independent cultural spaces, organisations and artist networks, with the aim of fair working conditions for everyone involved.</p>
     <p>Pulse Index was started by Monika Hauck, new media artist and one half of the audiovisual duo Static Channel. Through her own A/V performances she kept meeting acts who wanted visuals, and was drawn into more and more live collaborations. Missing the closeness of house parties and house shows, she put on the first Pulse Index event at Nasha Studio in 2025. Long the person others turn to for organising, she now leads it as producer and curator.</p>
     </div>
-    <div class="about-image" id="about-image">IMAGE — PLACEHOLDER</div>
+    <figure class="about-figure">
+      <div class="about-image" id="about-image">IMAGE — PLACEHOLDER</div>
+      <figcaption class="about-credit" id="about-credit" hidden></figcaption>
+    </figure>
     </div>
     <div class="hairline"></div>
     <div class="label">CONTACT / FOLLOW</div>
@@ -177,7 +180,10 @@
     // Setting status to ARCHIVED by hand still works (e.g. for a cancelled date).
     const today = new Date(new Date().toDateString());
     const dateOf = d => { const [dd,mm,yy]=(d||'').split('.').map(Number); return yy ? new Date(yy,mm-1,dd) : null; };
+    // event types: LIVE, WORKSHOP, LISTENING (listening session) — however the sheet spells them
+    const typeOf = t => { const u=String(t||'').toUpperCase().trim(); return /LISTEN/.test(u)?'LISTENING' : /WORKSHOP/.test(u)?'WORKSHOP' : /LIVE|PERFORM/.test(u)?'LIVE' : u; };
     window.EVENTS = (Array.isArray(ev)?ev:(ev.events||[])).map(e=>({ ...e,
+      type: typeOf(e.type),
       status: e.status==='ARCHIVED' || (dateOf(e.date) && dateOf(e.date) < today) ? 'ARCHIVED' : 'INCOMING',
       artists: (e.artists||[]).filter(known),
       documentation: (e.documentation||[]).filter(known),
@@ -189,7 +195,8 @@
     }));
     Object.values(ARTISTS).forEach(a=>{ a.members=(a.members||[]).filter(known); });
     window.ABOUT_IMAGE = st.aboutImage || '';
-    window.TYPE_LABELS = st.typeLabels || { LIVE:'LIVE PERFORMANCE', WORKSHOP:'WORKSHOP' };
+    window.ABOUT_CREDIT = st.aboutImageCredit || '';
+    window.TYPE_LABELS = { LIVE:'LIVE PERFORMANCE', WORKSHOP:'WORKSHOP', LISTENING:'LISTENING SESSION', ...(st.typeLabels||{}) };
     const s=document.createElement('script'); s.src='assets/app.js?v='+window.PULSE_BUILD; document.body.appendChild(s);
   }catch(err){
     console.error(err);
