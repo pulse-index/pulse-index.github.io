@@ -510,3 +510,7 @@ main{padding-top:var(--barh,52px);}
 .reg-info p{margin:0 0 6px;} .reg-info p:last-child{margin-bottom:0;}
 .reg-info a{color:var(--sig); font-size:inherit; margin:0; display:inline;}
 .reg-ok .reg-info{margin-top:12px;}
+
+/* event description from the sheet: paragraphs and line breaks */
+.desc-text p{margin:0 0 10px;} .desc-text p:last-child{margin-bottom:0;}
+.desc-text a{color:var(--sig);}

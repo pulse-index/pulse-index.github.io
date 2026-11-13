@@ -391,6 +391,11 @@ function folderHead(e){
 }
 
 /* ---------------- EVENT FILE / UNBOXING ---------------- */
+// sheet text → HTML: a blank line starts a new paragraph, a single line break stays a line break, links become clickable
+function textHtml(t, pStyle){
+  return String(t||'').trim().split(/\n\s*\n/).map(p=>`<p${pStyle?` style="${pStyle}"`:''}>`+htmlEsc(p.trim()).replace(/\n/g,'<br>')
+    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/,'')}</a>`)+'</p>').join('');
+}
 function bioHtml(b, style){ return (b||'').split(/\n\s*\n/).map(p=>`<p style="${style}">${p.trim()}</p>`).join(''); }
 function artistBlock(a){
   const ar = ARTISTS[a];
@@ -430,7 +435,7 @@ function fileLayers(e){
     <div class="cap">Video on YouTube — opens in a new tab ↗</div></a>`);
 
   return `
-    <div class="layer"><div class="lhead">DESCRIPTION</div><p style="margin:0">${e.description || `Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.`}</p></div>
+    <div class="layer desc-text"><div class="lhead">DESCRIPTION</div>${e.description ? textHtml(e.description) : `<p>Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.</p>`}</div>
     ${sp ? `<div class="layer"><div class="lhead">VENUE</div>${sp.description?`<p style="margin:0 0 8px">${sp.description}</p>`:''}<div class="related-list">${venueLine}</div></div>` : ''}
     ${isIncoming ? `<div class="layer reg-layer" id="reg-${e.id}" data-reg-layer="${e.id}" hidden></div>` : ''}
     ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><div class="lhead">TICKETS</div>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
@@ -729,7 +734,7 @@ function selectNode(id){
    States: open (left = spots left, or null for no limit) / waitlist / full / closed.
    Until that script is in place, nothing shows. */
 var REG = {}, REG_DONE = {};
-const htmlEsc = s => String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function htmlEsc(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 (function(){
   try{ const c=JSON.parse(localStorage.getItem('pi_reg_v1')||'null'); if(c && Date.now()-c.t < 864e5) REG=c.d||{}; }catch(_){}
   try{ REG_DONE=JSON.parse(localStorage.getItem('pi_reg_done')||'{}')||{}; }catch(_){}
@@ -755,8 +760,7 @@ function regBtnHtml(id){
 // the event's "registration info" from the sheet: paragraphs, with links made clickable
 function regInfoHtml(id){
   const ev=EVENTS.find(e=>e.id===id), t=String((ev&&ev.registrationInfo)||'').trim(); if(!t) return '';
-  return '<div class="reg-info">'+t.split(/\n\s*\n/).map(p=>'<p>'+htmlEsc(p.trim()).replace(/\n/g,'<br>')
-    .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/,'')}</a>`)+'</p>').join('')+'</div>';
+  return '<div class="reg-info">'+textHtml(t)+'</div>';
 }
 function regLayerHtml(id, again){
   const s=REG[id]; if(!s) return '';
