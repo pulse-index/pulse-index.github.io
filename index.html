@@ -12,29 +12,31 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-11-13a";</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-13a">
+<script>window.PULSE_BUILD="2026-11-25a";</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-25a">
 </head>
 <body>
+<a class="skip-link" id="skip" href="#main-content">Skip to content</a>
 
 <div id="freqbar">
-  <button class="lock" id="home-btn" style="border:none;padding:0"><span class="dot"></span><span>PULSE INDEX</span></button>
-  <nav class="channels">
-    <button data-v="signal" class="active">SIGNAL</button>
-    <button data-v="archive">ARCHIVE</button>
-    <button data-v="releases">RELEASES</button>
-    <button data-v="network">NETWORK</button>
-    <button data-v="about">ABOUT</button>
+  <button type="button" class="lock" id="home-btn" style="border:none;padding:0" aria-label="Pulse Index, front page"><span class="dot" aria-hidden="true"></span><span>PULSE INDEX</span></button>
+  <nav class="channels" aria-label="Main">
+    <button type="button" data-v="signal" class="active" aria-current="page">SIGNAL</button>
+    <button type="button" data-v="archive">ARCHIVE</button>
+    <button type="button" data-v="releases">RELEASES</button>
+    <button type="button" data-v="network">NETWORK</button>
+    <button type="button" data-v="about">ABOUT</button>
   </nav>
 </div>
 
-<main>
+<main id="main-content" tabindex="-1">
+  <h1 class="sr-only">Pulse Index — artist-led platform for experimental audiovisual art, Helsinki and Berlin</h1>
 
   <!-- SIGNAL -->
   <section id="view-signal" class="view active">
     <div id="next-tx"></div>
     <div class="also-incoming" id="also-wrap" style="display:none">
-      <div class="label" style="margin-bottom:10px">ALSO INCOMING</div>
+      <h2 class="label" style="margin-bottom:10px">ALSO INCOMING</h2>
       <div id="prog-list"></div>
     </div>
     <div id="featured"></div>
@@ -45,7 +47,7 @@
   <!-- ARCHIVE -->
   <section id="view-archive" class="view">
     <div class="archive-head">
-      <div class="label">RECEIVED / ARCHIVED FILES</div>
+      <h2 class="label">RECEIVED / ARCHIVED FILES</h2>
       <div class="label" style="margin-top:4px">Select a folder to open the full file — newest at the top</div>
     </div>
     <div class="cabinet" id="cabinet"></div>
@@ -54,7 +56,7 @@
   <!-- RELEASES -->
   <section id="view-releases" class="view">
     <div class="archive-head">
-      <div class="label">RELEASES / CATALOGUE</div>
+      <h2 class="label">RELEASES / CATALOGUE</h2>
       <div class="label" style="margin-top:4px">Records by artists in the index — select one to open the full release</div>
     </div>
     <div class="release-grid" id="release-grid"></div>
@@ -62,31 +64,31 @@
 
   <!-- NETWORK -->
   <section id="view-network" class="view">
-    <div class="label" id="net-hint-top">SELECT A NODE</div>
+    <h2 class="label" id="net-hint-top">SELECT A NODE</h2>
     <div class="scan-controls" id="net-filters" style="flex-wrap:wrap">
       <span class="label" style="align-self:center;margin-right:4px">VIEW</span>
-      <button data-mode="map" class="netf active">MAP</button>
-      <button data-mode="list" class="netf">LIST</button>
+      <button type="button" data-mode="map" class="netf active" aria-pressed="true">MAP</button>
+      <button type="button" data-mode="list" class="netf" aria-pressed="false">LIST</button>
       <span class="label" style="align-self:center;margin:0 4px 0 14px">CITY</span>
-      <button data-city="ALL" class="netf active">ALL</button>
-      <button data-city="Helsinki" class="netf">HELSINKI</button>
-      <button data-city="Berlin" class="netf">BERLIN</button>
+      <button type="button" data-city="ALL" class="netf active" aria-pressed="true">ALL</button>
+      <button type="button" data-city="Helsinki" class="netf" aria-pressed="false">HELSINKI</button>
+      <button type="button" data-city="Berlin" class="netf" aria-pressed="false">BERLIN</button>
       <span class="label" style="align-self:center;margin:0 4px 0 14px">TYPE</span>
-      <button data-cat="ALL" class="netf active">ALL</button>
-      <button data-cat="AUDIO" class="netf">AUDIO</button>
-      <button data-cat="VISUAL" class="netf">VJ / VISUAL</button>
-      <button data-cat="DOCUMENTATION" class="netf">DOCUMENTATION</button>
-      <button data-cat="SPACE" class="netf">SPACES</button>
+      <button type="button" data-cat="ALL" class="netf active" aria-pressed="true">ALL</button>
+      <button type="button" data-cat="AUDIO" class="netf" aria-pressed="false">AUDIO</button>
+      <button type="button" data-cat="VISUAL" class="netf" aria-pressed="false">VJ / VISUAL</button>
+      <button type="button" data-cat="DOCUMENTATION" class="netf" aria-pressed="false">DOCUMENTATION</button>
+      <button type="button" data-cat="SPACE" class="netf" aria-pressed="false">SPACES</button>
     </div>
-    <div class="label" id="net-hint" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom</div>
-    <svg id="netsvg" viewBox="0 0 700 500"></svg>
+    <div class="label" id="net-hint" style="margin:10px 16px 0">Drag empty space to pan, drag a node to move it, scroll to zoom. With a keyboard: Tab to a name, Enter for details — or use LIST.</div>
+    <svg id="netsvg" viewBox="0 0 700 500" role="group" aria-describedby="net-hint"></svg>
     <div id="netlist" hidden></div>
-    <div id="netdetail"></div>
+    <div id="netdetail" role="dialog" aria-labelledby="net-title" tabindex="-1"></div>
   </section>
 
   <!-- ABOUT -->
   <section id="view-about" class="view">
-    <div class="label">ABOUT</div>
+    <h2 class="label">ABOUT</h2>
     <p style="font-family:var(--disp); font-weight:600; font-size:22px; margin:10px 0 20px;">Pulse Index</p>
     <div class="about-grid">
     <div class="about-text">
@@ -100,14 +102,14 @@
     </figure>
     </div>
     <div class="hairline"></div>
-    <div class="label">CONTACT / FOLLOW</div>
+    <h3 class="label">CONTACT / FOLLOW</h3>
     <div class="contact-row">
     <p style="margin:0">
       <a href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Telegram</a><a href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Instagram</a><a href="https://soundcloud.com/pulse-index" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">SoundCloud</a><a href="https://www.youtube.com/@PULSE_INDEX" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">YouTube</a><a href="https://linktr.ee/pulseindex" target="_blank" rel="noopener" style="color:var(--sig)">Linktree</a>
     </p>
     </div>
     <div class="hairline"></div>
-    <div class="label">SUBMIT DOCUMENTATION</div>
+    <h3 class="label">SUBMIT DOCUMENTATION</h3>
     <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in — it can be added to the archive.</p>
     <p>Send it to <a href="mailto:pulseindex.platform@gmail.com" style="color:var(--sig)">pulseindex.platform@gmail.com</a></p>
   
@@ -116,28 +118,31 @@
 
 </main>
 
-<footer>PULSE INDEX / ARCHIVAL TRANSMISSION SYSTEM</footer>
+<footer id="site-footer">PULSE INDEX / ARCHIVAL TRANSMISSION SYSTEM</footer>
 
-<div id="filepanel">
+<div id="filepanel" role="dialog" aria-modal="true" aria-labelledby="file-title">
   <div class="inner">
-    <button class="close" id="file-close">CLOSE ✕</button>
+    <button type="button" class="close" id="file-close" aria-label="Close">CLOSE ✕</button>
     <div id="file-content"></div>
   </div>
 </div>
 
-<div id="lightbox">
-  <button class="close" id="lightbox-close">CLOSE ✕</button>
-  <img id="lightbox-img" src="" alt="">
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button type="button" class="close" id="lightbox-close" aria-label="Close image">CLOSE ✕</button>
+  <img id="lightbox-img" src="" alt="" aria-describedby="lightbox-cap">
   <div id="lightbox-cap"></div>
 </div>
 
-<script src="config.js?v=2026-10-22d"></script>
+<script src="config.js?v=2026-11-25a"></script>
 <script>
 /* Loads the content, then starts the site — without making visitors wait for Google:
    1) the copy saved in this browser from the last visit shows straight away;
    2) otherwise the sheet gets 1.5 s, then the saved files in /content take over;
-   3) the sheet keeps loading in the background. Its answer is saved for next time,
-      and if it differs from what's on screen, a "new signal" marker offers a reload. */
+   3) the sheet keeps loading in the background (up to 60 s). Its answer is saved for next time.
+      If it differs from what's on screen, the page reloads by itself — unless the visitor has
+      already started using the page; then an "updated" button offers the reload instead.
+   A saved copy older than a day gets a few seconds' head start for the sheet, so returning
+   visitors usually see the latest listings straight away. */
 (async function(){
   const get = f => fetch('content/'+f+'.json', {cache:'no-cache'}).then(r=>{ if(!r.ok) throw new Error(f+'.json: '+r.status); return r.json(); });
   const URL_ = (window.PULSE_CONFIG||{}).endpoint;
@@ -146,7 +151,7 @@
   function readCache(){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); return c && c.src===URL_ && Date.now()-c.t < CACHE_DAYS*864e5 ? c.d : null; }catch(_){ return null; } }
   function writeCache(d){ try{ localStorage.setItem(CACHE_KEY, JSON.stringify({t:Date.now(), src:URL_, d})); }catch(_){} }
   async function fromSheet(){
-    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(), 20000);
+    const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(), 60000);
     try{
       const r=await fetch(URL_, {signal:ctl.signal}); if(!r.ok) throw new Error('sheet: '+r.status);
       const d=await r.json(); if(!d.events || !d.artists) throw new Error('sheet: unexpected reply');
@@ -159,19 +164,31 @@
     const rl = await get('releases').catch(()=>[]);
     return [ev, ar, sp, st, rl];
   }
-  function newSignal(){
+  function cacheAge(){ try{ const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); return c ? Date.now()-c.t : Infinity; }catch(_){ return Infinity; } }
+  // has the visitor started using the page? then never reload under their hands
+  let busy=false;
+  ['pointerdown','keydown','touchstart'].forEach(ev=>addEventListener(ev,()=>{ busy=true; },{once:true,passive:true}));
+  function newContent(){
+    const panelOpen = document.querySelector('#filepanel.open, #lightbox.open, #netdetail.open');
+    let last=0; try{ last=+sessionStorage.getItem('pi_autoreload')||0; }catch(_){}
+    if(!busy && scrollY<=150 && !panelOpen && Date.now()-last>60000){
+      try{ sessionStorage.setItem('pi_autoreload', String(Date.now())); }catch(_){}
+      location.reload(); return;
+    }
     if(document.getElementById('new-signal')) return;
     const b=document.createElement('button'); b.id='new-signal'; b.type='button';
-    b.innerHTML='<span class="dot"></span>NEW SIGNAL — UPDATE ↻'; b.title='The content has changed since this page loaded';
+    b.innerHTML='<span class="dot" aria-hidden="true"></span>UPDATED — RELOAD ↻'; b.title='New listings arrived after this page loaded';
     b.onclick=()=>location.reload();
     document.getElementById('freqbar').insertBefore(b, document.querySelector('nav.channels'));
   }
   const sheet = URL_ ? fromSheet().catch(err=>{ console.warn('Pulse Index: sheet not reachable —', err.message); return null; }) : Promise.resolve(null);
   try{
+    const wait = ms => Promise.race([sheet, new Promise(r=>setTimeout(()=>r(null), ms))]);
     let shown = readCache();
-    if(!shown) shown = await Promise.race([sheet, new Promise(r=>setTimeout(()=>r(null), 1500))]);
+    if(shown && cacheAge() > 864e5) shown = (await wait(4000)) || shown;   // saved copy is over a day old
+    if(!shown) shown = await wait(1500);
     if(!shown) shown = await fromFiles();
-    sheet.then(fresh=>{ if(!fresh) return; writeCache(fresh); if(!same(fresh, shown)) newSignal(); });
+    sheet.then(fresh=>{ if(!fresh) return; writeCache(fresh); if(!same(fresh, shown)) setTimeout(newContent, 0); });
     const [ev, ar, sp, st, rl] = shown;
     window.ARTISTS = Object.fromEntries((Array.isArray(ar)?ar:(ar.artists||[])).map(a=>[a.id, {links:[], tags:[], bio:'', city:'', ...a}]));
     window.SPACES  = Object.fromEntries((Array.isArray(sp)?sp:(sp.spaces||[])).map(s=>[s.id, {tags:['SPACE'], city:'', ...s}]));
