@@ -83,7 +83,7 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   if(!upcoming.length){
     // nothing scheduled: a slim "TBA" strip, pointing at the last event and where announcements go
     box.innerHTML=`<div class="tba">
-      <div class="nt-kicker"><h2 class="label">NEXT TRANSMISSION</h2><span class="status-tag">TBA</span></div>
+      <div class="nt-kicker"><h2 class="section-title">Next event</h2></div>
       <h3 class="tba-title">Next date to be announced<span class="tba-cursor" aria-hidden="true">_</span></h3>
       <p class="tba-note">New dates go out first on Telegram.</p>
       <a class="tune-btn primary" href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener">GET NOTIFIED →</a>
@@ -96,14 +96,14 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   const [dd,mm,yy]=e.date.split('.');
   const row=(k,v)=> v ? `<div class="row"><span>${k}</span><span>${v}</span></div>` : '';
   box.innerHTML=`<div class="next-tx">
-    ${e.posterUrl ? `<button type="button" class="nt-poster zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : `<div class="nt-poster empty">POSTER — INCOMING</div>`}
+    ${e.posterUrl ? `<button type="button" class="nt-poster zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : `<div class="nt-poster empty">POSTER COMING SOON</div>`}
     <div>
-      <div class="nt-kicker"><h2 class="label">NEXT TRANSMISSION</h2><span class="status-tag">INCOMING</span></div>
+      <div class="nt-kicker"><h2 class="section-title">Next event</h2></div>
       <h3 class="nt-title">${e.name}</h3>
       <div class="nt-date">${dd}.${mm}<span style="color:var(--grey)">.${yy.slice(2)}</span></div>
       <div class="nt-count">${count}</div>
       <div class="nt-meta">
-        ${row('FILE', `<span style="color:var(--sig)">${e.id}</span> / ${TYPE_LABELS[e.type]||e.type}`)}
+        ${row('EVENT', `<span style="color:var(--sig)">PULSE INDEX ${e.id}</span> / ${TYPE_LABELS[e.type]||e.type}`)}
         ${row('TIME', e.time||'')}
         ${row('LOCATION', sp ? `${sp.name}, ${sp.city}` : '')}
         ${row(e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS', lineupText(e))}
@@ -144,7 +144,7 @@ function openArtist(id){ DLG_RETURN.delete(document.getElementById('filepanel'))
 function coverHtml(r, cls){
   return r.coverUrl
     ? `<button type="button" class="${cls} zoom" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')" aria-label="Enlarge cover: ${htmlEsc(r.title)}"><img src="${r.coverUrl}" alt="${r.title} cover"></button>`
-    : `<div class="${cls} empty">COVER — INCOMING</div>`;
+    : `<div class="${cls} empty">COVER COMING SOON</div>`;
 }
 function socialLinks(ids){
   return ids.flatMap(id=>(ARTISTS[id].links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${ids.length>1?ARTISTS[id].name+' — ':''}${l.label} ↗</a>`)).join('');
@@ -248,7 +248,7 @@ function scPlayer(r, url){
   const out = r.date && parseDate(r.date) <= new Date();
   const sc = (r.links||[]).find(l=>/soundcloud\.com/i.test(l.url));
   box.innerHTML=`<section class="home-block feat">
-    <div class="nt-kicker"><h2 class="label">FEATURED RELEASE</h2><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+    <div class="nt-kicker"><h2 class="section-title">Featured release</h2></div>
     <div class="feat-head${r.coverUrl?'':' nocover'}">
       <div class="feat-text">
         <h3 class="feat-title">${r.title}</h3>
@@ -272,7 +272,7 @@ function scPlayer(r, url){
   const desc=(e.description||'').split(/\n\s*\n/)[0];
   const photos=(e.docPhotos||[]).slice(0,3);
   box.innerHTML=`<section class="home-block recap">
-    <h2 class="label">LAST TRANSMISSION</h2>
+    <h2 class="section-title">Previous event</h2>
     <button type="button" class="lt-card" onclick="openFolder('${e.id}')">
       ${e.posterUrl?`<span class="lt-poster"><img src="${e.posterUrl}" alt="" loading="lazy"></span>`:`<span class="lt-poster empty"></span>`}
       <span class="lt-info">
@@ -280,7 +280,7 @@ function scPlayer(r, url){
         <span class="lt-name">${e.name}</span>
         <span class="lt-meta">${[e.date, sp?`${sp.name}, ${sp.city}`:''].filter(Boolean).join(' · ')}</span>
         ${desc?`<span class="lt-desc">${desc}</span>`:''}
-        <span class="lt-go">OPEN FILE →</span>
+        <span class="lt-go">VIEW EVENT →</span>
       </span>
     </button>
     ${photos.length?`<div class="recap-photos">${photos.map(p=>`<button type="button" onclick="openLightbox('${p.src}','${esc(p.cap||e.name)}')" aria-label="Enlarge photo${p.cap?': '+htmlEsc(p.cap):''}"><img src="${p.thumb||p.src}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
@@ -290,12 +290,12 @@ function scPlayer(r, url){
 (function(){
   const grid=document.getElementById('release-grid'); if(!grid) return;
   const list=[...RELEASES].sort((x,y)=>parseDate(y.date||'1.1.1970')-parseDate(x.date||'1.1.1970'));
-  if(!list.length){ grid.innerHTML='<div class="release-empty label">NO RELEASES ON FILE YET</div>'; return; }
+  if(!list.length){ grid.innerHTML='<div class="release-empty label">NO RELEASES YET</div>'; return; }
   list.forEach(r=>{
     const out = r.date && parseDate(r.date) <= new Date();
     const c=document.createElement('button'); c.className='rel-card'; c.type='button';
-    c.innerHTML=`<div class="rc-cover${r.coverUrl?'':' empty'}">${r.coverUrl?`<img src="${r.coverUrl}" alt="${r.title} cover" loading="lazy">`:'COVER — INCOMING'}</div>
-      <div class="rc-top"><span class="rc-cat">${r.catalog||r.id}</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+    c.innerHTML=`<div class="rc-cover${r.coverUrl?'':' empty'}">${r.coverUrl?`<img src="${r.coverUrl}" alt="${r.title} cover" loading="lazy">`:'COVER COMING SOON'}</div>
+      <div class="rc-top"><span class="rc-cat">${r.catalog||r.id}</span>${out?'':`<span class="rc-soon">Out ${r.date}</span>`}</div>
       <div class="rc-title">${r.title}</div>
       <div class="rc-artist">${r.artists.map(a=>ARTISTS[a].name).join(' / ')}</div>
       <div class="rc-meta">${[r.format||'RELEASE', r.date, r.label].filter(Boolean).join(' · ')}${r.from&&RELEASES.find(x=>x.id===r.from)?`<br>from ${RELEASES.find(x=>x.id===r.from).title}`:''}</div>`;
@@ -361,7 +361,7 @@ function openRelease(id){
       return (parent?layer('FROM', `<a href="#${parent.id}" class="onfile-link">${parent.title} — ${parent.format||'RELEASE'}${parent.catalog?' / '+parent.catalog:''} →</a>`):'')
         + (kids.length?layer('SINGLES', `<div class="related-list">${kids.map(k=>`<a href="#${k.id}">${k.title}${k.date?' — '+k.date:''}</a>`).join('')}</div>`):''); })()}
     ${(r.gallery||[]).length?layer('VISUAL IDENTITY', `<div class="gallery-grid">${r.gallery.map(g=>galleryItem(g.src,g.cap,g.thumb)).join('')}</div>`):''}
-    ${sections || layer('PROCESS', `<div class="doc-incoming"><span class="status-tag">PROCESS NOTES INCOMING</span><span class="label">Notes, footage and interviews on the making of this record will appear here.</span></div>`)}
+    ${sections || layer('PROCESS', `<div class="doc-incoming"><span class="status-tag">PROCESS NOTES COMING SOON</span><span class="label">Notes, footage and interviews on the making of this record will appear here.</span></div>`)}
     ${layer('ARTISTS', r.artists.map(a=>artistBlock(a,4)).join(''))}
     ${ev?layer('LAUNCHED AT', `<a href="#${ev.id}" class="onfile-link">${ev.id} — ${ev.name}, ${ev.date} →</a>`):''}`;
   showFilePanel(); setHash(id);
@@ -388,11 +388,11 @@ function openRelease(id){
   [...archived].reverse().forEach((e,i)=>{
     const f=document.createElement('div'); f.className='folder'; f.id='folder-'+e.id;
     const lineup=lineupText(e);
-    f.innerHTML=`<button type="button" class="tab" style="margin-left:${(i%5)*17}%" aria-expanded="false" aria-controls="contents-${e.id}"><span class="fid">${e.id}</span><span>${e.date}</span><span class="sr-only"> — ${htmlEsc(e.name)}</span></button>
+    f.innerHTML=`<button type="button" class="tab" style="margin-left:${(i%5)*17}%" aria-expanded="false" aria-controls="contents-${e.id}"><span class="fid">${e.id}</span><span class="sr-only"> ${e.date} — ${htmlEsc(e.name)}</span></button>
       <div class="body">
         <div class="cover">
           <div><div class="label">${TYPE_LABELS[e.type]||e.type}</div><h3 class="fname">${e.name}</h3>${lineup?`<div class="lineup">${lineup}</div>`:''}</div>
-          <div><span class="stamp">ARCHIVED</span><button type="button" class="fclose">CLOSE ✕</button></div>
+          <div><span class="fdate">${e.date}</span><button type="button" class="fclose">CLOSE ✕</button></div>
         </div>
         <div class="contents" id="contents-${e.id}"></div>
       </div>`;
@@ -423,10 +423,9 @@ function folderHead(e){
   return `<div class="folder-head">
     ${e.posterUrl ? `<button type="button" class="clip zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : '<div></div>'}
     <div class="sheet">
-      ${row('FILE', e.id)}${row('TYPE', TYPE_LABELS[e.type]||e.type)}${row('DATE', e.date + (e.time?' · '+e.time:''))}
+      ${row('EVENT', 'PULSE INDEX '+e.id)}${row('TYPE', TYPE_LABELS[e.type]||e.type)}${row('DATE', e.date + (e.time?' · '+e.time:''))}
       ${row('LOCATION', sp ? (sp.mapUrl?`<a href="${sp.mapUrl}" target="_blank" rel="noopener">${sp.name}${sp.address?', '+sp.address:', '+sp.city}</a>`:`${sp.name}${sp.address?', '+sp.address:', '+sp.city}`) : '')}
       ${row(e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS', lineupText(e))}${row('DOCUMENTED BY', (e.documentation||[]).map(a=>ARTISTS[a].name).join(' / '))}
-      ${row('CONTENTS', contents)}${row('STATUS', e.status)}
     </div>
   </div>`;
 }
@@ -461,10 +460,10 @@ function fileLayers(e, lvl){
   const sp = e.space ? SPACES[e.space] : null;
   const isIncoming = e.status==='INCOMING';
   const docIncoming = `<div class="layer"><${H} class="lhead">DOCUMENTATION</${H}><div class="doc-incoming">
-    <span class="status-tag">DOCUMENTATION INCOMING</span>
+    <p class="doc-none">No photos or video yet.</p>
     <a href="mailto:pulseindex.platform@gmail.com?subject=Documentation%20%E2%80%94%20${encodeURIComponent(e.id+' '+e.name)}">SUBMIT YOUR OWN →</a>
   </div></div>`;
-  const artistBlocks = e.artists.map(a=>artistBlock(a,(lvl||3)+1)).join('') || '<span style="color:var(--grey)">no linked artists on file</span>';
+  const artistBlocks = e.artists.map(a=>artistBlock(a,(lvl||3)+1)).join('') || '<span style="color:var(--grey)">no artists listed yet</span>';
   const docBlocks = (e.documentation||[]).map(a=>artistBlock(a,(lvl||3)+1)).join('');
   const venueLine = sp ? (sp.address ? `<a href="${sp.mapUrl||'#'}" target="_blank" rel="noopener">${sp.name}, ${sp.address}</a>` : `${sp.name}, ${sp.city}`) + (sp.link?` &nbsp;<a href="${sp.link}" target="_blank" rel="noopener">(venue link)</a>`:'') : '';
   const eventLinks = (e.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
@@ -478,7 +477,7 @@ function fileLayers(e, lvl){
     <div class="cap">Video on YouTube — opens in a new tab ↗</div></a>`);
 
   return `
-    <div class="layer desc-text"><${H} class="lhead">DESCRIPTION</${H}>${e.description ? textHtml(e.description) : `<p>Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.</p>`}</div>
+    <div class="layer desc-text"><${H} class="lhead">DESCRIPTION</${H}>${e.description ? textHtml(e.description) : `<p>${e.name}, ${e.date}${sp?', '+sp.name+', '+sp.city:''}. More details to follow.</p>`}</div>
     ${sp ? `<div class="layer"><${H} class="lhead">VENUE</${H}>${sp.description?`<p style="margin:0 0 8px">${sp.description}</p>`:''}<div class="related-list">${venueLine}</div></div>` : ''}
     ${isIncoming ? `<div class="layer reg-layer" id="reg-${e.id}" data-reg-layer="${e.id}" hidden></div>` : ''}
     ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><${H} class="lhead">TICKETS</${H}>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
@@ -501,10 +500,9 @@ function openFile(id){
   document.getElementById('file-content').innerHTML = `
     <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin:30px 0 20px">
       <div class="file-head" style="flex:1; min-width:180px; margin:0">
-        <div class="fid">PULSE INDEX / ${TYPE_LABELS[e.type]||e.type} / FILE ${e.id}</div>
+        <div class="fid">PULSE INDEX ${e.id} / ${TYPE_LABELS[e.type]||e.type}</div>
         <h2 class="ftitle" id="file-title">${e.name}</h2>
         <div class="mono" style="font-size:11px;color:var(--grey)">${e.date}${e.time?' · '+e.time:''}${sp?' · '+sp.city.toUpperCase():''}</div>
-        <div class="mono" style="font-size:11px;margin-top:8px">STATUS: ${e.status}</div>
       </div>
       ${e.posterUrl ? `<button type="button" class="poster-box zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : ''}
     </div>
@@ -597,7 +595,7 @@ function drawNetwork(){
     const A=nodes.find(n=>n.id===a), B=nodes.find(n=>n.id===b);
     if(A&&B) svgHtml+=`<line class="member" data-a="${a}" data-b="${b}" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`;
   });
-  if(!nodes.length) svgHtml += `<text x="350" y="250" text-anchor="middle" style="fill:var(--grey)">NO SIGNAL IN THIS FILTER</text>`;
+  if(!nodes.length) svgHtml += `<text x="350" y="250" text-anchor="middle" style="fill:var(--grey)">NOTHING MATCHES THESE FILTERS</text>`;
   nodes.forEach(n=>{
     const cls = n.tags.map(t=>'tag-'+t).join(' ');
     const strokeOverride = n.tags.length>1 ? ` style="stroke:url(#grad-${n.id})"` : '';
@@ -694,14 +692,14 @@ document.querySelectorAll('#net-filters button[data-mode]').forEach(b=>b.addEven
   document.getElementById('netsvg').style.display = list?'none':'';
   document.getElementById('netlist').hidden = !list;
   document.getElementById('net-hint').hidden = list;
-  document.getElementById('net-hint-top').textContent = list ? 'SELECT A NAME' : 'SELECT A NODE';
+  document.getElementById('net-hint-top').textContent = 'Artists, documenters and venues who have been part of Pulse Index. Select a name for details.';
   drawNetwork();
 }));
 const NET_COLS=[
   {key:'name', label:'NAME'},
   {key:'type', label:'TYPE'},
   {key:'city', label:'CITY'},
-  {key:'files', label:'ON FILE'},
+  {key:'files', label:'EVENTS'},
 ];
 function drawNetList(){
   const box=document.getElementById('netlist');
@@ -738,8 +736,8 @@ function drawNetList(){
     </button>`;
   }).join('');
   box.innerHTML = `<div class="nl-head">${NET_COLS.map(c=>`<button type="button" data-sort="${c.key}" class="${c.key===key?'on':''}" aria-label="Sort by ${c.label.toLowerCase()}${c.key===key?(dir>0?', currently ascending':', currently descending'):''}">${c.label}${c.key===key?(dir>0?' ↓':' ↑'):''}</button>`).join('')}</div>
-    ${rows.length ? body : '<div class="nl-empty">NO SIGNAL IN THIS FILTER</div>'}
-    <div class="label nl-count">${rows.length} ON FILE</div>`;
+    ${rows.length ? body : '<div class="nl-empty">NOTHING MATCHES THESE FILTERS</div>'}
+    <div class="label nl-count">${rows.length} SHOWN</div>`;
   box.querySelectorAll('.nl-head button').forEach(b=>b.onclick=()=>{
     const k=b.dataset.sort;
     // "ON FILE" starts with the most active first; everything else starts A→Z
@@ -754,9 +752,9 @@ function eventLinksFor(list){
     const venueNamed = e.space && SPACES[e.space] && SPACES[e.space].name===e.name;
     const what = `<span style="color:var(--sig)">${e.id}</span> &nbsp;${e.date} — ${TYPE_LABELS[e.type]||e.type}${venueNamed?'':`<br><span style="color:var(--ink)">${e.name}</span>`}`;
     return e.status==='ARCHIVED'
-      ? `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); closeNetDetail(true); openFolder('${e.id}')"><span class="go">open file →</span>${what}</a>`
-      : `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); openFile('${e.id}')"><span class="go">incoming →</span>${what}</a>`;
-  }).join('') || '<span style="color:var(--grey)">none logged</span>';
+      ? `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); closeNetDetail(true); openFolder('${e.id}')"><span class="go">view event →</span>${what}</a>`
+      : `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); openFile('${e.id}')"><span class="go">view event →</span>${what}</a>`;
+  }).join('') || '<span style="color:var(--grey)">none yet</span>';
 }
 function selectNode(id){
   const det=document.getElementById('netdetail');
@@ -772,7 +770,7 @@ function selectNode(id){
       ${(a.members||[]).length?`<div class="label" style="margin-top:10px">MEMBERS</div><div class="netfiles">${a.members.map(m=>`<a href="#" onclick="event.preventDefault(); selectNode('${m}')">${ARTISTS[m].name} →</a>`).join('')}</div>`:''}
       ${groupsOf(id).length?`<div class="label" style="margin-top:10px">MEMBER OF</div><div class="netfiles">${groupsOf(id).map(g=>`<a href="#" onclick="event.preventDefault(); selectNode('${g.id}')">${g.name} →</a>`).join('')}</div>`:''}
       ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); closeNetDetail(true); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.catalog||r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
-      <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
+      <h3 class="label" style="margin-top:10px">EVENTS</h3><div class="netfiles">${eventLinksFor(evs)}</div>`;
   } else if(SPACES[id]){
     const s=SPACES[id];
     const evs=EVENTS.filter(e=>e.space===id);
@@ -781,7 +779,7 @@ function selectNode(id){
       ${s.description?`<p style="margin:6px 0">${s.description}</p>`:''}
       ${s.address?`<p style="margin:6px 0;color:var(--grey)">${s.address}</p>`:''}
       <div class="netlinks">${s.link?`<a href="${s.link}" target="_blank" rel="noopener">venue link</a>`:''}</div>
-      <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
+      <h3 class="label" style="margin-top:10px">EVENTS</h3><div class="netfiles">${eventLinksFor(evs)}</div>`;
   }
   det.classList.add('open');
   dialogOpened(det, document.getElementById('net-close'));
