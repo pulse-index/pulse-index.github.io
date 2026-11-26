@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PULSE INDEX</title>
-<meta name="description" content="Pulse Index — an artist-led platform for experimental audiovisual art: performances, workshops and an archive of documentation. Helsinki / Berlin.">
+<title>Pulse Index — experimental audiovisual art, Helsinki / Berlin</title>
+<meta name="description" content="Pulse Index — an artist-led platform for experimental audiovisual art: live performances, workshops and documentation of past events. Helsinki / Berlin.">
 <meta property="og:title" content="PULSE INDEX">
-<meta property="og:description" content="Artist-led platform for experimental audiovisual art — performances, workshops and an archive of documentation.">
+<meta property="og:description" content="Artist-led platform for experimental audiovisual art — live performances, workshops and documentation of past events.">
 <meta property="og:type" content="website">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <!-- bump BUILD with every update so browsers fetch the new files straight away -->
-<script>window.PULSE_BUILD="2026-11-25a";</script>
-<link rel="stylesheet" href="assets/style.css?v=2026-11-25a">
+<script>window.PULSE_BUILD="2026-11-26b";</script>
+<link rel="stylesheet" href="assets/style.css?v=2026-11-26b">
 </head>
 <body>
 <a class="skip-link" id="skip" href="#main-content">Skip to content</a>
@@ -21,8 +21,8 @@
 <div id="freqbar">
   <button type="button" class="lock" id="home-btn" style="border:none;padding:0" aria-label="Pulse Index, front page"><span class="dot" aria-hidden="true"></span><span>PULSE INDEX</span></button>
   <nav class="channels" aria-label="Main">
-    <button type="button" data-v="signal" class="active" aria-current="page">SIGNAL</button>
-    <button type="button" data-v="archive">ARCHIVE</button>
+    <button type="button" data-v="signal" class="active" aria-current="page">HOME</button>
+    <button type="button" data-v="archive">EVENTS</button>
     <button type="button" data-v="releases">RELEASES</button>
     <button type="button" data-v="network">NETWORK</button>
     <button type="button" data-v="about">ABOUT</button>
@@ -36,19 +36,19 @@
   <section id="view-signal" class="view active">
     <div id="next-tx"></div>
     <div class="also-incoming" id="also-wrap" style="display:none">
-      <h2 class="label" style="margin-bottom:10px">ALSO INCOMING</h2>
+      <h2 class="section-title" style="margin-bottom:10px">Also coming up</h2>
       <div id="prog-list"></div>
     </div>
     <div id="featured"></div>
     <div id="recap"></div>
-    <p class="intro">An artist-led platform for experimental audiovisual art — performances, workshops and an archive of what happened. Helsinki / Berlin.</p>
+    <p class="intro">An artist-led platform for experimental audiovisual art — performances, workshops and documentation of what happened. Helsinki / Berlin.</p>
   </section>
 
   <!-- ARCHIVE -->
   <section id="view-archive" class="view">
     <div class="archive-head">
-      <h2 class="label">RECEIVED / ARCHIVED FILES</h2>
-      <div class="label" style="margin-top:4px">Select a folder to open the full file — newest at the top</div>
+      <h2 class="page-title">Archived events</h2>
+      <p class="page-sub">Newest first. Open an event for the lineup, photos and video.</p>
     </div>
     <div class="cabinet" id="cabinet"></div>
   </section>
@@ -56,15 +56,16 @@
   <!-- RELEASES -->
   <section id="view-releases" class="view">
     <div class="archive-head">
-      <h2 class="label">RELEASES / CATALOGUE</h2>
-      <div class="label" style="margin-top:4px">Records by artists in the index — select one to open the full release</div>
+      <h2 class="page-title">Releases</h2>
+      <p class="page-sub">Records by artists in the network. Open one for the tracklist and notes.</p>
     </div>
     <div class="release-grid" id="release-grid"></div>
   </section>
 
   <!-- NETWORK -->
   <section id="view-network" class="view">
-    <h2 class="label" id="net-hint-top">SELECT A NODE</h2>
+    <h2 class="page-title" id="net-title-top">Network</h2>
+    <p class="page-sub" id="net-hint-top">Artists, documenters and venues who have been part of Pulse Index. Select a name for details.</p>
     <div class="scan-controls" id="net-filters" style="flex-wrap:wrap">
       <span class="label" style="align-self:center;margin-right:4px">VIEW</span>
       <button type="button" data-mode="map" class="netf active" aria-pressed="true">MAP</button>
@@ -88,8 +89,7 @@
 
   <!-- ABOUT -->
   <section id="view-about" class="view">
-    <h2 class="label">ABOUT</h2>
-    <p style="font-family:var(--disp); font-weight:600; font-size:22px; margin:10px 0 20px;">Pulse Index</p>
+    <h2 class="page-title" style="margin:0 0 20px">About Pulse Index</h2>
     <div class="about-grid">
     <div class="about-text">
     <p>Pulse Index is an artist-led platform for experimental audiovisual art, based in Helsinki and Berlin. It brings together artists working across sound, moving image, performance, movement and technology to meet, share knowledge and build new collaborations.</p>
@@ -102,15 +102,15 @@
     </figure>
     </div>
     <div class="hairline"></div>
-    <h3 class="label">CONTACT / FOLLOW</h3>
+    <h3 class="section-title">Contact and follow</h3>
     <div class="contact-row">
     <p style="margin:0">
       <a href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Telegram</a><a href="https://www.instagram.com/pulseindex/" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">Instagram</a><a href="https://soundcloud.com/pulse-index" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">SoundCloud</a><a href="https://www.youtube.com/@PULSE_INDEX" target="_blank" rel="noopener" style="color:var(--sig);margin-right:14px">YouTube</a><a href="https://linktr.ee/pulseindex" target="_blank" rel="noopener" style="color:var(--sig)">Linktree</a>
     </p>
     </div>
     <div class="hairline"></div>
-    <h3 class="label">SUBMIT DOCUMENTATION</h3>
-    <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in — it can be added to the archive.</p>
+    <h3 class="section-title">Send documentation</h3>
+    <p style="margin-top:10px">Were you at a Pulse Index event and have photos, video, audio or other documentation? Send it in and it can be added to the event's page.</p>
     <p>Send it to <a href="mailto:pulseindex.platform@gmail.com" style="color:var(--sig)">pulseindex.platform@gmail.com</a></p>
   
     <div class="bottom-logo"><img src="images/site/logo.png" alt="Pulse Index"></div>
@@ -118,7 +118,7 @@
 
 </main>
 
-<footer id="site-footer">PULSE INDEX / ARCHIVAL TRANSMISSION SYSTEM</footer>
+<footer id="site-footer">Pulse Index © 2026</footer>
 
 <div id="filepanel" role="dialog" aria-modal="true" aria-labelledby="file-title">
   <div class="inner">
@@ -133,7 +133,7 @@
   <div id="lightbox-cap"></div>
 </div>
 
-<script src="config.js?v=2026-11-25a"></script>
+<script src="config.js?v=2026-11-26b"></script>
 <script>
 /* Loads the content, then starts the site — without making visitors wait for Google:
    1) the copy saved in this browser from the last visit shows straight away;
@@ -217,7 +217,7 @@
     const s=document.createElement('script'); s.src='assets/app.js?v='+window.PULSE_BUILD; document.body.appendChild(s);
   }catch(err){
     console.error(err);
-    document.querySelector('main').insertAdjacentHTML('afterbegin','<div style="padding:90px 16px;max-width:600px;margin:0 auto" class="label">NO SIGNAL — the content files could not be loaded. If you opened index.html straight from your computer, see README (preview section).</div>');
+    document.querySelector('main').insertAdjacentHTML('afterbegin','<div style="padding:90px 16px;max-width:600px;margin:0 auto" class="label">The listings could not be loaded. If you opened index.html straight from your computer, see README (preview section).</div>');
   }
 })();
 </script>
