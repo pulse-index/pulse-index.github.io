@@ -10,6 +10,44 @@ function lineupText(e){
 const archived = EVENTS.filter(e=>e.status==='ARCHIVED');
 const incoming = EVENTS.filter(e=>e.status==='INCOMING');
 
+/* ---------------- DIALOGS ----------------
+   The event/release panel and the image viewer are modal: while one is open the rest of the
+   page is made inert (not clickable, not reachable with Tab), focus moves to its Close button,
+   and on closing focus returns to whatever opened it. The network detail card is not modal,
+   but gets the same focus in / focus back. */
+const DLG_RETURN = new Map();
+function syncInert(){
+  const lb=document.getElementById('lightbox').classList.contains('open');
+  const fp=document.getElementById('filepanel').classList.contains('open');
+  ['freqbar','main-content','site-footer','skip'].forEach(id=>{ const el=document.getElementById(id); if(el) el.inert = lb||fp; });
+  document.getElementById('filepanel').inert = lb;
+}
+// Tab and Shift+Tab loop inside an open modal instead of leaving it
+document.addEventListener('keydown', e=>{
+  if(e.key!=='Tab') return;
+  const m=['lightbox','filepanel'].map(id=>document.getElementById(id)).find(el=>el.classList.contains('open') && !el.inert);
+  if(!m) return;
+  const f=[...m.querySelectorAll('a[href],button:not([disabled]),input:not([tabindex="-1"]),select,textarea,[tabindex]:not([tabindex="-1"])')]
+    .filter(x=>x.offsetParent!==null || x===document.activeElement);
+  if(!f.length) return;
+  const first=f[0], last=f[f.length-1];
+  if(!m.contains(document.activeElement)){ e.preventDefault(); first.focus(); }
+  else if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+});
+function dialogOpened(el, focusEl){
+  if(!DLG_RETURN.has(el)){ const a=document.activeElement; DLG_RETURN.set(el, a && a!==document.body ? a : null); }
+  syncInert();
+  // opened straight from a link like …/#wave-i while the page loads: leave focus where it is
+  if(!DLG_RETURN.get(el) && performance.now() < 4000) return;
+  setTimeout(()=>{ (focusEl||el).focus({preventScroll:true}); }, 30);
+}
+function dialogClosed(el){
+  syncInert();
+  const back=DLG_RETURN.get(el); DLG_RETURN.delete(el);
+  if(back && document.contains(back) && !back.closest('[inert]')) back.focus({preventScroll:true});
+}
+
 /* ---------------- NAV ---------------- */
 document.querySelectorAll('nav.channels button').forEach(b=>{
   b.addEventListener('click', ()=> showView(b.dataset.v));
@@ -19,7 +57,7 @@ function currentView(){ const v=document.querySelector('.view.active'); return v
 function showView(v){
   setHash(v==='signal' ? '' : v);
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('nav.channels button').forEach(b=>b.classList.toggle('active', b.dataset.v===v));
+  document.querySelectorAll('nav.channels button').forEach(b=>{ const on=b.dataset.v===v; b.classList.toggle('active', on); if(on) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   document.getElementById('view-'+v).classList.add('active');
   if(v==='network' && !window.__netDrawn){ drawNetwork(); window.__netDrawn=true; }
 }
@@ -31,7 +69,7 @@ document.addEventListener('keydown', e=>{
   const nd=document.getElementById('netdetail');
   if(lb.classList.contains('open')) closeLightbox();
   else if(fp.classList.contains('open')) closeFile();
-  else if(nd.classList.contains('open')) nd.classList.remove('open');
+  else if(nd.classList.contains('open')) closeNetDetail();
   else { const f=document.querySelector('.folder.open'); if(f) closeFolder(f); }
 });
 
@@ -45,8 +83,8 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   if(!upcoming.length){
     // nothing scheduled: a slim "TBA" strip, pointing at the last event and where announcements go
     box.innerHTML=`<div class="tba">
-      <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">TBA</span></div>
-      <div class="tba-title">Next date to be announced<span class="tba-cursor">_</span></div>
+      <div class="nt-kicker"><h2 class="label">NEXT TRANSMISSION</h2><span class="status-tag">TBA</span></div>
+      <h3 class="tba-title">Next date to be announced<span class="tba-cursor" aria-hidden="true">_</span></h3>
       <p class="tba-note">New dates go out first on Telegram.</p>
       <a class="tune-btn primary" href="https://t.me/+p6LygedzhEI4YTYx" target="_blank" rel="noopener">GET NOTIFIED →</a>
     </div>`;
@@ -58,10 +96,10 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
   const [dd,mm,yy]=e.date.split('.');
   const row=(k,v)=> v ? `<div class="row"><span>${k}</span><span>${v}</span></div>` : '';
   box.innerHTML=`<div class="next-tx">
-    ${e.posterUrl ? `<div class="nt-poster" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')"><img src="${e.posterUrl}" alt="${e.name} poster"></div>` : `<div class="nt-poster empty">POSTER — INCOMING</div>`}
+    ${e.posterUrl ? `<button type="button" class="nt-poster zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : `<div class="nt-poster empty">POSTER — INCOMING</div>`}
     <div>
-      <div class="nt-kicker"><span class="label">NEXT TRANSMISSION</span><span class="status-tag">INCOMING</span></div>
-      <div class="nt-title">${e.name}</div>
+      <div class="nt-kicker"><h2 class="label">NEXT TRANSMISSION</h2><span class="status-tag">INCOMING</span></div>
+      <h3 class="nt-title">${e.name}</h3>
       <div class="nt-date">${dd}.${mm}<span style="color:var(--grey)">.${yy.slice(2)}</span></div>
       <div class="nt-count">${count}</div>
       <div class="nt-meta">
@@ -85,8 +123,8 @@ function parseDate(d){ const [dd,mm,yy]=d.split('.').map(Number); return new Dat
     rest.forEach(e=>{
       const sp=SPACES[e.space];
       const r=document.createElement('div'); r.className='event-row'; r.style.cursor='pointer'; r.style.minHeight='0';
-      r.onclick=(ev)=>{ if(!ev.target.closest('a')) openFile(e.id); };
-      r.innerHTML=`<div><div class="fid">${e.id} / ${TYPE_LABELS[e.type]||e.type}</div><div class="name">${e.name}</div></div>
+      r.onclick=(ev)=>{ if(!ev.target.closest('a,button')) openFile(e.id); };
+      r.innerHTML=`<div><div class="fid">${e.id} / ${TYPE_LABELS[e.type]||e.type}</div><h3 class="name"><button type="button" class="row-link" onclick="openFile('${e.id}')">${e.name}</button></h3></div>
         <div class="meta" style="margin:0">${e.date}${sp?` &nbsp;·&nbsp; ${sp.name.toUpperCase()}, ${sp.city.toUpperCase()}`:''}</div>
         ${e.ticketUrl ? `<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="align-self:flex-start;margin-top:0">GET TICKETS →</a>` : ''}
         <span class="reg-slot compact" data-reg-btn="${e.id}"></span>`;
@@ -102,10 +140,10 @@ const esc = s => String(s||'').replace(/'/g,"\\'");
 function artistNames(ids){
   return ids.map(id=>`<a href="#" class="artist-link" onclick="event.preventDefault(); openArtist('${id}')">${ARTISTS[id].name}</a>`).join(' / ');
 }
-function openArtist(id){ closeFile(); showView('network'); selectNode(id); }
+function openArtist(id){ DLG_RETURN.delete(document.getElementById('filepanel')); closeFile(); showView('network'); selectNode(id); }
 function coverHtml(r, cls){
   return r.coverUrl
-    ? `<div class="${cls}" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')"><img src="${r.coverUrl}" alt="${r.title} cover"></div>`
+    ? `<button type="button" class="${cls} zoom" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')" aria-label="Enlarge cover: ${htmlEsc(r.title)}"><img src="${r.coverUrl}" alt="${r.title} cover"></button>`
     : `<div class="${cls} empty">COVER — INCOMING</div>`;
 }
 function socialLinks(ids){
@@ -132,7 +170,7 @@ function scPlayer(r, url){
   el.innerHTML=`<button type="button" class="mp-play" aria-label="Play">▶</button>
     <div class="mp-main">
       <div class="mp-top"><span class="mp-title"><span class="mp-lead">${[r.artists.map(a=>ARTISTS[a].name).join(' / '), r.title].filter(Boolean).join(' — ')}</span></span><span class="mp-time">0:00</span></div>
-      <div class="mp-bar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100"><span class="mp-fill"></span></div>
+      <div class="mp-bar" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00"><span class="mp-fill"></span></div>
       <div class="mp-foot"><span class="mp-nav"><button type="button" class="mp-prev" aria-label="Previous track">⏮</button><span class="mp-count"></span><button type="button" class="mp-next" aria-label="Next track">⏭</button></span>
         <a class="mp-src" href="${url}" target="_blank" rel="noopener">SoundCloud ↗</a></div>
     </div>
@@ -174,6 +212,7 @@ function scPlayer(r, url){
     widget.bind(E.FINISH, ()=>{ if(idx>=n-1){ playing=false; el.classList.remove('playing'); playBtn.textContent='▶'; } });
     widget.bind(E.PLAY_PROGRESS, e=>{
       fill.style.width=(e.relativePosition*100)+'%'; bar.setAttribute('aria-valuenow', Math.round(e.relativePosition*100));
+      bar.setAttribute('aria-valuetext', fmtTime(e.currentPosition)+(dur?' of '+fmtTime(dur):''));
       time.textContent = fmtTime(e.currentPosition)+(dur?' / '+fmtTime(dur):'');
     });
   }
@@ -209,10 +248,10 @@ function scPlayer(r, url){
   const out = r.date && parseDate(r.date) <= new Date();
   const sc = (r.links||[]).find(l=>/soundcloud\.com/i.test(l.url));
   box.innerHTML=`<section class="home-block feat">
-    <div class="nt-kicker"><span class="label">FEATURED RELEASE</span><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
+    <div class="nt-kicker"><h2 class="label">FEATURED RELEASE</h2><span class="status-tag">${out?'OUT NOW':'INCOMING'}</span></div>
     <div class="feat-head${r.coverUrl?'':' nocover'}">
       <div class="feat-text">
-        <div class="feat-title">${r.title}</div>
+        <h3 class="feat-title">${r.title}</h3>
         <div class="rel-artist">${artistNames(r.artists)}</div>
         ${r.blurb?`<p class="rel-blurb">${r.blurb}</p>`:''}
         <button type="button" class="text-link" onclick="openRelease('${r.id}')">FULL RELEASE →</button>
@@ -233,7 +272,7 @@ function scPlayer(r, url){
   const desc=(e.description||'').split(/\n\s*\n/)[0];
   const photos=(e.docPhotos||[]).slice(0,3);
   box.innerHTML=`<section class="home-block recap">
-    <div class="label">LAST TRANSMISSION</div>
+    <h2 class="label">LAST TRANSMISSION</h2>
     <button type="button" class="lt-card" onclick="openFolder('${e.id}')">
       ${e.posterUrl?`<span class="lt-poster"><img src="${e.posterUrl}" alt="" loading="lazy"></span>`:`<span class="lt-poster empty"></span>`}
       <span class="lt-info">
@@ -244,7 +283,7 @@ function scPlayer(r, url){
         <span class="lt-go">OPEN FILE →</span>
       </span>
     </button>
-    ${photos.length?`<div class="recap-photos">${photos.map(p=>`<button type="button" onclick="openLightbox('${p.src}','${esc(p.cap||e.name)}')"><img src="${p.thumb||p.src}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
+    ${photos.length?`<div class="recap-photos">${photos.map(p=>`<button type="button" onclick="openLightbox('${p.src}','${esc(p.cap||e.name)}')" aria-label="Enlarge photo${p.cap?': '+htmlEsc(p.cap):''}"><img src="${p.thumb||p.src}" alt="" loading="lazy"></button>`).join('')}</div>`:''}
   </section>`;
 })();
 // RELEASES page: every release as a cover card, newest first
@@ -273,7 +312,7 @@ function toggleTrack(btn){
 function openRelease(id){
   const r=RELEASES.find(x=>x.id===id); if(!r) return;
   const ev = r.event ? EVENTS.find(e=>e.id===r.event) : null;
-  const layer=(head, body)=> body ? `<div class="layer"><div class="lhead">${head}</div>${body}</div>` : '';
+  const layer=(head, body)=> body ? `<div class="layer"><h3 class="lhead">${head}</h3>${body}</div>` : '';
   // each track is a row; a track with artwork, notes, a video or a link opens into its own little section
   const tracks=(r.tracks||[]).map((t,i)=>{
     const n=String(i+1).padStart(2,'0'), title=t.title||t;
@@ -284,10 +323,10 @@ function openRelease(id){
     return `<li class="trk">
       <button type="button" class="trk-head" aria-expanded="false" onclick="toggleTrack(this)"><span class="tn">${n}</span>${thumb}<span class="ttl">${title}</span><span class="tl">${t.length||''}</span><span class="tx" aria-hidden="true">+</span></button>
       <div class="trk-body">
-        ${t.art?`<div class="trk-art" onclick="openLightbox('${t.art.src}','${esc(title)} — ${esc(r.title)}')"><img src="${t.art.thumb||t.art.src}" alt="${title} artwork" loading="lazy"></div>`:''}
+        ${t.art?`<button type="button" class="trk-art zoom" onclick="openLightbox('${t.art.src}','${esc(title)} — ${esc(r.title)}')" aria-label="Enlarge artwork: ${htmlEsc(title)}"><img src="${t.art.thumb||t.art.src}" alt="${title} artwork" loading="lazy"></button>`:''}
         <div class="trk-info">
           <div class="label">TRACK ${n}${t.length?' · '+t.length:''}</div>
-          <div class="trk-title">${title}</div>
+          <h4 class="trk-title">${title}</h4>
           ${t.notes?bioHtml(t.notes,'margin:0 0 10px;max-width:520px'):''}
           ${t.video?ytHtml(t.video,''):''}
           ${links?`<div class="rel-socials">${links}</div>`:''}
@@ -309,11 +348,11 @@ function openRelease(id){
     <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin:30px 0 20px">
       <div class="file-head" style="flex:1; min-width:180px; margin:0">
         <div class="fid">PULSE INDEX / ${r.format||'RELEASE'} / ${r.catalog?'CAT. NO. '+r.catalog:'FILE '+r.id}</div>
-        <div class="ftitle">${r.title}</div>
+        <h2 class="ftitle" id="file-title">${r.title}</h2>
         <div class="rel-artist" style="font-size:14px">${artistNames(r.artists)}</div>
         <div class="mono" style="font-size:11px;color:var(--grey);margin-top:6px">${[r.date,r.label].filter(Boolean).join(' · ')}</div>
       </div>
-      ${r.coverUrl?`<div class="poster-box" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')"><img src="${r.coverUrl}" alt="${r.title} cover"></div>`:''}
+      ${r.coverUrl?`<button type="button" class="poster-box zoom" onclick="openLightbox('${r.coverUrl}','${esc(r.title)} — cover')" aria-label="Enlarge cover: ${htmlEsc(r.title)}"><img src="${r.coverUrl}" alt="${r.title} cover"></button>`:''}
     </div>
     ${layer('ABOUT THE RECORD', r.about ? bioHtml(r.about,'margin:0 0 10px;max-width:640px') : (r.blurb?`<p style="margin:0">${r.blurb}</p>`:''))}
     ${layer('TRACKLIST', tracks?`<ol class="tracklist">${tracks}</ol>`:'')}
@@ -323,14 +362,15 @@ function openRelease(id){
         + (kids.length?layer('SINGLES', `<div class="related-list">${kids.map(k=>`<a href="#${k.id}">${k.title}${k.date?' — '+k.date:''}</a>`).join('')}</div>`):''); })()}
     ${(r.gallery||[]).length?layer('VISUAL IDENTITY', `<div class="gallery-grid">${r.gallery.map(g=>galleryItem(g.src,g.cap,g.thumb)).join('')}</div>`):''}
     ${sections || layer('PROCESS', `<div class="doc-incoming"><span class="status-tag">PROCESS NOTES INCOMING</span><span class="label">Notes, footage and interviews on the making of this record will appear here.</span></div>`)}
-    ${layer('ARTISTS', r.artists.map(artistBlock).join(''))}
+    ${layer('ARTISTS', r.artists.map(a=>artistBlock(a,4)).join(''))}
     ${ev?layer('LAUNCHED AT', `<a href="#${ev.id}" class="onfile-link">${ev.id} — ${ev.name}, ${ev.date} →</a>`):''}`;
-  document.getElementById('filepanel').classList.add('open'); setHash(id);
-  document.getElementById('filepanel').scrollTop = 0;
+  showFilePanel(); setHash(id);
   document.querySelectorAll('#file-content .layer').forEach((l,i)=>{ l.classList.remove('show'); setTimeout(()=>l.classList.add('show'), 80*i+60); });
 }
 // About image, with an optional "PHOTO: Name" credit under it (Settings → about image credit: "Name" or "Name | link")
-(function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img'); box.innerHTML=`<img src="${ABOUT_IMAGE}" alt="Pulse Index — visual">`; box.onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'); }
+(function(){ if(window.ABOUT_IMAGE){ const box=document.getElementById('about-image'); box.classList.add('has-img');
+    box.innerHTML=`<button type="button" class="zoom" aria-label="Enlarge photo"><img src="${ABOUT_IMAGE}" alt="Pulse Index live performance, blurred black and white photo"></button>`;
+    box.querySelector('button').onclick=()=>openLightbox(ABOUT_IMAGE,'Pulse Index'+(window.ABOUT_CREDIT?' — photo: '+String(ABOUT_CREDIT).split('|')[0].trim():'')); }
   const cr=document.getElementById('about-credit'), raw=String(window.ABOUT_CREDIT||'').trim();
   if(cr && raw && window.ABOUT_IMAGE){ const [name,link]=raw.split('|').map(x=>x.trim()); const h=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     cr.innerHTML='PHOTO: '+(link&&/^https?:\/\//.test(link)?`<a href="${h(link)}" target="_blank" rel="noopener">${h(name)}</a>`:h(name)); cr.hidden=false; } })();
@@ -348,21 +388,22 @@ function openRelease(id){
   [...archived].reverse().forEach((e,i)=>{
     const f=document.createElement('div'); f.className='folder'; f.id='folder-'+e.id;
     const lineup=lineupText(e);
-    f.innerHTML=`<div class="tab" style="margin-left:${(i%5)*17}%"><span class="fid">${e.id}</span><span>${e.date}</span></div>
+    f.innerHTML=`<button type="button" class="tab" style="margin-left:${(i%5)*17}%" aria-expanded="false" aria-controls="contents-${e.id}"><span class="fid">${e.id}</span><span>${e.date}</span><span class="sr-only"> — ${htmlEsc(e.name)}</span></button>
       <div class="body">
         <div class="cover">
-          <div><div class="label">${TYPE_LABELS[e.type]||e.type}</div><div class="fname">${e.name}</div>${lineup?`<div class="lineup">${lineup}</div>`:''}</div>
-          <div><span class="stamp">ARCHIVED</span><button class="fclose">CLOSE ✕</button></div>
+          <div><div class="label">${TYPE_LABELS[e.type]||e.type}</div><h3 class="fname">${e.name}</h3>${lineup?`<div class="lineup">${lineup}</div>`:''}</div>
+          <div><span class="stamp">ARCHIVED</span><button type="button" class="fclose">CLOSE ✕</button></div>
         </div>
-        <div class="contents"></div>
+        <div class="contents" id="contents-${e.id}"></div>
       </div>`;
     const toggle=()=> f.classList.contains('open') ? closeFolder(f) : openFolder(e.id);
     f.querySelector('.tab').onclick=toggle;
-    f.querySelector('.cover').onclick=toggle;
+    f.querySelector('.cover').onclick=ev=>{ if(!ev.target.closest('a')) toggle(); };
     cab.appendChild(f);
   });
 })();
-function closeFolder(f){ f.classList.remove('open'); setHash('archive'); }
+function closeFolder(f){ f.classList.remove('open'); f.querySelector('.tab').setAttribute('aria-expanded','false'); setHash('archive');
+  if(f.contains(document.activeElement)) f.querySelector('.tab').focus({preventScroll:true}); }
 function openFolder(id){
   const e=EVENTS.find(x=>x.id===id); if(!e) return;
   if(!document.getElementById('view-archive').classList.contains('active')) showView('archive');
@@ -370,8 +411,8 @@ function openFolder(id){
   document.querySelectorAll('.folder.open').forEach(closeFolder);
   const f=document.getElementById('folder-'+id);
   const c=f.querySelector('.contents');
-  if(!c.dataset.built){ c.innerHTML=folderHead(e)+fileLayers(e); c.dataset.built='1'; }
-  f.classList.add('open'); setHash(id);
+  if(!c.dataset.built){ c.innerHTML=folderHead(e)+fileLayers(e, 4); c.dataset.built='1'; }
+  f.classList.add('open'); f.querySelector('.tab').setAttribute('aria-expanded','true'); setHash(id);
   c.querySelectorAll('.layer').forEach((l,i)=>{ l.classList.remove('show'); setTimeout(()=>l.classList.add('show'), 80*i+120); });
   setTimeout(()=>f.scrollIntoView({behavior:'smooth', block:'start'}), 60);
 }
@@ -380,7 +421,7 @@ function folderHead(e){
   const contents=[e.posterUrl?'1 poster':'', (e.docPhotos||[]).length?`${e.docPhotos.length} photos`:'', (e.videos||[]).length?`${e.videos.length} video${e.videos.length>1?'s':''}`:'', (e.promoCards||[]).length?`${e.promoCards.length} promo cards`:''].filter(Boolean).join(' · ');
   const row=(k,v)=> v ? `<div class="row"><span>${k}</span><span>${v}</span></div>` : '';
   return `<div class="folder-head">
-    ${e.posterUrl ? `<div class="clip" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')"><img src="${e.posterUrl}" alt="${e.name} poster"></div>` : '<div></div>'}
+    ${e.posterUrl ? `<button type="button" class="clip zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : '<div></div>'}
     <div class="sheet">
       ${row('FILE', e.id)}${row('TYPE', TYPE_LABELS[e.type]||e.type)}${row('DATE', e.date + (e.time?' · '+e.time:''))}
       ${row('LOCATION', sp ? (sp.mapUrl?`<a href="${sp.mapUrl}" target="_blank" rel="noopener">${sp.name}${sp.address?', '+sp.address:', '+sp.city}</a>`:`${sp.name}${sp.address?', '+sp.address:', '+sp.city}`) : '')}
@@ -397,35 +438,37 @@ function textHtml(t, pStyle){
     .replace(/https?:\/\/[^\s<]+[^\s<.,;:!?)]/g, u=>`<a href="${u}" target="_blank" rel="noopener">${u.replace(/^https?:\/\/(www\.)?/,'')}</a>`)+'</p>').join('');
 }
 function bioHtml(b, style){ return (b||'').split(/\n\s*\n/).map(p=>`<p style="${style}">${p.trim()}</p>`).join(''); }
-function artistBlock(a){
+function artistBlock(a, lvl){
+  const AH='h'+(lvl||4);
   const ar = ARTISTS[a];
   const links = (ar.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
   return `<div style="margin-bottom:14px;display:flex;gap:10px;align-items:flex-start">
     ${ar.photoUrl?`<img src="${ar.photoUrl}" alt="${ar.name}" style="width:56px;height:56px;object-fit:cover;border:1px solid var(--line);flex:0 0 auto">`:''}
     <div>
-      <div style="font-family:var(--disp);font-weight:600;font-size:14px">${ar.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${ar.role}</span></div>
+      <${AH} class="artist-name" style="font-family:var(--disp);font-weight:600;font-size:14px">${ar.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${ar.role}</span></${AH}>
       ${ar.bio?bioHtml(ar.bio,'margin:4px 0 8px;font-size:12px;max-width:640px'):''}
       ${links}
     </div>
   </div>`;
 }
 function galleryItem(src, cap, thumb){
-  return `<div class="gallery-item" onclick="openLightbox('${src}','${(cap||'').replace(/'/g,"\\'")}')" style="cursor:pointer">
-    <img src="${thumb||src}" alt="${cap||''}" loading="lazy"><div class="cap">${cap||''}</div>
-  </div>`;
+  return `<button type="button" class="gallery-item zoom" onclick="openLightbox('${src}','${(cap||'').replace(/'/g,"\\'")}')" aria-label="Enlarge image${cap?': '+htmlEsc(cap):''}">
+    <img src="${thumb||src}" alt="${htmlEsc(cap||'')}" loading="lazy">${cap?`<span class="cap">${cap}</span>`:''}
+  </button>`;
 }
-function fileLayers(e){
+function fileLayers(e, lvl){
+  const H = 'h'+(lvl||3);
   const sp = e.space ? SPACES[e.space] : null;
   const isIncoming = e.status==='INCOMING';
-  const docIncoming = `<div class="layer"><div class="lhead">DOCUMENTATION</div><div class="doc-incoming">
+  const docIncoming = `<div class="layer"><${H} class="lhead">DOCUMENTATION</${H}><div class="doc-incoming">
     <span class="status-tag">DOCUMENTATION INCOMING</span>
     <a href="mailto:pulseindex.platform@gmail.com?subject=Documentation%20%E2%80%94%20${encodeURIComponent(e.id+' '+e.name)}">SUBMIT YOUR OWN →</a>
   </div></div>`;
-  const artistBlocks = e.artists.map(artistBlock).join('') || '<span style="color:var(--grey)">no linked artists on file</span>';
-  const docBlocks = (e.documentation||[]).map(artistBlock).join('');
+  const artistBlocks = e.artists.map(a=>artistBlock(a,(lvl||3)+1)).join('') || '<span style="color:var(--grey)">no linked artists on file</span>';
+  const docBlocks = (e.documentation||[]).map(a=>artistBlock(a,(lvl||3)+1)).join('');
   const venueLine = sp ? (sp.address ? `<a href="${sp.mapUrl||'#'}" target="_blank" rel="noopener">${sp.name}, ${sp.address}</a>` : `${sp.name}, ${sp.city}`) + (sp.link?` &nbsp;<a href="${sp.link}" target="_blank" rel="noopener">(venue link)</a>`:'') : '';
   const eventLinks = (e.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('');
-  const ticketBlock = e.ticketUrl ? `<div class="layer"><div class="lhead">TICKETS</div><a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="display:inline-block">GET TICKETS →</a></div>` : '';
+  const ticketBlock = e.ticketUrl ? `<div class="layer"><${H} class="lhead">TICKETS</${H}><a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn" style="display:inline-block">GET TICKETS →</a></div>` : '';
 
   // Visual Identity holds only ADDITIONAL art (poster shown once, in the header, not repeated here)
   const visualAssets = (e.promoCards||[]).map(c=>galleryItem(c.src, c.cap, c.thumb));
@@ -435,21 +478,21 @@ function fileLayers(e){
     <div class="cap">Video on YouTube — opens in a new tab ↗</div></a>`);
 
   return `
-    <div class="layer desc-text"><div class="lhead">DESCRIPTION</div>${e.description ? textHtml(e.description) : `<p>Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.</p>`}</div>
-    ${sp ? `<div class="layer"><div class="lhead">VENUE</div>${sp.description?`<p style="margin:0 0 8px">${sp.description}</p>`:''}<div class="related-list">${venueLine}</div></div>` : ''}
+    <div class="layer desc-text"><${H} class="lhead">DESCRIPTION</${H}>${e.description ? textHtml(e.description) : `<p>Documentation for ${e.name}, transmitted ${e.date}${sp?' from '+sp.name+', '+sp.city:''}. Full archival notes pending digitisation.</p>`}</div>
+    ${sp ? `<div class="layer"><${H} class="lhead">VENUE</${H}>${sp.description?`<p style="margin:0 0 8px">${sp.description}</p>`:''}<div class="related-list">${venueLine}</div></div>` : ''}
     ${isIncoming ? `<div class="layer reg-layer" id="reg-${e.id}" data-reg-layer="${e.id}" hidden></div>` : ''}
-    ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><div class="lhead">TICKETS</div>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
-    ${visualAssets.length ? `<div class="layer"><div class="lhead">VISUAL IDENTITY</div><div class="gallery-grid">${visualAssets.join('')}</div></div>` : ''}
-    <div class="layer"><div class="lhead">${e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS'}</div>${artistBlocks}</div>
-    ${isIncoming || !(docPhotos.length || videoItems.length) ? docIncoming : `    <div class="layer"><div class="lhead">DOCUMENTATION</div>
+    ${isIncoming && (e.price || e.ticketUrl) ? `<div class="layer"><${H} class="lhead">TICKETS</${H}>${e.price?`<p style="margin:0 0 4px">${e.price}${e.ticketNote?'<br>'+e.ticketNote:''}</p>`:''}${e.ticketUrl?`<a href="${e.ticketUrl}" target="_blank" rel="noopener" class="tune-btn">GET TICKETS →</a>`:''}</div>` : ''}
+    ${visualAssets.length ? `<div class="layer"><${H} class="lhead">VISUAL IDENTITY</${H}><div class="gallery-grid">${visualAssets.join('')}</div></div>` : ''}
+    <div class="layer"><${H} class="lhead">${e.type==='WORKSHOP'?'FACILITATOR':'ARTISTS'}</${H}>${artistBlocks}</div>
+    ${isIncoming || !(docPhotos.length || videoItems.length) ? docIncoming : `    <div class="layer"><${H} class="lhead">DOCUMENTATION</${H}>
       <div class="gallery-grid" style="margin-bottom:${docBlocks?'14px':'0'}">
         ${videoItems.join('')}${(docPhotos.length||videoItems.length) ? docPhotos.join('') : `<div class="gallery-item"><div class="poster-frame" style="aspect-ratio:4/3">CONTACT SHEET — PLACEHOLDER</div></div><div class="gallery-item"><div class="monitor"></div></div>`}
       </div>
       ${docBlocks || '<p style="color:var(--grey);margin:0">No documenter credited yet.</p>'}
     </div>
 `}
-    ${(window.RELEASES||[]).filter(r=>r.event===e.id).map(r=>`<div class="layer"><div class="lhead">RELEASED HERE</div><a href="#${r.id}" class="onfile-link">${r.id} — ${r.title} / ${r.artists.map(a=>ARTISTS[a].name).join(' / ')} →</a></div>`).join('')}
-    ${eventLinks ? `<div class="layer"><div class="lhead">LINKS</div><div class="related-list">${eventLinks}</div></div>` : ''}
+    ${(window.RELEASES||[]).filter(r=>r.event===e.id).map(r=>`<div class="layer"><${H} class="lhead">RELEASED HERE</${H}><a href="#${r.id}" class="onfile-link">${r.id} — ${r.title} / ${r.artists.map(a=>ARTISTS[a].name).join(' / ')} →</a></div>`).join('')}
+    ${eventLinks ? `<div class="layer"><${H} class="lhead">LINKS</${H}><div class="related-list">${eventLinks}</div></div>` : ''}
   `;
 }
 function openFile(id){
@@ -459,33 +502,41 @@ function openFile(id){
     <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap; margin:30px 0 20px">
       <div class="file-head" style="flex:1; min-width:180px; margin:0">
         <div class="fid">PULSE INDEX / ${TYPE_LABELS[e.type]||e.type} / FILE ${e.id}</div>
-        <div class="ftitle">${e.name}</div>
+        <h2 class="ftitle" id="file-title">${e.name}</h2>
         <div class="mono" style="font-size:11px;color:var(--grey)">${e.date}${e.time?' · '+e.time:''}${sp?' · '+sp.city.toUpperCase():''}</div>
         <div class="mono" style="font-size:11px;margin-top:8px">STATUS: ${e.status}</div>
       </div>
-      ${e.posterUrl ? `<div class="poster-box" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')"><img src="${e.posterUrl}" alt="${e.name} poster"></div>` : ''}
+      ${e.posterUrl ? `<button type="button" class="poster-box zoom" onclick="openLightbox('${e.posterUrl}','${e.name.replace(/'/g,"\\'")} — poster')" aria-label="Enlarge poster: ${htmlEsc(e.name)}"><img src="${e.posterUrl}" alt="${e.name} poster"></button>` : ''}
     </div>
 ` + fileLayers(e);
   regRefresh(true);
-  document.getElementById('filepanel').classList.add('open'); setHash(id);
-  document.getElementById('filepanel').scrollTop = 0;
+  showFilePanel(); setHash(id);
   document.querySelectorAll('#file-content .layer').forEach((l,i)=>{
     l.classList.remove('show');
     setTimeout(()=>l.classList.add('show'), 80*i+60);
   });
 }
 document.getElementById('file-close').onclick = closeFile;
-function openLightbox(src, cap){
-  document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-cap').textContent = cap||'';
-  document.getElementById('lightbox').classList.add('open');
+function showFilePanel(){
+  const fp=document.getElementById('filepanel');
+  fp.classList.add('open'); fp.scrollTop=0;
+  dialogOpened(fp, document.getElementById('file-close'));
 }
-function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+function openLightbox(src, cap){
+  const img=document.getElementById('lightbox-img'), lb=document.getElementById('lightbox');
+  img.src = src;
+  img.alt = cap || 'Enlarged image';
+  document.getElementById('lightbox-cap').textContent = cap||'';
+  lb.classList.add('open');
+  dialogOpened(lb, document.getElementById('lightbox-close'));
+}
+function closeLightbox(){ const lb=document.getElementById('lightbox'); if(!lb.classList.contains('open')) return; lb.classList.remove('open'); dialogClosed(lb); }
 document.getElementById('lightbox-close').onclick = closeLightbox;
 document.getElementById('lightbox').addEventListener('click', e=>{ if(e.target.id==='lightbox') closeLightbox(); });
 function closeFile(){
-  const fp=document.getElementById('filepanel'); if(fp.classList.contains('open')){ const v=currentView(); setHash(v==='signal'?'':v); }
-  fp.classList.remove('open');
+  const fp=document.getElementById('filepanel'); if(!fp.classList.contains('open')) return;
+  const v=currentView(); setHash(v==='signal'?'':v);
+  fp.classList.remove('open'); dialogClosed(fp);
 }
 
 /* ---------------- NETWORK ---------------- */
@@ -550,13 +601,16 @@ function drawNetwork(){
   nodes.forEach(n=>{
     const cls = n.tags.map(t=>'tag-'+t).join(' ');
     const strokeOverride = n.tags.length>1 ? ` style="stroke:url(#grad-${n.id})"` : '';
-    svgHtml+=`<g class="netnode ${cls}" data-id="${n.id}" data-r="${n.rad}">
+    const who = SPACES[n.id] ? `${SPACES[n.id].name}, venue` : `${ARTISTS[n.id].name}${ARTISTS[n.id].role?', '+ARTISTS[n.id].role:''}`;
+    svgHtml+=`<g class="netnode ${cls}" data-id="${n.id}" data-r="${n.rad}" tabindex="0" role="button" aria-label="${htmlEsc(who)}">
       <circle r="${n.rad}" cx="${n.x}" cy="${n.y}"${strokeOverride}/>
       <text x="${n.x}" y="${n.y+n.rad+14}" text-anchor="middle">${n.label}</text>
     </g>`;
   });
   svg.innerHTML = svgHtml;
   svg.querySelectorAll('.netnode').forEach(g=>{ g.style.cursor='grab'; });
+  const f=[netCity!=='ALL'?'in '+netCity:'', netCat!=='ALL'?'type '+netCat.toLowerCase():''].filter(Boolean).join(', ');
+  svg.setAttribute('aria-label', `Network map: ${usedArtists.length} people and ${usedSpaces.length} venues${f?' ('+f+')':''}. Tab to a name and press Enter for details, or switch to the list view.`);
 }
 /* pan + zoom + per-node dragging on the network canvas. Note: pointer
    capture retargets the synthetic 'click' event to the SVG itself, so
@@ -608,6 +662,10 @@ function drawNetwork(){
     if(!moved && downId) selectNode(downId);
   });
   svg.addEventListener('pointerleave', ()=>{ dragging=false; svg.style.cursor='grab'; });
+  svg.addEventListener('keydown', e=>{
+    const g=e.target.closest && e.target.closest('.netnode'); if(!g) return;
+    if(e.key==='Enter' || e.key===' '){ e.preventDefault(); selectNode(g.dataset.id); }
+  });
   svg.addEventListener('wheel', e=>{
     e.preventDefault();
     const factor = Math.exp(Math.max(-40, Math.min(40, e.deltaY)) * 0.0012); // gentle, works for mouse wheels and trackpads
@@ -618,7 +676,7 @@ function drawNetwork(){
   }, {passive:false});
 })();
 /* CITY and TYPE filters toggle: clicking the active one again switches it off (back to ALL) */
-function netFilter(attr, b){
+function netFilter(attr, b){ /* aria-pressed kept in step below */
   const group=document.querySelectorAll(`#net-filters button[data-${attr}]`);
   const v = b.classList.contains('active') && b.dataset[attr]!=='ALL' ? 'ALL' : b.dataset[attr];
   group.forEach(x=>{ const on=x.dataset[attr]===v; x.classList.toggle('active', on); x.setAttribute('aria-pressed', on); });
@@ -630,8 +688,8 @@ document.querySelectorAll('#net-filters button[data-cat]').forEach(b=>b.addEvent
 /* LIST view: same people + spaces as the map (same CITY / TYPE filters), as a sortable table.
    Click a column heading to sort; click it again to reverse. Click a row to open the same detail card. */
 document.querySelectorAll('#net-filters button[data-mode]').forEach(b=>b.addEventListener('click', ()=>{
-  document.querySelectorAll('#net-filters button[data-mode]').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); netMode=b.dataset.mode;
+  document.querySelectorAll('#net-filters button[data-mode]').forEach(x=>{ x.classList.remove('active'); x.setAttribute('aria-pressed','false'); });
+  b.classList.add('active'); b.setAttribute('aria-pressed','true'); netMode=b.dataset.mode;
   const list=netMode==='list';
   document.getElementById('netsvg').style.display = list?'none':'';
   document.getElementById('netlist').hidden = !list;
@@ -672,14 +730,14 @@ function drawNetList(){
     let div='';
     if(key==='name'){ const L=(r.name[0]||'').normalize('NFD')[0].toUpperCase(); if(L!==last){ last=L; div=`<div class="nl-letter">${L}</div>`; } }
     const dots=r.tags.map(t=>`<i class="nl-dot tag-${t}"></i>`).join('');
-    return div+`<button class="nl-row" data-id="${r.id}">
+    return div+`<button type="button" class="nl-row" data-id="${r.id}">
       <span class="nl-name">${r.name}${r.role?`<span class="nl-role"> / ${r.role}</span>`:''}</span>
       <span class="nl-type">${dots}${typeText(r)}</span>
       <span class="nl-city">${r.city||'—'}</span>
       <span class="nl-files">${r.files||'—'}</span>
     </button>`;
   }).join('');
-  box.innerHTML = `<div class="nl-head">${NET_COLS.map(c=>`<button data-sort="${c.key}" class="${c.key===key?'on':''}">${c.label}${c.key===key?(dir>0?' ↓':' ↑'):''}</button>`).join('')}</div>
+  box.innerHTML = `<div class="nl-head">${NET_COLS.map(c=>`<button type="button" data-sort="${c.key}" class="${c.key===key?'on':''}" aria-label="Sort by ${c.label.toLowerCase()}${c.key===key?(dir>0?', currently ascending':', currently descending'):''}">${c.label}${c.key===key?(dir>0?' ↓':' ↑'):''}</button>`).join('')}</div>
     ${rows.length ? body : '<div class="nl-empty">NO SIGNAL IN THIS FILTER</div>'}
     <div class="label nl-count">${rows.length} ON FILE</div>`;
   box.querySelectorAll('.nl-head button').forEach(b=>b.onclick=()=>{
@@ -696,8 +754,8 @@ function eventLinksFor(list){
     const venueNamed = e.space && SPACES[e.space] && SPACES[e.space].name===e.name;
     const what = `<span style="color:var(--sig)">${e.id}</span> &nbsp;${e.date} — ${TYPE_LABELS[e.type]||e.type}${venueNamed?'':`<br><span style="color:var(--ink)">${e.name}</span>`}`;
     return e.status==='ARCHIVED'
-      ? `<a href="#" class="onfile" onclick="event.preventDefault(); document.getElementById('netdetail').classList.remove('open'); openFolder('${e.id}')"><span class="go">open file →</span>${what}</a>`
-      : `<a href="#" class="onfile" onclick="event.preventDefault(); openFile('${e.id}')"><span class="go">incoming →</span>${what}</a>`;
+      ? `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); closeNetDetail(true); openFolder('${e.id}')"><span class="go">open file →</span>${what}</a>`
+      : `<a href="#${e.id}" class="onfile" onclick="event.preventDefault(); openFile('${e.id}')"><span class="go">incoming →</span>${what}</a>`;
   }).join('') || '<span style="color:var(--grey)">none logged</span>';
 }
 function selectNode(id){
@@ -706,27 +764,34 @@ function selectNode(id){
     const a=ARTISTS[id];
     const evs=EVENTS.filter(e=>e.artists.includes(id) || (e.documentation||[]).includes(id));
     const links=(a.links||[]).map(l=>`<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join(' &nbsp; ');
-    det.innerHTML=`<button class="close" id="net-close">CLOSE ✕</button>
+    det.innerHTML=`<button type="button" class="close" id="net-close" aria-label="Close details">CLOSE ✕</button>
       ${a.photoUrl?`<img src="${a.photoUrl}" alt="${a.name}" style="width:100%;max-width:180px;display:block;margin-bottom:8px;border:1px solid var(--line)">`:''}
-      <div style="font-family:var(--disp);font-weight:600;font-size:16px">${a.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${a.role} · ${a.tags.join(' + ')}${a.city?' · '+a.city:''}</span></div>
+      <h2 id="net-title" style="font-family:var(--disp);font-weight:600;font-size:16px">${a.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ ${a.role} · ${a.tags.join(' + ')}${a.city?' · '+a.city:''}</span></h2>
       ${a.bio?bioHtml(a.bio,'margin:6px 0'):''}
       <div class="netlinks">${links}</div>
       ${(a.members||[]).length?`<div class="label" style="margin-top:10px">MEMBERS</div><div class="netfiles">${a.members.map(m=>`<a href="#" onclick="event.preventDefault(); selectNode('${m}')">${ARTISTS[m].name} →</a>`).join('')}</div>`:''}
       ${groupsOf(id).length?`<div class="label" style="margin-top:10px">MEMBER OF</div><div class="netfiles">${groupsOf(id).map(g=>`<a href="#" onclick="event.preventDefault(); selectNode('${g.id}')">${g.name} →</a>`).join('')}</div>`:''}
-      ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); document.getElementById('netdetail').classList.remove('open'); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.catalog||r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
+      ${(()=>{ const rs=RELEASES.filter(r=>r.artists.includes(id)); return rs.length?`<div class="label" style="margin-top:10px">RELEASES</div><div class="netfiles">${rs.map(r=>`<a href="#" class="onfile" onclick="event.preventDefault(); closeNetDetail(true); openRelease('${r.id}')"><span class="go">open release →</span><span style="color:var(--sig)">${r.catalog||r.id}</span> &nbsp;${r.date||''} — ${r.format||'RELEASE'}<br><span style="color:var(--ink)">${r.title}</span></a>`).join('')}</div>`:''; })()}
       <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
   } else if(SPACES[id]){
     const s=SPACES[id];
     const evs=EVENTS.filter(e=>e.space===id);
-    det.innerHTML=`<button class="close" id="net-close">CLOSE ✕</button>
-      <div style="font-family:var(--disp);font-weight:600;font-size:16px">${s.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ SPACE · ${s.city}</span></div>
+    det.innerHTML=`<button type="button" class="close" id="net-close" aria-label="Close details">CLOSE ✕</button>
+      <h2 id="net-title" style="font-family:var(--disp);font-weight:600;font-size:16px">${s.name} <span style="font-family:var(--mono);font-weight:400;font-size:10px;color:var(--grey)">/ SPACE · ${s.city}</span></h2>
       ${s.description?`<p style="margin:6px 0">${s.description}</p>`:''}
       ${s.address?`<p style="margin:6px 0;color:var(--grey)">${s.address}</p>`:''}
       <div class="netlinks">${s.link?`<a href="${s.link}" target="_blank" rel="noopener">venue link</a>`:''}</div>
       <div class="label" style="margin-top:10px">ON FILE</div><div class="netfiles">${eventLinksFor(evs)}</div>`;
   }
   det.classList.add('open');
-  document.getElementById('net-close').onclick = ()=>det.classList.remove('open');
+  dialogOpened(det, document.getElementById('net-close'));
+  document.getElementById('net-close').onclick = ()=>closeNetDetail();
+}
+// quiet = closing because the visitor is moving on to something else (don't send focus back)
+function closeNetDetail(quiet){
+  const det=document.getElementById('netdetail'); if(!det.classList.contains('open')) return;
+  det.classList.remove('open');
+  if(quiet){ DLG_RETURN.delete(det); syncInert(); } else dialogClosed(det);
 }
 /* ---------------- REGISTRATION ----------------
    Events with "registration" ticked in the sheet get a REGISTER button and a short form.
@@ -764,7 +829,7 @@ function regInfoHtml(id){
 }
 function regLayerHtml(id, again){
   const s=REG[id]; if(!s) return '';
-  const head='<div class="lhead">REGISTRATION</div>';
+  const head='<h3 class="lhead">REGISTRATION</h3>';
   const live = s.state==='open' || s.state==='waitlist';
   if(live && REG_DONE[id] && !again) return head+`<div class="reg-ok"><span class="status-tag">${REG_DONE[id]==='waitlist'?'ON THE WAITLIST':'REGISTERED'}</span>
     <p>You signed up from this device. To cancel, reply to the confirmation email.</p>${regInfoHtml(id)}
@@ -829,7 +894,7 @@ function submitReg(ev, id){
     if(r.ok){
       REG_DONE[id]=r.status; regSave();
       const box=document.getElementById('reg-'+id);
-      box.innerHTML=`<div class="lhead">REGISTRATION</div><div class="reg-ok"><span class="status-tag">${r.status==='waitlist'?'ON THE WAITLIST':"YOU'RE ON THE LIST"}</span>
+      box.innerHTML=`<h3 class="lhead">REGISTRATION</h3><div class="reg-ok"><span class="status-tag">${r.status==='waitlist'?'ON THE WAITLIST':"YOU'RE ON THE LIST"}</span>
         <p>${r.status==='waitlist'?"We'll email you if a spot opens up.":'See you there.'} A confirmation is on its way to ${htmlEsc(v('email'))}.</p>${regInfoHtml(id)}</div>`;
       box.dataset.st=JSON.stringify(REG[id]||null)+'d';
       regRefresh(); return;
@@ -872,6 +937,6 @@ route(); addEventListener('hashchange', route);
 document.addEventListener('error', e=>{
   const img=e.target; if(!(img instanceof HTMLImageElement) || img.dataset.failed) return;
   img.dataset.failed='1';
-  const box=document.createElement('div'); box.className='img-missing'; box.textContent='IMAGE UNAVAILABLE';
+  const box=document.createElement('div'); box.className='img-missing'; box.textContent='IMAGE UNAVAILABLE'; box.setAttribute('role','img'); box.setAttribute('aria-label',(img.alt?img.alt+' — ':'')+'image unavailable');
   img.replaceWith(box);
 }, true);

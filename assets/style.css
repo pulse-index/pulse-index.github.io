@@ -1,13 +1,13 @@
 :root{
-  --ink:#0c0c0b; --paper:#eeece4; --grey:#8c8a80; --line:#c8c6ba;
-  --sig:#e4531f; --panel:#e3e1d7; --folder:#dcd7c5;
+  --ink:#0c0c0b; --paper:#eeece4; --grey:#5f5d54; --line:#c8c6ba; --edge:#86857b;
+  --sig:#a0360a; --sig-bright:#e4531f; --panel:#e3e1d7; --folder:#dcd7c5;
   --mono:'IBM Plex Mono',monospace; --disp:'Space Grotesk',sans-serif;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){ --ink:#eeece4; --paper:#111110; --grey:#8c8a80; --line:#2c2b26; --panel:#1a1a17; --folder:#1d1c19; }
+  :root:not([data-theme="light"]){ --ink:#eeece4; --paper:#111110; --grey:#8c8a80; --line:#2c2b26; --edge:#6a685f; --sig:#e4531f; --panel:#1a1a17; --folder:#1d1c19; }
 }
-:root[data-theme="dark"]{ --ink:#eeece4; --paper:#111110; --grey:#8c8a80; --line:#2c2b26; --panel:#1a1a17; --folder:#1d1c19; }
+:root[data-theme="dark"]{ --ink:#eeece4; --paper:#111110; --grey:#8c8a80; --line:#2c2b26; --edge:#6a685f; --sig:#e4531f; --panel:#1a1a17; --folder:#1d1c19; }
 *{box-sizing:border-box;}
 html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px);}
 body{
@@ -18,7 +18,27 @@ body{
 .mono{font-family:var(--mono);}
 .disp{font-family:var(--disp);}
 a{color:inherit;}
-button{font-family:var(--mono); background:none; border:1px solid var(--line); color:var(--ink); cursor:pointer;}
+button{font-family:var(--mono); background:none; border:1px solid var(--edge); color:var(--ink); cursor:pointer;}
+
+/* ---- accessibility helpers ---- */
+/* headings carry the structure; their look still comes from their classes */
+h1,h2,h3,h4,h5,h6{font:inherit; margin:0; letter-spacing:inherit; color:inherit;}
+.sr-only{position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;}
+.skip-link{position:fixed; left:8px; top:-60px; z-index:300; background:var(--ink); color:var(--paper); padding:10px 14px; font-size:12px; text-decoration:none;}
+.skip-link:focus{top:8px;}
+main:focus{outline:none;}
+/* a visible keyboard focus everywhere (mouse clicks don't show it) */
+:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
+#lightbox :focus-visible{outline-color:#fff;}
+/* images that open bigger are real buttons now; this keeps them looking like before */
+.zoom{display:block; width:100%; padding:0; margin:0; font:inherit; color:inherit; text-align:inherit; background:none; border:0; cursor:zoom-in; line-height:inherit;}
+.zoom img{display:block;}
+.row-link{all:unset; cursor:pointer;}
+.row-link:hover{text-decoration:underline;}
+.row-link:focus-visible{outline:2px solid var(--ink); outline-offset:2px;}
+.netnode:focus{outline:none;}
+.netnode:focus-visible circle{stroke-width:4; stroke:var(--ink);}
+.netnode:focus-visible text{text-decoration:underline;}
 
 /* ---- freq bar (persistent) ---- */
 #freqbar{
@@ -28,7 +48,8 @@ button{font-family:var(--mono); background:none; border:1px solid var(--line); c
   font-size:11px; letter-spacing:.03em;
 }
 #freqbar .lock{display:flex; gap:6px; align-items:center;}
-#freqbar .dot{width:6px; height:6px; border-radius:50%; background:var(--sig); animation:pulse 1.6s infinite;}
+#freqbar .dot{width:6px; height:6px; border-radius:50%; background:var(--sig-bright); animation:pulse 1.6s infinite;}
+@media(prefers-reduced-motion:reduce){#freqbar .dot{animation:none;}}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
 nav.channels{display:flex; gap:2px;}
 nav.channels button{padding:6px 10px; font-size:11px; letter-spacing:.05em;}
@@ -475,9 +496,9 @@ main{padding-top:var(--barh,52px);}
 .reg-left{color:var(--sig); font-size:11px; letter-spacing:.05em; white-space:nowrap;}
 .reg-form{display:grid; grid-template-columns:1fr 1fr; gap:12px 14px; max-width:560px; position:relative;}
 .reg-form label{display:flex; flex-direction:column; gap:4px; min-width:0;}
-.reg-form input:not([type=checkbox]), .reg-form select{font:inherit; font-size:14px; color:var(--ink); background:transparent; border:1px solid var(--line); border-radius:0; padding:9px 10px; width:100%; -webkit-appearance:none; appearance:none;}
+.reg-form input:not([type=checkbox]), .reg-form select{font:inherit; font-size:14px; color:var(--ink); background:transparent; border:1px solid var(--edge); border-radius:0; padding:9px 10px; width:100%; -webkit-appearance:none; appearance:none;}
 .reg-form select{background-image:linear-gradient(45deg,transparent 50%,var(--grey) 50%),linear-gradient(135deg,var(--grey) 50%,transparent 50%); background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%; background-size:5px 5px; background-repeat:no-repeat; padding-right:28px;}
-.reg-form input:focus, .reg-form select:focus{outline:none; border-color:var(--sig);}
+.reg-form input:focus, .reg-form select:focus{outline:2px solid var(--sig); outline-offset:0; border-color:var(--sig);}
 .reg-form input::placeholder{color:var(--grey);}
 .reg-form .reg-people{max-width:120px;}
 .reg-form .reg-check, .reg-form .reg-actions{grid-column:1/-1;}
@@ -514,3 +535,11 @@ main{padding-top:var(--barh,52px);}
 /* event description from the sheet: paragraphs and line breaks */
 .desc-text p{margin:0 0 10px;} .desc-text p:last-child{margin-bottom:0;}
 .desc-text a{color:var(--sig);}
+
+/* ---- accessibility round 2026-11-25: buttons that used to be boxes ---- */
+.folder .tab{font-family:inherit; color:inherit; cursor:pointer;}
+button.poster-box{width:auto;}
+button.gallery-item{font:inherit; color:inherit; text-align:left; cursor:zoom-in; width:100%;}
+.gallery-item .cap{display:block;}
+.event-row .name{margin:0;}
+@media(prefers-reduced-motion:reduce){.tba-cursor{animation:none;}}
